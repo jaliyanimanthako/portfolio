@@ -40,7 +40,7 @@ const Hero = () => {
             >
                 <div className="relative w-[120%] h-full translate-x-[25%]">
                     <img
-                        src="/hero-portrait.png"
+                        src="/hero-portrait.webp"
                         alt="Jaliya Nimantha"
                         className="w-full h-full object-cover object-top opacity-50"
                     />
