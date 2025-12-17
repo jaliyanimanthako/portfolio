@@ -268,7 +268,7 @@ const YearSection = ({ experience, index, onProjectClick }) => {
     const isFlipped = index % 2 === 1;
 
     return (
-        <div ref={sectionRef} className="min-h-[80vh] relative flex flex-col justify-center py-10">
+        <div ref={sectionRef} className="min-h-[60vh] md:min-h-[80vh] relative flex flex-col justify-center py-10">
             {/* Large Year Display */}
             <motion.div
                 style={{ opacity: yearOpacity, scale: yearScale, y: yearY }}
@@ -282,9 +282,9 @@ const YearSection = ({ experience, index, onProjectClick }) => {
             {/* Accent Year on the side - position based on isFlipped */}
             <motion.div
                 style={{ opacity: yearOpacity }}
-                className={`absolute top-1/2 -translate-y-1/2 z-10 ${isFlipped ? 'right-4 md:right-10' : 'left-4 md:left-10'}`}
+                className={`experience-year-accent absolute top-1/2 -translate-y-1/2 z-10 hidden md:block ${isFlipped ? 'right-4 md:right-10' : 'left-4 md:left-10'}`}
             >
-                <span className="text-6xl md:text-8xl lg:text-9xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
+                <span className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
                     {experience.year}
                 </span>
             </motion.div>
@@ -292,7 +292,7 @@ const YearSection = ({ experience, index, onProjectClick }) => {
             {/* Experience Card - position based on isFlipped */}
             <motion.div
                 style={{ opacity: cardOpacity, y: cardY }}
-                className={`relative z-20 w-full md:w-[75%] lg:w-[70%] ${isFlipped ? 'mr-auto pl-4 md:pl-10' : 'ml-auto pr-4 md:pr-10'}`}
+                className={`relative z-20 w-full px-4 md:px-0 md:w-[75%] lg:w-[70%] ${isFlipped ? 'md:mr-auto md:pl-10' : 'md:ml-auto md:pr-10'}`}
             >
                 <div className="relative group">
                     {/* Main card */}
@@ -425,7 +425,7 @@ const Experience = () => {
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8 }}
-                                className="relative h-[300px] overflow-hidden"
+                                className="relative h-[200px] md:h-[300px] overflow-hidden"
                             >
                                 <div
                                     className="flex gap-6 items-center h-full animate-scroll-seamless"
@@ -439,7 +439,7 @@ const Experience = () => {
                                             key={i}
                                             src={photo}
                                             alt={`Gallery ${(i % galleryPhotos.length) + 1}`}
-                                            className="h-[280px] w-auto flex-shrink-0 rounded-xl object-contain"
+                                            className="h-[180px] md:h-[280px] w-auto flex-shrink-0 rounded-xl object-contain"
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
                                             }}
