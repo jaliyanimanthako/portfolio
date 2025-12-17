@@ -24,7 +24,7 @@ const Hero = () => {
     };
 
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-black">
+        <section className="hero-section relative min-h-screen w-full overflow-hidden bg-black">
             {/* Ambient Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-black via-black to-gray-900 -z-10">
                 <div className="absolute bottom-[-30%] right-[-20%] w-[100vw] h-[100vw] bg-blue-900/20 rounded-full blur-[200px] animate-pulse"></div>
@@ -38,7 +38,7 @@ const Hero = () => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1.2, delay: 0.3 }}
             >
-                <div className="relative w-[120%] h-full translate-x-[25%]">
+                <div className="relative w-full md:w-[120%] h-full md:translate-x-[25%]">
                     <img
                         src="/hero-portrait.webp"
                         alt="Jaliya Nimantha"
@@ -51,7 +51,7 @@ const Hero = () => {
             </motion.div>
 
             {/* Main Content Container */}
-            <div className="container relative z-[50] flex flex-col h-full justify-center -mt-16">
+            <div className="container relative z-[50] flex flex-col min-h-screen justify-center py-20 md:py-0 md:-mt-16">
                 <motion.div
                     variants={container}
                     initial="hidden"
@@ -74,7 +74,7 @@ const Hero = () => {
                         <div className="overflow-hidden">
                             <motion.h1
                                 variants={item}
-                                className="text-[13vw] md:text-[11vw] font-display font-bold leading-none tracking-tighter text-white"
+                                className="text-[11vw] sm:text-[12vw] md:text-[11vw] lg:text-[10vw] font-display font-bold leading-none tracking-tighter text-white"
                             >
                                 JALIYA
                             </motion.h1>
@@ -83,7 +83,7 @@ const Hero = () => {
                         <div className="overflow-hidden">
                             <motion.h1
                                 variants={item}
-                                className="text-[13vw] md:text-[11vw] font-display font-bold leading-none tracking-tighter text-white pl-[5vw]"
+                                className="text-[11vw] sm:text-[12vw] md:text-[11vw] lg:text-[10vw] font-display font-bold leading-none tracking-tighter text-white pl-[3vw] md:pl-[5vw]"
                             >
                                 NIMANTHA
                             </motion.h1>
@@ -93,7 +93,7 @@ const Hero = () => {
                     {/* Degree and Passion Statement - Under Name */}
                     <motion.div
                         variants={item}
-                        className="max-w-xl mb-10 space-y-3 mt-16"
+                        className="max-w-xl mb-8 md:mb-10 space-y-3 mt-8 md:mt-16"
                     >
                         <p className="text-base md:text-lg font-bold text-white uppercase tracking-wide">
                             Electronic & Telecommunication Engineering Undergraduate

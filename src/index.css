@@ -101,3 +101,51 @@ a {
 .animate-scroll-seamless {
   animation: scroll-seamless 25s linear infinite;
 }
+
+/* Mobile-safe viewport height - handles dynamic browser chrome */
+.h-screen-safe {
+  height: 100vh;
+  height: 100svh; /* Small viewport height - excludes browser UI */
+}
+
+.min-h-screen-safe {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+/* Responsive text scaling that works better on all screen sizes */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1rem;
+  }
+}
+
+/* Fix for mobile landscape */
+@media (max-height: 500px) {
+  .hero-section {
+    min-height: 100vh;
+    height: auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Improved experience section on mobile */
+@media (max-width: 768px) {
+  .experience-year-accent {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    transform: none !important;
+    margin-bottom: 1rem;
+  }
+  
+  .experience-card-wrapper {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
