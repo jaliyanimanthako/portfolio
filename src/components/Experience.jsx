@@ -21,8 +21,8 @@ const labProjects = [
             'End-to-End Deployment SDKs (Python and Android)'
         ],
         tech: ['TensorFlow Lite', 'MediaPipe', 'Kotlin', 'LLaMA.cpp', 'Android'],
-        thumbnail: '/aisee.png',
-        modalImage: '/aise.png',
+        thumbnail: '/aisee.webp',
+        modalImage: '/aise.webp',
         images: []
     },
     {
@@ -36,8 +36,8 @@ const labProjects = [
         ],
         deliverables: [],
         tech: ['Python', 'E4 Wearable', 'Signal Processing', 'Machine Learning'],
-        thumbnail: '/gut.png',
-        modalImage: '/Industrial.png',
+        thumbnail: '/gut.webp',
+        modalImage: '/Industrial.webp',
         images: []
     },
     {
@@ -52,7 +52,7 @@ const labProjects = [
         deliverables: [],
         tech: ['Mobile App', 'Hardware', 'Firmware', 'Game-based Learning'],
         // Add your images here: e.g., '/itiles.png'
-        thumbnail: '/it.png',
+        thumbnail: '/it.webp',
         modalImage: '/itiel.jpeg',
         images: []
     }
@@ -68,7 +68,7 @@ const experiences = [
         type: "Current",
         description: [],
         tech: ['TinyML', 'MediaPipe', 'llama.cpp', 'LangGraph', 'Edge AI', 'Python'],
-        logos: ['/NUS.png', '/ah.png'],
+        logos: ['/NUS.png', '/ah.webp'],
         projects: labProjects
     },
     {
@@ -84,7 +84,7 @@ const experiences = [
             "Contributed to model optimization and deployment at Magentic One, ensuring scalable real-world applications."
         ],
         tech: ['VLMs', 'Multi-modal AI', 'Python', 'Agentic AI', 'Magentic One', 'Deep Learning'],
-        logos: ['/ah.png']
+        logos: ['/ah.webp']
     }
 ];
 
@@ -388,11 +388,11 @@ const Experience = () => {
 
     // Gallery photos - add your images here
     const galleryPhotos = [
-        '/1.png', // Replace with your image paths
-        '/2.png',
-        '/3.png',
-        '/4.png',
-        '/4.png'
+        '/1.webp', // Replace with your image paths
+        '/2.webp',
+        '/3.webp',
+        '/4.webp',
+        '/5.webp'
     ];
 
     return (

@@ -14,7 +14,7 @@ const featuredProjects = [
         color: "#06b6d4",
         bgGradient: "from-cyan-900/40 via-blue-900/30 to-black",
         highlights: ["Research-driven innovation", "Neuroscience + AI fusion", "Real-time signal processing"],
-        image: "/eeg_cap.png"
+        image: "/eeg_cap.webp"
     },
     {
         title: "BioSense-AI",
@@ -27,7 +27,7 @@ const featuredProjects = [
         color: "#10b981",
         bgGradient: "from-emerald-900/40 via-teal-900/30 to-black",
         highlights: ["Portable diagnostics", "ML-powered classification", "Real-time monitoring"],
-        image: "/biosense.png"
+        image: "/biosense.webp"
     },
     {
         title: "GGUF Model Converter",
@@ -41,7 +41,7 @@ const featuredProjects = [
         color: "#a855f7",
         bgGradient: "from-purple-900/40 via-indigo-900/30 to-black",
         highlights: ["Open source", "PyPI package", "Full automation pipeline"],
-        image: "/gguf.png"
+        image: "/gguf.webp"
     },
     {
         title: "AiSee LLaMa SDK",
@@ -55,7 +55,7 @@ const featuredProjects = [
         color: "#f97316",
         bgGradient: "from-orange-900/40 via-red-900/30 to-black",
         highlights: ["On-device inference", "No cloud dependency", "Streamed responses"],
-        image: "/llama.png"
+        image: "/llama.webp"
     },
     {
         title: "Industrial End Effector",
@@ -68,7 +68,7 @@ const featuredProjects = [
         color: "#64748b",
         bgGradient: "from-slate-800/40 via-gray-900/30 to-black",
         highlights: ["High precision sensing", "Industrial-grade", "Modbus integration"],
-        image: "/endeff.png"
+        image: "/endeff.webp"
     },
     {
         title: "Hodi — Sinhala OCR",
@@ -82,7 +82,7 @@ const featuredProjects = [
         color: "#06b6d4",
         bgGradient: "from-cyan-900/40 via-blue-900/30 to-black",
         highlights: ["Handwritten recognition", "Cross-platform", "Sinhala language support"],
-        image: "/hodi.png"
+        image: "/hodi.webp"
     }
 ];
 
