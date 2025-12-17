@@ -14,7 +14,7 @@
   --color-accent-gradient: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
 
   --spacing-container: 2rem;
-  --max-width: 1400px;
+  --max-width: 1600px;
 }
 
 * {
@@ -105,7 +105,8 @@ a {
 /* Mobile-safe viewport height - handles dynamic browser chrome */
 .h-screen-safe {
   height: 100vh;
-  height: 100svh; /* Small viewport height - excludes browser UI */
+  height: 100svh;
+  /* Small viewport height - excludes browser UI */
 }
 
 .min-h-screen-safe {
@@ -140,7 +141,7 @@ a {
     transform: none !important;
     margin-bottom: 1rem;
   }
-  
+
   .experience-card-wrapper {
     width: 100% !important;
     margin-left: 0 !important;
