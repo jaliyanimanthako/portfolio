@@ -203,7 +203,7 @@ const ProjectCard = ({ project, index, onClick }) => {
             className="group relative cursor-pointer"
         >
             {/* Card Container */}
-            <div className={`relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-br ${project.bgGradient} border border-white/5 group-hover:border-white/20 transition-all duration-700`}>
+            <div className={`relative w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden bg-gradient-to-br ${project.bgGradient} border border-white/5 group-hover:border-white/20 transition-all duration-700`}>
 
                 {/* Project Image with Fold-Up Animation */}
                 {project.image ? (
@@ -251,7 +251,7 @@ const ProjectCard = ({ project, index, onClick }) => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
                 {/* Content */}
-                <div className="absolute inset-0 p-6 md:p-10 flex flex-col justify-end">
+                <div className="absolute inset-0 p-4 sm:p-6 md:p-10 flex flex-col justify-end overflow-hidden">
                     {/* Category and Status */}
                     <div className="flex items-center gap-3 mb-4">
                         <span className="text-white/50 text-xs md:text-sm tracking-widest uppercase">
@@ -267,18 +267,18 @@ const ProjectCard = ({ project, index, onClick }) => {
                     {/* Title */}
                     <motion.h3
                         style={{ y }}
-                        className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-none mb-4 group-hover:translate-x-4 transition-transform duration-500"
+                        className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight mb-2 sm:mb-4 group-hover:translate-x-4 transition-transform duration-500"
                     >
                         {project.title}
                     </motion.h3>
 
                     {/* Description - appears on hover */}
-                    <p className="text-gray-400 text-sm md:text-base max-w-2xl opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                    <p className="text-gray-400 text-xs sm:text-sm md:text-base max-w-2xl line-clamp-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 hidden sm:block">
                         {project.description}
                     </p>
 
                     {/* Year and arrow */}
-                    <div className="flex items-center justify-between mt-6">
+                    <div className="flex items-center justify-between mt-3 sm:mt-6">
                         <span className="text-white/30 font-mono text-sm">{project.year}</span>
                         <div
                             className="w-12 h-12 rounded-full flex items-center justify-center border border-white/20 group-hover:bg-white group-hover:border-white transition-all duration-300"

@@ -300,15 +300,7 @@ const YearSection = ({ experience, index, onProjectClick }) => {
                         {/* Gradient overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                        {/* Status badge */}
-                        {experience.type === "Current" && (
-                            <div className="absolute top-6 right-6 z-20">
-                                <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-xs rounded-full flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                                    Current
-                                </span>
-                            </div>
-                        )}
+
 
                         {/* Content */}
                         <div className="relative z-10 space-y-6">
@@ -317,9 +309,19 @@ const YearSection = ({ experience, index, onProjectClick }) => {
                                 <h3 className="text-2xl md:text-4xl font-display font-bold text-white">
                                     {experience.title}
                                 </h3>
-                                <p className="text-xl md:text-2xl text-white/60 font-semibold">
-                                    {experience.company}
-                                </p>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <p className="text-xl md:text-2xl text-white/60 font-semibold">
+                                        {experience.company}
+                                    </p>
+                                    {/* Mobile-friendly inline logos */}
+                                    {experience.logos && (
+                                        <div className="flex items-center gap-2">
+                                            {experience.logos.map((logo, i) => (
+                                                <img key={i} src={logo} alt="Logo" className="w-12 h-12 md:w-14 md:h-14 object-contain" />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Meta info */}
@@ -370,10 +372,10 @@ const YearSection = ({ experience, index, onProjectClick }) => {
                             </div>
                         </div>
 
-                        {/* Decorative logos */}
-                        <div className="absolute top-6 right-6 flex items-center gap-4">
+                        {/* Decorative background logos - visible only on xl screens as subtle background */}
+                        <div className="absolute top-6 right-6 hidden xl:flex items-center gap-4 opacity-20 pointer-events-none">
                             {experience.logos && experience.logos.map((logo, i) => (
-                                <img key={i} src={logo} alt="Logo" className="w-36 h-36 md:w-48 md:h-48 object-contain mix-blend-lighten" />
+                                <img key={i} src={logo} alt="" className="w-32 h-32 object-contain mix-blend-lighten" />
                             ))}
                         </div>
                     </div>
