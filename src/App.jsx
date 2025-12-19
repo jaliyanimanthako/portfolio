@@ -6,7 +6,9 @@ import Hero from './components/Hero';
 import Projects from './components/Projects';
 import Services from './components/Services';
 import Experience from './components/Experience';
-import Metrics from './components/Metrics';
+import Education from './components/Education';
+import Awards from './components/Awards';
+import Volunteering from './components/Volunteering';
 import Testimonials from './components/Testimonials';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -30,7 +32,9 @@ const HomePage = () => (
       <Projects />
       <Marquee />
       <Services />
-      <Metrics />
+      <Education />
+      <Awards />
+      <Volunteering />
       <Testimonials />
       <Contact />
     </main>

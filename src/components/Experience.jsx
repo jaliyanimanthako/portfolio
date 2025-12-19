@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { MapPin, Calendar, X, ArrowUpRight } from 'lucide-react';
+import { MapPin, Calendar, X, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Lab projects for 2025 experience
 const labProjects = [
@@ -68,7 +68,7 @@ const experiences = [
         type: "Current",
         description: [],
         tech: ['TinyML', 'MediaPipe', 'llama.cpp', 'LangGraph', 'Edge AI', 'Python'],
-        logos: ['/NUS.png', '/ah.webp'],
+        logos: ['/NUS.webp', '/ah.webp'],
         projects: labProjects
     },
     {
@@ -304,24 +304,24 @@ const YearSection = ({ experience, index, onProjectClick }) => {
 
                         {/* Content */}
                         <div className="relative z-10 space-y-6">
-                            {/* Header */}
-                            <div className="space-y-3">
-                                <h3 className="text-2xl md:text-4xl font-display font-bold text-white">
-                                    {experience.title}
-                                </h3>
-                                <div className="flex flex-wrap items-center gap-3">
+                            {/* Header with Logos */}
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="space-y-2 flex-1">
+                                    <h3 className="text-2xl md:text-4xl font-display font-bold text-white">
+                                        {experience.title}
+                                    </h3>
                                     <p className="text-xl md:text-2xl text-white/60 font-semibold">
                                         {experience.company}
                                     </p>
-                                    {/* Mobile-friendly inline logos */}
-                                    {experience.logos && (
-                                        <div className="flex items-center gap-2">
-                                            {experience.logos.map((logo, i) => (
-                                                <img key={i} src={logo} alt="Logo" className="w-12 h-12 md:w-14 md:h-14 object-contain" />
-                                            ))}
-                                        </div>
-                                    )}
                                 </div>
+                                {/* Logos - Positioned at top right */}
+                                {experience.logos && (
+                                    <div className="flex items-center gap-4 flex-shrink-0">
+                                        {experience.logos.map((logo, i) => (
+                                            <img key={i} src={logo} alt="Logo" className="w-20 h-20 md:w-32 md:h-32 object-contain" />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Meta info */}
@@ -372,16 +372,180 @@ const YearSection = ({ experience, index, onProjectClick }) => {
                             </div>
                         </div>
 
-                        {/* Decorative background logos - visible only on xl screens as subtle background */}
-                        <div className="absolute top-6 right-6 hidden xl:flex items-center gap-4 opacity-20 pointer-events-none">
-                            {experience.logos && experience.logos.map((logo, i) => (
-                                <img key={i} src={logo} alt="" className="w-32 h-32 object-contain mix-blend-lighten" />
-                            ))}
-                        </div>
+
                     </div>
                 </div>
             </motion.div>
         </div>
+    );
+};
+
+// Interactive Gallery with auto-scroll and manual controls
+const InteractiveGallery = ({ photos }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
+    const [dragStartX, setDragStartX] = useState(0);
+
+    // Auto-scroll effect
+    useEffect(() => {
+        if (isPaused) return;
+
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % photos.length);
+        }, 4000); // Change slide every 4 seconds
+
+        return () => clearInterval(interval);
+    }, [isPaused, photos.length]);
+
+    const goToSlide = (index) => {
+        setCurrentIndex(index);
+        setIsPaused(true);
+        setTimeout(() => setIsPaused(false), 8000);
+    };
+
+    const goToPrevious = () => {
+        setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
+        setIsPaused(true);
+        setTimeout(() => setIsPaused(false), 8000);
+    };
+
+    const goToNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % photos.length);
+        setIsPaused(true);
+        setTimeout(() => setIsPaused(false), 8000);
+    };
+
+    const handleDragStart = (e) => {
+        const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        setDragStartX(clientX);
+    };
+
+    const handleDragEnd = (e) => {
+        const clientX = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+        const diff = dragStartX - clientX;
+
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                goToNext();
+            } else {
+                goToPrevious();
+            }
+        }
+    };
+
+    // Get indices for visible slides (previous, current, next) with wrapping
+    const getSlideIndex = (offset) => {
+        return (currentIndex + offset + photos.length) % photos.length;
+    };
+
+    const prevIndex = getSlideIndex(-1);
+    const nextIndex = getSlideIndex(1);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
+            {/* Main Carousel Container */}
+            <div
+                className="relative h-[220px] md:h-[320px] overflow-hidden rounded-2xl"
+                onMouseDown={handleDragStart}
+                onMouseUp={handleDragEnd}
+                onTouchStart={handleDragStart}
+                onTouchEnd={handleDragEnd}
+            >
+                {/* 3-slide view: Previous, Current, Next */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                    {/* Previous Image (Left side, low opacity) */}
+                    <motion.div
+                        key={`prev-${prevIndex}`}
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 0.3, x: 0 }}
+                        transition={{ duration: 0.4 }}
+                        className="absolute left-0 h-full w-1/4 flex items-center justify-end pr-2"
+                    >
+                        <img
+                            src={photos[prevIndex]}
+                            alt={`Gallery ${prevIndex + 1}`}
+                            className="h-[70%] w-auto object-contain rounded-2xl opacity-40 scale-90"
+                            draggable={false}
+                        />
+                    </motion.div>
+
+                    {/* Current Image (Center, full opacity) */}
+                    <motion.div
+                        key={`current-${currentIndex}`}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4 }}
+                        className="relative z-10 h-full w-1/2 flex items-center justify-center cursor-grab active:cursor-grabbing"
+                    >
+                        <img
+                            src={photos[currentIndex]}
+                            alt={`Gallery ${currentIndex + 1}`}
+                            className="h-full w-auto max-w-full object-contain rounded-2xl shadow-2xl"
+                            draggable={false}
+                        />
+                    </motion.div>
+
+                    {/* Next Image (Right side, low opacity) */}
+                    <motion.div
+                        key={`next-${nextIndex}`}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 0.3, x: 0 }}
+                        transition={{ duration: 0.4 }}
+                        className="absolute right-0 h-full w-1/4 flex items-center justify-start pl-2"
+                    >
+                        <img
+                            src={photos[nextIndex]}
+                            alt={`Gallery ${nextIndex + 1}`}
+                            className="h-[70%] w-auto object-contain rounded-2xl opacity-40 scale-90"
+                            draggable={false}
+                        />
+                    </motion.div>
+                </div>
+
+                {/* Gradient overlays */}
+                <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent pointer-events-none z-20" />
+                <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent pointer-events-none z-20" />
+
+                {/* Navigation Arrows */}
+                <button
+                    onClick={goToPrevious}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-cyan-500 border border-white/20 hover:border-cyan-500 flex items-center justify-center transition-all duration-300 group"
+                    aria-label="Previous slide"
+                >
+                    <ChevronLeft size={20} className="text-white group-hover:text-white" />
+                </button>
+                <button
+                    onClick={goToNext}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-cyan-500 border border-white/20 hover:border-cyan-500 flex items-center justify-center transition-all duration-300 group"
+                    aria-label="Next slide"
+                >
+                    <ChevronRight size={20} className="text-white group-hover:text-white" />
+                </button>
+            </div>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center items-center gap-2 mt-4">
+                {photos.map((_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => goToSlide(i)}
+                        className={`transition-all duration-300 rounded-full ${i === currentIndex
+                            ? 'w-8 h-2 bg-cyan-400'
+                            : 'w-2 h-2 bg-white/30 hover:bg-white/50'
+                            }`}
+                        aria-label={`Go to slide ${i + 1}`}
+                    />
+                ))}
+            </div>
+        </motion.div>
     );
 };
 
@@ -421,38 +585,8 @@ const Experience = () => {
                                 </h2>
                             </motion.div>
 
-                            {/* Right: Auto-sliding Photo Gallery */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8 }}
-                                className="relative h-[200px] md:h-[300px] overflow-hidden"
-                            >
-                                <div
-                                    className="flex gap-6 items-center h-full animate-scroll-seamless"
-                                    style={{
-                                        width: 'max-content',
-                                    }}
-                                >
-                                    {/* Triple the images for truly seamless looping */}
-                                    {[...galleryPhotos, ...galleryPhotos, ...galleryPhotos].map((photo, i) => (
-                                        <img
-                                            key={i}
-                                            src={photo}
-                                            alt={`Gallery ${(i % galleryPhotos.length) + 1}`}
-                                            className="h-[180px] md:h-[280px] w-auto flex-shrink-0 rounded-xl object-contain"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none';
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-
-                                {/* Gradient fade overlays on edges */}
-                                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent pointer-events-none z-10" />
-                                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent pointer-events-none z-10" />
-                            </motion.div>
+                            {/* Right: Interactive Photo Gallery Carousel */}
+                            <InteractiveGallery photos={galleryPhotos} />
                         </div>
                     </div>
 

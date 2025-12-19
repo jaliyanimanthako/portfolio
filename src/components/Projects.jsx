@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, Github, X, ExternalLink } from 'lucide-react';
 
@@ -350,15 +351,13 @@ const Projects = () => {
                         transition={{ duration: 0.6, delay: 0.3 }}
                         className="mt-20 flex justify-center"
                     >
-                        <a
-                            href="https://github.com/jaliyanimanthako"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        <Link
+                            to="/projects"
                             className="group inline-flex items-center gap-4 px-10 py-5 border border-white/20 rounded-full text-white font-display text-lg uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-500"
                         >
                             <span>Explore All Projects</span>
                             <ArrowUpRight size={20} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </a>
+                        </Link>
                     </motion.div>
                 </div>
             </section>
