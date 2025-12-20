@@ -18,10 +18,19 @@ const volunteeringData = [
         color: "from-cyan-500 to-blue-600"
     },
     {
+        role: "Workshop Mentor",
+        organization: "ICE 2025 - AI Innovation Workshop",
+        period: "2025",
+        images: ["/ice1.webp", "/ice2.webp", "/ice3.webp"],
+        link: "https://ice2025.com/",
+        description: "Mentored 30 participants in Sri Lanka's premier AI innovation workshop, guiding teams to build breakthrough prototypes within three days.",
+        color: "from-violet-500 to-purple-600"
+    },
+    {
         role: "Department Facilitator",
         organization: "EXMO 2023, University of Moratuwa",
         period: "Jul 2023",
-        image: "/exmo.webp",
+        hideImage: true,
         description: "Contributed to the successful execution of the University of Moratuwa's flagship engineering exhibition, showcasing innovative student projects and promoting technological awareness.",
         color: "from-purple-500 to-indigo-600"
     },
@@ -29,19 +38,37 @@ const volunteeringData = [
         role: "Committee Member",
         organization: "Rotaract Club, University of Moratuwa",
         period: "Dec 2022",
-        image: "/rotaract.webp",
+        hideImage: true,
         description: "Involved in organizing several events with the Rotaract Club. Additionally, worked as a video editor for events such as Data Storm, El Talento, and Rota Spark.",
         color: "from-orange-500 to-red-500"
     },
     {
-        role: "Troop Leader",
+        role: "President Scout Awardee",
         organization: "Scout Troop, Bandaranayake College",
-        period: "2018",
-        image: "/scout.webp",
-        description: "Led a troop of over 600 scouts, organizing national-level events including an all-island hiking competition with multiple championship wins. Played a key role in centenary celebration projects and was awarded the President Scout Award.",
+        period: "2008 – 2019",
+        images: ["/sct.webp", "/sct1.webp", "/sct2.webp", "/sct3.webp"],
+        imagePositions: ["center 30%", "center 30%", "center 30%", "center 70%"],
+        hasTimeline: true,
+        timeline: [
+            { role: "President Scout Award", period: "2019" },
+            { role: "Troop Leader", period: "2018 – 2019" },
+            { role: "Senior Scout", period: "2015 – 2017" },
+            { role: "Junior Scout", period: "2011 – 2015" },
+            { role: "Cub Scout", period: "2008 – 2010" }
+        ],
+        description: "Led a troop of over 600 scouts, organizing national-level events including an all-island hiking competition with multiple championship wins. Played a key role in centenary celebration projects.",
         color: "from-emerald-500 to-teal-600"
+    },
+    {
+        role: "Program Host",
+        organization: "Leadership & Personality Development Program, Kotugoda Sri Rahula College",
+        period: "Nov 2023",
+        images: ["/programme.webp", "/programm1.webp"],
+        description: "Collaborated with Scout Master Rasanga Rupasinghe to lead a transformative 'Beyond Boundaries' program for 50+ students, facilitating discussions on balancing academics with extracurriculars and personal development strategies.",
+        color: "from-amber-500 to-yellow-600"
     }
 ];
+
 
 const VolunteerCard = ({ volunteer, index }) => {
     const cardRef = useRef(null);
@@ -58,10 +85,14 @@ const VolunteerCard = ({ volunteer, index }) => {
         }
     }, [volunteer.images]);
 
-    // Get current image source
+    // Get current image source and position
     const imageSrc = volunteer.images
         ? volunteer.images[currentImageIndex]
         : volunteer.image;
+
+    const imagePosition = volunteer.imagePositions
+        ? volunteer.imagePositions[currentImageIndex]
+        : 'center 30%';
 
     return (
         <motion.div
@@ -72,48 +103,62 @@ const VolunteerCard = ({ volunteer, index }) => {
             className="group relative"
         >
             <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 h-full flex flex-col">
-                {/* Image at Top */}
-                <div className="relative h-80 overflow-hidden">
-                    {/* Fallback gradient */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${volunteer.color} flex items-center justify-center`}>
-                        <Users size={64} className="text-white/30" />
-                    </div>
-                    {/* Main image with crossfade dissolve transition */}
-                    <AnimatePresence>
-                        <motion.img
-                            key={currentImageIndex}
-                            src={imageSrc}
-                            alt={volunteer.organization}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 1, ease: "easeInOut" }}
-                            className="absolute inset-0 z-10 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            style={{ objectPosition: 'center 70%' }}
-                            onError={(e) => {
-                                e.target.style.display = 'none';
-                            }}
-                        />
-                    </AnimatePresence>
+                {/* Image at Top - conditionally rendered */}
+                {!volunteer.hideImage && (
+                    <div className="relative h-80 overflow-hidden">
+                        {/* Fallback gradient */}
+                        <div className={`absolute inset-0 bg-gradient-to-br ${volunteer.color} flex items-center justify-center`}>
+                            <Users size={64} className="text-white/30" />
+                        </div>
+                        {/* Main image with crossfade dissolve transition */}
+                        <AnimatePresence>
+                            <motion.img
+                                key={currentImageIndex}
+                                src={imageSrc}
+                                alt={volunteer.organization}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 1, ease: "easeInOut" }}
+                                className="absolute inset-0 z-10 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                style={{ objectPosition: imagePosition }}
+                                onError={(e) => {
+                                    e.target.style.display = 'none';
+                                }}
+                            />
+                        </AnimatePresence>
 
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-20" />
 
-                    {/* Period badge */}
-                    <div className="absolute top-4 right-4 z-30">
-                        <span className="px-3 py-1 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full text-sm text-white font-medium">
-                            {volunteer.period}
-                        </span>
+                        {/* Period badge */}
+                        <div className="absolute top-4 right-4 z-30">
+                            <span className="px-3 py-1 bg-black/50 backdrop-blur-sm border border-white/20 rounded-full text-sm text-white font-medium">
+                                {volunteer.period}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Content */}
                 <div className="relative z-10 p-6 flex-1 flex flex-col">
                     {/* Organization */}
                     <p className="text-white/60 text-sm mb-3 flex items-center gap-2">
                         <Users size={14} className="text-white/40" />
-                        {volunteer.organization}
+                        {volunteer.link ? (
+                            <a
+                                href={volunteer.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:text-cyan-400 transition-colors duration-300 underline underline-offset-2"
+                            >
+                                {volunteer.organization}
+                            </a>
+                        ) : (
+                            volunteer.organization
+                        )}
                     </p>
+
 
                     {/* Timeline tree if hasTimeline */}
                     {volunteer.hasTimeline && volunteer.timeline ? (
