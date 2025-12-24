@@ -267,6 +267,14 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
 };
 
 const ProjectCard = ({ project, index, onClick }) => {
+    // Handle click - if has github, don't open modal on card body click
+    const handleCardClick = (e) => {
+        // Only open modal if no github link
+        if (!project.github) {
+            onClick();
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -274,8 +282,8 @@ const ProjectCard = ({ project, index, onClick }) => {
             viewport={{ once: true, margin: "-30px" }}
             transition={{ duration: 0.5, delay: index * 0.03, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ y: -5 }}
-            onClick={onClick}
-            className="group relative bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 cursor-pointer"
+            onClick={handleCardClick}
+            className={`group relative bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 ${!project.github ? 'cursor-pointer' : ''}`}
         >
             <div className="p-5 space-y-3">
                 <div className="flex justify-between items-start gap-2">
@@ -310,18 +318,28 @@ const ProjectCard = ({ project, index, onClick }) => {
                         <span className="px-2 py-1 text-xs rounded-full bg-white/5 text-gray-600">+{project.tech.length - 3}</span>
                     )}
                 </div>
-
-                {project.github && (
-                    <div className="inline-flex items-center gap-1.5 text-gray-500 text-sm pt-2">
-                        <Github size={14} />
-                        <span>GitHub</span>
-                    </div>
-                )}
             </div>
 
-            {/* Arrow indicator */}
-            <div className="absolute bottom-4 right-4 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <ArrowUpRight size={14} className="text-white/50" />
+            {/* Action button - GitHub link or Arrow */}
+            <div className="absolute bottom-4 right-4">
+                {project.github ? (
+                    <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:border-white transition-all duration-300 group/btn"
+                    >
+                        <Github size={18} className="text-white/50 group-hover/btn:text-black transition-colors duration-300" />
+                    </a>
+                ) : (
+                    <div
+                        onClick={onClick}
+                        className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer hover:bg-white hover:border-white"
+                    >
+                        <ArrowUpRight size={14} className="text-white/50 group-hover:text-black transition-colors" />
+                    </div>
+                )}
             </div>
 
             <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none`} />

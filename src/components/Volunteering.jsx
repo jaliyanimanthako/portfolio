@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { Users, Calendar, MapPin } from 'lucide-react';
+import { Users, Calendar, MapPin, ArrowUpRight } from 'lucide-react';
 
 const volunteeringData = [
     {
@@ -27,6 +27,28 @@ const volunteeringData = [
         color: "from-violet-500 to-purple-600"
     },
     {
+        role: "President Scout Awardee",
+        organization: "Scout Troop, Bandaranayake College",
+        period: "2008 – 2019",
+        images: ["/sct.webp", "/sct1.webp", "/sct2.webp", "/sct3.webp"],
+        imagePositions: ["center 30%", "center 30%", "center 30%", "center 70%"],
+        hasTimeline: true,
+        timeline: [
+            { role: "President Scout Award", period: "2019" },
+            { role: "Troop Leader", period: "2018 – 2019" }
+        ],
+        description: "Led a troop of over 600 scouts, organizing national-level events including an all-island hiking competition with multiple championship wins. Played a key role in centenary celebration projects.",
+        color: "from-emerald-500 to-teal-600"
+    },
+    {
+        role: "Program Host",
+        organization: "Leadership & Personality Development Program, Kotugoda Sri Rahula College",
+        period: "Nov 2023",
+        images: ["/programme.webp", "/programm1.webp"],
+        description: "Collaborated with Scout Master Rasanga Rupasinghe to lead a transformative 'Beyond Boundaries' program for 50+ students, facilitating discussions on balancing academics with extracurriculars and personal development strategies.",
+        color: "from-amber-500 to-yellow-600"
+    },
+    {
         role: "Department Facilitator",
         organization: "EXMO 2023, University of Moratuwa",
         period: "Jul 2023",
@@ -41,31 +63,6 @@ const volunteeringData = [
         hideImage: true,
         description: "Involved in organizing several events with the Rotaract Club. Additionally, worked as a video editor for events such as Data Storm, El Talento, and Rota Spark.",
         color: "from-orange-500 to-red-500"
-    },
-    {
-        role: "President Scout Awardee",
-        organization: "Scout Troop, Bandaranayake College",
-        period: "2008 – 2019",
-        images: ["/sct.webp", "/sct1.webp", "/sct2.webp", "/sct3.webp"],
-        imagePositions: ["center 30%", "center 30%", "center 30%", "center 70%"],
-        hasTimeline: true,
-        timeline: [
-            { role: "President Scout Award", period: "2019" },
-            { role: "Troop Leader", period: "2018 – 2019" },
-            { role: "Senior Scout", period: "2015 – 2017" },
-            { role: "Junior Scout", period: "2011 – 2015" },
-            { role: "Cub Scout", period: "2008 – 2010" }
-        ],
-        description: "Led a troop of over 600 scouts, organizing national-level events including an all-island hiking competition with multiple championship wins. Played a key role in centenary celebration projects.",
-        color: "from-emerald-500 to-teal-600"
-    },
-    {
-        role: "Program Host",
-        organization: "Leadership & Personality Development Program, Kotugoda Sri Rahula College",
-        period: "Nov 2023",
-        images: ["/programme.webp", "/programm1.webp"],
-        description: "Collaborated with Scout Master Rasanga Rupasinghe to lead a transformative 'Beyond Boundaries' program for 50+ students, facilitating discussions on balancing academics with extracurriculars and personal development strategies.",
-        color: "from-amber-500 to-yellow-600"
     }
 ];
 
@@ -186,9 +183,22 @@ const VolunteerCard = ({ volunteer, index }) => {
                         </div>
                     ) : (
                         /* Regular role display */
-                        <h3 className="text-xl md:text-2xl font-display font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors duration-300">
-                            {volunteer.role}
-                        </h3>
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                            <h3 className="text-xl md:text-2xl font-display font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
+                                {volunteer.role}
+                            </h3>
+                            {/* Link button - only show if link exists */}
+                            {volunteer.link && (
+                                <a
+                                    href={volunteer.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center border border-white/20 hover:bg-white hover:border-white transition-all duration-300 group/btn"
+                                >
+                                    <ArrowUpRight size={20} className="text-white/50 group-hover/btn:text-black group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-all duration-300" />
+                                </a>
+                            )}
+                        </div>
                     )}
 
                     {/* Description */}

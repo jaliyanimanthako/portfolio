@@ -37,11 +37,10 @@ const Contact = () => {
                             href="mailto:jaliya@example.com"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="group relative px-10 py-5 bg-white text-black rounded-full font-bold uppercase tracking-wider overflow-hidden flex items-center gap-3 text-lg"
+                            className="group relative px-10 py-5 bg-gradient-to-r from-cyan-400 to-blue-600 text-white rounded-full font-bold uppercase tracking-wider overflow-hidden flex items-center gap-3 text-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-shadow duration-300"
                         >
                             <Mail size={24} />
                             <span>Send Email</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-600 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 -z-10"></div>
                         </motion.a>
 
                         <motion.a
@@ -49,7 +48,7 @@ const Contact = () => {
                             target="_blank"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="px-10 py-5 border-2 border-white/20 text-white rounded-full font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-all duration-300 flex items-center gap-3 text-lg"
+                            className="group relative px-10 py-5 bg-gradient-to-r from-cyan-400 to-blue-600 text-white rounded-full font-bold uppercase tracking-wider overflow-hidden flex items-center gap-3 text-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-shadow duration-300"
                         >
                             <Linkedin size={24} />
                             <span>LinkedIn</span>

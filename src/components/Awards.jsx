@@ -10,6 +10,7 @@ const awardsData = [
         year: "2025",
         image: "/ai.webp",
         imagePosition: "center top",
+        mobileImagePosition: "left top",
         icon: Star,
         color: "from-blue-600 to-indigo-700"
     },
@@ -83,10 +84,21 @@ const AwardCard = ({ award, index }) => {
                         <Icon size={64} className="text-white/30" />
                     </div>
                     {/* Main image - on top */}
+                    {/* Mobile image (hidden on md+) */}
                     <img
                         src={award.image}
                         alt={award.title}
-                        className="relative z-10 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="relative z-10 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 md:hidden"
+                        style={{ objectPosition: award.mobileImagePosition || award.imagePosition || 'center 70%' }}
+                        onError={(e) => {
+                            e.target.style.display = 'none';
+                        }}
+                    />
+                    {/* Desktop image (hidden on mobile) */}
+                    <img
+                        src={award.image}
+                        alt={award.title}
+                        className="relative z-10 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 hidden md:block"
                         style={{ objectPosition: award.imagePosition || 'center 70%' }}
                         onError={(e) => {
                             e.target.style.display = 'none';
