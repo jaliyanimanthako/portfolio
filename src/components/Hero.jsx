@@ -30,18 +30,19 @@ const Hero = () => {
                 <div className="absolute bottom-[-30%] right-[-20%] w-[100vw] h-[100vw] bg-blue-900/20 rounded-full blur-[200px] animate-pulse"></div>
             </div>
 
-            {/* Portrait Image */}
+            {/* Portrait Image - Renders immediately, no animation delay */}
             <motion.div
                 className="absolute inset-0 z-[1] flex items-center justify-end pointer-events-none"
                 style={{ y: portraitY, scale: portraitScale }}
-                initial={{ opacity: 0.6 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.2, delay: 0.3 }}
+                initial={false}
             >
                 <div className="relative w-full md:w-[120%] h-full md:translate-x-[25%]">
                     <img
                         src="/hero-portrait.webp"
                         alt="Jaliya Nimantha"
+                        fetchPriority="high"
+                        loading="eager"
+                        decoding="sync"
                         className="w-full h-full object-cover object-top opacity-50"
                     />
                     {/* Gradient overlay */}
@@ -110,7 +111,7 @@ const Hero = () => {
                     >
                         {/* Download Resume Button */}
                         <a
-                            href="/resume.pdf"
+                            href="/CV.pdf"
                             download
                             className="inline-flex items-center gap-3 px-8 py-4 border-2 border-white/30 text-white font-display font-bold uppercase tracking-wide text-sm rounded-full hover:bg-white hover:text-black hover:border-white transition-all duration-300 group"
                         >
