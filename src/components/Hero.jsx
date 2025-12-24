@@ -57,6 +57,7 @@ const Hero = () => {
                     variants={container}
                     initial="hidden"
                     animate="show"
+                    className="mt-40 md:mt-0"
                 >
                     {/* Identity Labels - Top */}
                     <motion.div
