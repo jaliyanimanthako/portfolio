@@ -90,6 +90,20 @@ const experiences = [
 
 // Project Detail Modal
 const ProjectDetailModal = ({ project, isOpen, onClose }) => {
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    // Stop touch and wheel events from propagating
+    const handleTouchMove = (e) => e.stopPropagation();
+    const handleWheel = (e) => e.stopPropagation();
+
     if (!project) return null;
 
     return (
@@ -122,7 +136,12 @@ const ProjectDetailModal = ({ project, isOpen, onClose }) => {
                             <X size={24} className="text-white group-hover:rotate-90 transition-transform duration-300" />
                         </button>
 
-                        <div className="h-full overflow-y-auto p-8 md:p-12 lg:p-16">
+                        <div
+                            className="h-full overflow-y-scroll p-8 md:p-12 lg:p-16"
+                            onTouchMove={handleTouchMove}
+                            onWheel={handleWheel}
+                            style={{ WebkitOverflowScrolling: 'touch' }}
+                        >
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                                 {/* Left Column: Content */}
                                 <div>

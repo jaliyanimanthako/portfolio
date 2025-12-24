@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, Github, X, ExternalLink } from 'lucide-react';
@@ -89,6 +89,21 @@ const featuredProjects = [
 
 // Project Modal Component
 const ProjectModal = ({ project, isOpen, onClose }) => {
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
+    // Stop touch events from propagating to backdrop
+    const handleContentTouchMove = (e) => {
+        e.stopPropagation();
+    };
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -107,7 +122,7 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 50 }}
                         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        className="fixed inset-4 md:inset-10 lg:inset-16 z-[201] overflow-hidden rounded-2xl bg-black border border-white/10"
+                        className="fixed inset-4 md:inset-10 lg:inset-16 z-[201] rounded-2xl bg-black border border-white/10 overflow-hidden"
                     >
                         <button
                             onClick={onClose}
@@ -116,7 +131,12 @@ const ProjectModal = ({ project, isOpen, onClose }) => {
                             <X size={24} className="text-white group-hover:rotate-90 transition-transform duration-300" />
                         </button>
 
-                        <div className="h-full overflow-y-auto">
+                        <div
+                            className="h-full overflow-y-scroll"
+                            onTouchMove={handleContentTouchMove}
+                            onWheel={(e) => e.stopPropagation()}
+                            style={{ WebkitOverflowScrolling: 'touch' }}
+                        >
                             {/* Hero Section */}
                             <div className={`relative h-[40vh] bg-gradient-to-br ${project.bgGradient} flex items-end`}>
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
