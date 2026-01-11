@@ -1,0 +1,24 @@
+# Robots.txt for jaliyanimantha.com
+# Allow all search engines and AI crawlers
+
+User-agent: *
+Allow: /
+
+# AI Model Crawlers - Explicitly Allowed
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Sitemap location
+Sitemap: https://jaliyanimantha.com/sitemap.xml
