@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="JN logo">
+  <rect width="64" height="64" rx="10" fill="#101010"/>
+  <circle cx="19" cy="15" r="4.5" fill="#edebe6"/>
+  <path fill="#edebe6" d="M14.5 23h9v25.2c0 8-4.5 11.8-12.1 11.8-1.8 0-3.4-.2-4.9-.7l1.4-7a9 9 0 0 0 2.6.4c2.8 0 4-1.4 4-4.9V23Z"/>
+  <path fill="#edebe6" d="M28 23h8.7v4.8c2.2-3.7 5.5-5.6 9.8-5.6 7 0 11 4.5 11 12.2V51h-9V36c0-4.2-1.7-6.3-5.3-6.3-3.8 0-6.2 2.7-6.2 7.3v14h-9V23Z"/>
+  <circle cx="53" cy="19" r="7.5" fill="#b481f8"/>
+  <circle cx="53" cy="19" r="2.6" fill="#101010"/>
+</svg>

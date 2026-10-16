@@ -1,0 +1,103 @@
+.ill {
+  --ill-ink: #191919;
+  --ill-paper: #fff;
+  --ill-accent: #b481f8;
+  --ill-deep: #7a4fc0;
+  --ill-soft: #ece3fb;
+  --ill-pants: #2b2733;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+/* Only animated pieces use their own box; positioned groups keep SVG's user space. */
+.ill-twinkle, .ill-eyes, .ill-breathe, .ill-bar, .ill-pop, .ill-spark, .ill-heart, .ill-nod, .ill-node-pop, .ill-phone-msg { transform-box: fill-box; }
+.ill .o { fill: var(--ill-paper); stroke: var(--ill-ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.ill .p { fill: var(--ill-accent); stroke: var(--ill-ink); stroke-width: 3; stroke-linejoin: round; }
+.ill .k { fill: var(--ill-ink); }
+.ill .line { fill: none; stroke: var(--ill-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ill .accent-line { fill: none; stroke: var(--ill-accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ill .deep-line { fill: none; stroke: var(--ill-deep); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ill .ill-limb path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ill .ill-mouth { fill: none; stroke: var(--ill-paper); stroke-width: 2.2; stroke-linecap: round; }
+.ill .ill-shine { fill: none; stroke: #ffffff70; stroke-width: 3; stroke-linecap: round; }
+.ill .ill-blob { fill: var(--ill-soft); }
+.ill text { font: 700 13px/1 Inter, Helvetica, Arial, sans-serif; fill: var(--ill-ink); letter-spacing: .04em; }
+
+/* ---------- shared motion ---------- */
+.ill-float { animation: ill-float 6s ease-in-out infinite alternate; }
+.ill-bob { animation: ill-bob 4s ease-in-out infinite alternate; animation-delay: var(--d, 0s); }
+.ill-twinkle { transform-origin: center; animation: ill-twinkle 2.6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.ill-eyes { transform-origin: center; animation: ill-blink 5s infinite; }
+.ill-breathe { transform-origin: center; animation: ill-breathe 8s ease-in-out infinite alternate; }
+
+@keyframes ill-float {
+  from { transform: translateY(6px) rotate(-1deg); }
+  to { transform: translateY(-14px) rotate(1.5deg); }
+}
+@keyframes ill-bob { from { transform: translateY(5px); } to { transform: translateY(-7px); } }
+@keyframes ill-twinkle { 0%, 100% { transform: scale(.55); opacity: .4; } 50% { transform: scale(1.1); opacity: 1; } }
+@keyframes ill-blink { 0%, 46%, 50%, 100% { transform: scaleY(1); } 48% { transform: scaleY(.1); } }
+@keyframes ill-breathe { from { transform: scale(.98); } to { transform: scale(1.02); } }
+
+/* ---------- hero: floating researcher ---------- */
+.ill-phone-msg { transform-origin: left center; animation: ill-msg 4.8s ease-out infinite; animation-delay: var(--d); }
+@keyframes ill-msg { 0%, 8% { transform: scaleX(0); } 20%, 85% { transform: scaleX(1); } 95%, 100% { transform: scaleX(0); } }
+.ill-toggle-knob { animation: ill-toggle 4s cubic-bezier(.7, 0, .3, 1) infinite; }
+.ill-toggle-track { animation: ill-toggle-track 4s cubic-bezier(.7, 0, .3, 1) infinite; }
+@keyframes ill-toggle { 0%, 40% { transform: translateX(0); } 50%, 90% { transform: translateX(24px); } 100% { transform: translateX(0); } }
+@keyframes ill-toggle-track { 0%, 40% { fill: var(--ill-paper); } 50%, 90% { fill: var(--ill-accent); } 100% { fill: var(--ill-paper); } }
+.ill-idea { animation: ill-idea 2.4s ease-in-out infinite; }
+@keyframes ill-idea { 0%, 100% { opacity: 0; } 30%, 70% { opacity: 1; } }
+
+/* ---------- traces that draw or flow ---------- */
+.ill-draw { stroke-dasharray: 100; animation: ill-draw 3.2s cubic-bezier(.6, 0, .3, 1) infinite; animation-delay: var(--d, 0s); }
+@keyframes ill-draw { 0% { stroke-dashoffset: 100; } 45%, 80% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -100; } }
+.ill-scroll { animation: ill-scroll 4s linear infinite; }
+@keyframes ill-scroll { to { transform: translateX(-80px); } }
+.ill-flow { stroke-dasharray: 3 9; animation: ill-flow 1.2s linear infinite; }
+@keyframes ill-flow { to { stroke-dashoffset: -12; } }
+
+/* ---------- research: electrodes and speech ---------- */
+.ill-electrode { animation: ill-electrode 2.5s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes ill-electrode { 0%, 100% { fill: var(--ill-paper); } 30% { fill: var(--ill-accent); } }
+.ill-bar { transform-origin: center; animation: ill-bar .9s ease-in-out infinite alternate; animation-delay: var(--d); }
+@keyframes ill-bar { from { transform: scaleY(.3); } to { transform: scaleY(1); } }
+
+/* ---------- edge AI: chat bubbles ---------- */
+.ill-pop { transform-origin: bottom left; animation: ill-pop 6s cubic-bezier(.3, 1.4, .5, 1) infinite; animation-delay: var(--d); }
+@keyframes ill-pop { 0%, 6% { transform: scale(0); opacity: 0; } 14%, 86% { transform: scale(1); opacity: 1; } 94%, 100% { transform: scale(0); opacity: 0; } }
+.ill-dot { animation: ill-dot 1s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes ill-dot { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-4px); } }
+
+/* ---------- hardware: solder and heartbeat ---------- */
+.ill-spark { transform-origin: center; animation: ill-spark .5s steps(2) infinite; animation-delay: var(--d); }
+@keyframes ill-spark { 0% { opacity: 1; transform: scale(1); } 100% { opacity: .1; transform: scale(.4); } }
+.ill-solder-arm { animation: ill-solder 1.6s ease-in-out infinite alternate; }
+@keyframes ill-solder { from { transform: rotate(-3deg); } to { transform: rotate(2deg); } }
+.ill-led { animation: ill-led 1.2s steps(1) infinite; }
+@keyframes ill-led { 50% { fill: var(--ill-paper); } }
+.ill-heart { transform-origin: center; animation: ill-heart 1.1s ease-in-out infinite; }
+@keyframes ill-heart { 0%, 40%, 100% { transform: scale(1); } 15% { transform: scale(1.25); } 28% { transform: scale(.95); } }
+
+/* ---------- leadership: pointing and nodding ---------- */
+.ill-point { animation: ill-point 2.4s ease-in-out infinite alternate; }
+@keyframes ill-point { from { transform: rotate(-4deg); } to { transform: rotate(3deg); } }
+.ill-nod { transform-origin: bottom center; animation: ill-nod 2.2s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes ill-nod { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-5deg); } 50% { transform: rotate(3deg); } }
+.ill-node-pop { transform-origin: center; animation: ill-node 6s ease-out infinite; animation-delay: var(--d); }
+@keyframes ill-node { 0%, 4% { transform: scale(0); } 12%, 86% { transform: scale(1); } 94%, 100% { transform: scale(0); } }
+.ill-edge-draw { stroke-dasharray: 100; animation: ill-edge 6s ease-out infinite; animation-delay: var(--d); }
+@keyframes ill-edge { 0%, 4% { stroke-dashoffset: 100; } 16%, 86% { stroke-dashoffset: 0; } 94%, 100% { stroke-dashoffset: 100; } }
+
+/* ---------- contact: wave and paper plane ---------- */
+.ill-wave-arm { animation: ill-wave 1.4s ease-in-out infinite; }
+@keyframes ill-wave { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(14deg); } }
+.ill-plane { offset-rotate: auto; offset-anchor: 0 0; animation: ill-plane 7s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes ill-plane { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.ill-trail { stroke-dasharray: 4 8; animation: ill-flow 1.2s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ill *, .ill *::before, .ill *::after { animation: none !important; }
+  .ill .ill-draw, .ill .ill-edge-draw { stroke-dashoffset: 0; }
+}

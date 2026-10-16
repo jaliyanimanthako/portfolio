@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rupee Portfolio Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column, ~760px; plan → engines → outcomes → actions → assumptions */
+*{box-sizing:border-box}
+body{margin:0}
+:root{
+  --bg:#f6f8f7; --surface:#ffffff; --ink:#18302b; --muted:#5b6f6a; --rule:#d9e2df;
+  --teal:#1f6b5c; --gold:#a8791f; --gold-soft:#f3e7cc; --teal-soft:#dcece7; --warn:#9a4a1c;
+  --display:"Source Serif 4", Georgia, serif;
+  --body:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111a18; --surface:#18231f; --ink:#e3ece9; --muted:#9db0aa; --rule:#2c3a36;
+  --teal:#5fb8a3; --gold:#d8a947; --gold-soft:#3a2f17; --teal-soft:#1d3530; --warn:#e08a5a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111a18; --surface:#18231f; --ink:#e3ece9; --muted:#9db0aa; --rule:#2c3a36;
+  --teal:#5fb8a3; --gold:#d8a947; --gold-soft:#3a2f17; --teal-soft:#1d3530; --warn:#e08a5a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--body)}
+.wrap{max-width:780px;margin:0 auto;padding-inline:16px;padding-block:40px 64px;display:flex;flex-direction:column;gap:36px}
+h1,h2{font-family:var(--display);font-weight:650;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:2rem}
+h2{font-size:1.3rem;margin-bottom:12px}
+p{margin:0;max-width:66ch}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header{display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--rule);padding-bottom:24px}
+.lede{color:var(--muted);font-size:1.02rem}
+section{display:flex;flex-direction:column;gap:12px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:.92rem}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 .72rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+tr.hl td{background:var(--teal-soft)}
+.engines{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.engines{grid-template-columns:1fr}}
+.engine{background:var(--surface);border:1px solid var(--rule);border-top:3px solid var(--teal);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.engine.g{border-top-color:var(--gold)}
+.engine h3{margin:0;font:600 1rem var(--body)}
+.engine .big{font:500 1.5rem var(--mono);font-variant-numeric:tabular-nums}
+.engine dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.88rem}
+.engine dt{color:var(--muted)} .engine dd{margin:0;text-align:right;font-family:var(--mono)}
+.bars{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:16px}
+.bar{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;font-size:.88rem}
+@media (max-width:520px){.bar{grid-template-columns:1fr 60px}.bar .lab{grid-column:1/-1}}
+.track{height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--gold);border-radius:3px}
+.bar .v{text-align:right;font-family:var(--mono)}
+.fixes{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.fixes li{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:12px 14px;background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+@media (max-width:520px){.fixes li{grid-template-columns:1fr;gap:4px}}
+.tag{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--warn)}
+.tag.ok{color:var(--teal)}
+.note{font-size:.85rem;color:var(--muted)}
+.callout{background:var(--gold-soft);border-radius:6px;padding:14px 16px}
+footer{border-top:1px solid var(--rule);padding-top:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Plan review · October 2026</span>
+  <h1>Rupee Portfolio Plan, 2026–2031</h1>
+  <p class="lede">Earn in Singapore dollars, build wealth in Sri Lankan rupees. Two engines: a T-bill ladder funded until December 2027, and quarterly gold coins funded until December 2031, which then pay for land near Mirigama. These are corrected figures, with a downside case included.</p>
+</header>
+
+<section>
+  <h2>Monthly cash flow (S$)</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th class="r">2027</th><th class="r">2028–2031</th></tr></thead>
+    <tbody>
+      <tr><td>Salary</td><td class="r num">4,500</td><td class="r num">4,500*</td></tr>
+      <tr><td>Rent, groceries, transport, phone</td><td class="r num">−2,000</td><td class="r num">−2,000</td></tr>
+      <tr><td>Income tax reserve (IRAS, ~S$1,460/yr)</td><td class="r num">−122</td><td class="r num">−122</td></tr>
+      <tr><td>Engine 1: Sri Lanka T-bills (S$4,500 per quarter)</td><td class="r num">−1,500</td><td class="r num">0</td></tr>
+      <tr><td>Engine 2: gold (S$500/month)</td><td class="r num">−500</td><td class="r num">−500</td></tr>
+      <tr class="hl"><td><strong>Left over</strong></td><td class="r num"><strong>378</strong></td><td class="r num"><strong>1,878</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">*If your job continues after 2027, S$1,500 a month becomes unassigned. Decide now where it goes (see actions below), so it doesn't quietly turn into spending.</p>
+</section>
+
+<section>
+  <h2>The two engines</h2>
+  <div class="engines">
+    <div class="engine">
+      <span class="eyebrow">Engine 1 · protection</span>
+      <h3>364-day T-bill ladder</h3>
+      <dl>
+        <dt>Funding</dt><dd>Dec 2026 – Sep 2027</dd>
+        <dt>Tranches</dt><dd>4 × ~Rs 1.10M</dd>
+        <dt>Total in</dt><dd>S$18,000 ≈ Rs 4.41M</dd>
+        <dt>After 2027</dt><dd>auto-roll, no new money</dd>
+      </dl>
+      <span class="eyebrow">Value at Dec 2031</span>
+      <span class="big">Rs 6.1M – 6.6M</span>
+      <p class="note">Gemini's figure was Rs 7.09M. It left out the 10% withholding tax and counted a full 5 years of growth. In today's money this is about Rs 4.9M.</p>
+    </div>
+    <div class="engine g">
+      <span class="eyebrow">Engine 2 · currency hedge → land</span>
+      <h3>One 22K sovereign per quarter</h3>
+      <dl>
+        <dt>Funding</dt><dd>Jan 2027 – Dec 2031</dd>
+        <dt>Quarters</dt><dd>20 × S$1,500</dd>
+        <dt>Total in</dt><dd>S$30,000 ≈ Rs 8.4M</dd>
+        <dt>Coins</dt><dd>~19–26 (price-dependent)</dd>
+      </dl>
+      <span class="eyebrow">Net value at Dec 2031</span>
+      <span class="big">Rs 7.2M – 10.6M</span>
+      <p class="note">This range runs from gold down 30% to gold up 6%/yr in USD, after a 4% dealer spread. When gold is cheap, your S$1,500 buys more coins, and the reverse.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>What the gold buys in Mirigama / Pasyala</h2>
+  <p>Land in this table costs Rs 220k per perch today, rising 8.5% a year to about Rs 336k by end-2031. The perch counts are after about 6.5% in stamp duty, notary and survey costs.</p>
+  <div class="bars" role="img" aria-label="Perches affordable: gold down 30% about 20, gold flat about 25, base case about 30">
+    <div class="bar"><span class="lab">Gold −30% (plan on this)</span><div class="track"><div class="fill" style="width:67%"></div></div><span class="v">~20 P</span></div>
+    <div class="bar"><span class="lab">Gold flat in USD</span><div class="track"><div class="fill" style="width:85%"></div></div><span class="v">~25 P</span></div>
+    <div class="bar"><span class="lab">Base case (+6%/yr)</span><div class="track"><div class="fill" style="width:99%"></div></div><span class="v">~30 P</span></div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Scenario</th><th class="r">Coins</th><th class="r">Net cash</th><th class="r">Perches</th></tr></thead>
+    <tbody>
+      <tr class="hl"><td>Gold falls 30% (USD), LKR −4%/yr</td><td class="r num">~26</td><td class="r num">Rs 7.2M</td><td class="r num">~20</td></tr>
+      <tr><td>Gold flat (USD), LKR −5%/yr</td><td class="r num">~22</td><td class="r num">Rs 9.1M</td><td class="r num">~25</td></tr>
+      <tr><td>Gold +6%/yr (USD), LKR −5%/yr</td><td class="r num">~19</td><td class="r num">Rs 10.6M</td><td class="r num">~30</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p><strong>Plan for 20 perches.</strong> Anything above that is a bonus. If an emergency forces you to sell coins, the plot gets smaller. That trade-off is intended, so keep it in mind.</p></div>
+</section>
+
+<section>
+  <h2>Combined position, December 2031</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Asset</th><th class="r">Low</th><th class="r">High</th></tr></thead>
+    <tbody>
+      <tr><td>T-bill ladder (liquid)</td><td class="r num">Rs 6.1M</td><td class="r num">Rs 6.6M</td></tr>
+      <tr><td>Gold → land</td><td class="r num">Rs 7.2M</td><td class="r num">Rs 10.6M</td></tr>
+      <tr class="hl"><td><strong>Total</strong></td><td class="r num"><strong>Rs 13.3M</strong></td><td class="r num"><strong>Rs 17.2M</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">This is from about S$48,000 (≈ Rs 12.8M) put in, with no debt. If you keep earning after 2027, the money left over each month (S$1,878) adds to this.</p>
+</section>
+
+<section>
+  <h2>Corrections and changes</h2>
+  <ul class="fixes">
+    <li><span class="tag">Fix</span><p><strong>The T-bill discount isn't spare money.</strong> The cash left over after buying a bill at a discount is just uninvested principal. Don't spend it on gold. Roll it into the bill or keep it as your buffer.</p></li>
+    <li><span class="tag">Fix</span><p><strong>Keep the emergency fund in Singapore.</strong> S$4,500 covers about 2 months. Aim for about S$7k by end-2027 by saving half of the S$378 left over each month. From 2028, use the freed S$1,500 a month to bring it to S$10–12k. Coins in Colombo are not your emergency fund.</p></li>
+    <li><span class="tag">Fix</span><p><strong>Model T-bills after tax, at falling rates.</strong> Assume about 8.9% net now, sliding toward about 6.8% net if CBSL cuts rates. After tax and inflation the ladder barely grows in real terms. Its job is protection, not growth.</p></li>
+    <li><span class="tag">Decide</span><p><strong>Give the T-bill pot a purpose.</strong> For example: "boundary wall and house foundation on the Mirigama land, from 2032", or "6 months of living costs if I move home". A stated purpose tells you when you can touch it.</p></li>
+    <li><span class="tag">Decide</span><p><strong>Choose where the freed S$1,500/month goes from 2028.</strong> Suggested order: top up the Singapore buffer first. Then consider something you don't have yet, such as a low-cost global index fund. Then send more to Sri Lanka.</p></li>
+    <li><span class="tag ok">Keep</span><p>No debt. Quarterly batching. Plain 22K coins only, never jewellery. T-bills rather than finance-company FDs. A joint "either or survivor" locker so family can deposit coins.</p></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Timeline</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>When</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td class="num">Oct–Nov 2026</td><td>Open a CDS/LankaSettle account (bank treasury desk or primary dealer). Ask about the current withholding tax and your tax residency. Hold S$4,500 in DBS.</td></tr>
+      <tr><td class="num">Dec 2026</td><td>T-bill tranche 1 (S$4,500).</td></tr>
+      <tr><td class="num">Mar 2027</td><td>T-bill tranche 2. Coin 1. Open the bank locker by now.</td></tr>
+      <tr><td class="num">Jun / Sep 2027</td><td>T-bill tranches 3 and 4. Coins 2 and 3.</td></tr>
+      <tr><td class="num">Dec 2027</td><td>Give standing auto-roll instructions for all four bills. Coin 4. Buffer at ~S$7k.</td></tr>
+      <tr><td class="num">2028–2031</td><td>One coin per quarter. Move the freed S$1,500/month to the buffer, then to the next goal. Start shortlisting land in 2030 (deed search, access road width, flood risk).</td></tr>
+      <tr><td class="num">Dec 2031</td><td>Sell the coins in batches and buy the land. The T-bill ladder stays untouched.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p><strong>Assumptions.</strong> SGD/LKR 245; 22K sovereign Rs 340k; 364-day T-bill 9.95% gross with 10% withholding tax; Mirigama land Rs 220k/perch rising 8.5%/yr. All of these came from the earlier Gemini conversation and have not been checked. Confirm them against CBSL, your bank and local dealers before acting.</p>
+  <p>This is a general planning summary, not licensed financial or tax advice.</p>
+</footer>
+</div>
+</body>
+</html>
