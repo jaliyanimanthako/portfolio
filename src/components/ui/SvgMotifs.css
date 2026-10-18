@@ -1,0 +1,103 @@
+.motif { display: block; overflow: visible; fill: none; }
+
+/* Hero orbit */
+.motif-orbit { width: 100%; height: 100%; }
+.orbit-track { stroke: #b481f850; stroke-width: 1; }
+.orbit-track-dashed { stroke: #b481f870; stroke-dasharray: .6 1.4; animation: orbit-drift 60s linear infinite; }
+.orbit-body {
+  stroke: var(--purple);
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-dasharray: 0 100;
+  animation: orbit-travel 18s linear infinite;
+}
+.orbit-body-small { stroke: var(--paper); stroke-width: 7; animation-duration: 11s; animation-direction: reverse; }
+.orbit-trail {
+  stroke: var(--purple);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 9 91;
+  stroke-dashoffset: 9;
+  opacity: .45;
+  animation: orbit-trail 18s linear infinite;
+}
+@keyframes orbit-travel { to { stroke-dashoffset: -100; } }
+@keyframes orbit-trail { to { stroke-dashoffset: -91; } }
+@keyframes orbit-drift { to { stroke-dashoffset: -100; } }
+
+/* About EEG trace */
+.motif-wave { width: 100%; height: 72px; margin-bottom: 26px; }
+.wave-baseline { stroke: #10101018; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.wave-line {
+  stroke: #70499d;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 100;
+}
+.motif-wave .wave-scroll { opacity: 0; transition: opacity .4s; }
+.motif-wave.is-live .wave-scroll { opacity: 1; animation: wave-scroll 7s linear infinite; }
+.motif-wave.is-live .wave-line { animation: wave-draw 1.8s cubic-bezier(.6, 0, .2, 1) backwards; }
+@keyframes wave-scroll { to { transform: translateX(-200px); } }
+@keyframes wave-draw { from { stroke-dashoffset: 100; } }
+
+/* Journey neural pulse */
+.motif-neural { width: 250px; height: 125px; flex-shrink: 0; margin-bottom: 6px; }
+.neural-edge { stroke: #10101033; stroke-width: 1; }
+.neural-pulse {
+  stroke: #70499d;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 14 200;
+  stroke-dashoffset: 14;
+  opacity: 0;
+}
+.neural-node { fill: var(--paper); stroke: var(--black); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
+.motif-neural.is-live .neural-pulse {
+  animation: neural-pulse 3.2s cubic-bezier(.45, 0, .55, 1) infinite;
+  animation-delay: calc(var(--layer) * .55s + var(--i) * 15ms);
+}
+.motif-neural.is-live .neural-node {
+  animation: neural-fire 3.2s ease-out infinite;
+  animation-delay: calc(var(--layer) * .55s - .05s);
+}
+@keyframes neural-pulse {
+  0% { stroke-dashoffset: 14; opacity: 1; }
+  22% { stroke-dashoffset: -100; opacity: 1; }
+  23%, 100% { stroke-dashoffset: -100; opacity: 0; }
+}
+@keyframes neural-fire {
+  0%, 100% { fill: var(--paper); transform: scale(1); }
+  6% { fill: #70499d; transform: scale(1.35); }
+  22% { fill: var(--paper); transform: scale(1); }
+}
+
+/* Contact broadcast rings */
+.broadcast-ring {
+  stroke: #4e2e73;
+  stroke-width: .8;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: broadcast 3.6s cubic-bezier(.2, .6, .35, 1) infinite;
+  animation-delay: calc(var(--i) * 1.2s);
+}
+@keyframes broadcast {
+  0% { transform: scale(.12); opacity: 0; }
+  15% { opacity: .9; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+@media (max-width: 650px) {
+  .motif-wave { height: 54px; }
+  .motif-neural { width: 160px; height: 80px; }
+}
+
+/* Keep the static state readable when motion is reduced. */
+@media (prefers-reduced-motion: reduce) {
+  .motif-wave .wave-scroll, .neural-pulse { opacity: 1; }
+  .neural-pulse { stroke-dasharray: none; stroke-width: 1; opacity: .35; }
+  .broadcast-ring { opacity: .25; }
+  .broadcast-ring:nth-child(2) { transform: scale(.66); }
+  .broadcast-ring:nth-child(1) { transform: scale(.33); }
+}
