@@ -1,0 +1,428 @@
+- generic [ref=f1e3]:
+  - navigation [ref=f1e7]:
+    - generic [ref=f1e8]:
+      - link "Jaliya Nimantha" [ref=f1e9] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=f1e10]:
+        - link "About Me" [ref=f1e11] [cursor=pointer]:
+          - /url: "#about"
+        - link "Skills" [ref=f1e12] [cursor=pointer]:
+          - /url: "#expertise"
+        - link "Experience" [ref=f1e13] [cursor=pointer]:
+          - /url: "#experience"
+        - link "Projects" [ref=f1e14] [cursor=pointer]:
+          - /url: "#projects"
+        - link "Contact Me" [ref=f1e15] [cursor=pointer]:
+          - /url: "#contact"
+      - link "Resume" [ref=f1e17] [cursor=pointer]:
+        - /url: /CV.pdf
+  - main [ref=f1e22]:
+    - generic [ref=f1e26]:
+      - heading [level=1] [ref=f1e27]:
+        - generic [ref=f1e28]:
+          - text: Hello I’am
+          - strong [ref=f1e29]: Jaliya.
+        - generic [ref=f1e30]:
+          - strong [ref=f1e31]: Research
+          - text: Engineer
+        - generic [ref=f1e32]:
+          - text: Based In
+          - strong [ref=f1e33]: Singapore.
+      - paragraph [ref=f1e34]: Research Engineer at the Augmented Human Lab, National University of Singapore, and a University of Moratuwa graduate. Working across embedded systems, on-device AI and human-computer interaction. Passionate about novel ideas and solving real-world problems with creativity and impact.
+      - generic [ref=f1e35]:
+        - link "Download Resume" [ref=f1e36] [cursor=pointer]:
+          - /url: /CV.pdf
+        - link "GitHub" [ref=f1e41] [cursor=pointer]:
+          - /url: https://github.com/jaliyanimanthako
+        - link "LinkedIn" [ref=f1e45] [cursor=pointer]:
+          - /url: https://linkedin.com/in/jaliya-nimantha-8924b7219/
+        - link "Email" [ref=f1e50] [cursor=pointer]:
+          - /url: mailto:jaliyanimantha070@gmail.com
+    - generic [ref=f1e61]:
+      - heading [level=2] [ref=f1e63]:
+        - text: About
+        - strong [ref=f1e64]: Me
+      - generic [ref=f1e65]:
+        - paragraph [ref=f1e66]:
+          - text: I'm a graduate of the
+          - strong [ref=f1e67]: University of Moratuwa, Sri Lanka
+          - text: ", where I read Electronic and Telecommunication Engineering, and I'm now a"
+          - strong [ref=f1e68]: Research Engineer at the Augmented Human Lab, National University of Singapore
+          - text: . My passion lies at the intersection of
+          - strong [ref=f1e69]: deep learning, computer vision, and artificial intelligence
+          - text: ", where algorithms meet real-world impact."
+        - paragraph [ref=f1e70]:
+          - text: From signal processing to embedded systems, from circuit design to
+          - strong [ref=f1e71]: Brain–Computer Interfaces
+          - text: ", I love exploring the full spectrum of technology. I'm particularly fascinated by"
+          - strong [ref=f1e72]: Human–Computer Interaction
+          - text: and
+          - strong [ref=f1e73]: Explainable AI
+          - text: ", because I believe technology should be understood, not just used."
+        - paragraph [ref=f1e74]:
+          - text: At the Augmented Human Lab I work on assistive technologies for the visually impaired, experimenting with AI agents and pushing the boundaries of on-device language models. My ultimate goal is building
+          - strong [ref=f1e75]: interpretable, human-centered AI solutions
+          - text: that bridge cutting-edge algorithms with transparency, usability, and meaningful engineering impact.
+      - generic [ref=f1e76]:
+        - heading "Technical Arsenal" [level=3] [ref=f1e77]
+        - generic [ref=f1e78]:
+          - generic [ref=f1e79]: Deep Learning
+          - generic [ref=f1e80]: Computer Vision
+          - generic [ref=f1e81]: Machine Learning
+          - generic [ref=f1e82]: Signal Processing
+          - generic [ref=f1e83]: Embedded Systems
+          - generic [ref=f1e84]: Python / C++
+          - generic [ref=f1e85]: TensorFlow / PyTorch
+          - generic [ref=f1e86]: HCI / BCI
+          - generic [ref=f1e87]: Circuit Design
+    - generic [ref=f1e89]:
+      - heading [level=2] [ref=f1e91]:
+        - text: My
+        - strong [ref=f1e92]: Skills
+      - generic [ref=f1e93]:
+        - generic [ref=f1e94]: Python
+        - generic [ref=f1e98]: PyTorch
+        - generic [ref=f1e102]: TensorFlow
+        - generic [ref=f1e106]: Keras
+        - generic [ref=f1e110]: OpenCV
+        - generic [ref=f1e114]: MediaPipe
+        - generic [ref=f1e118]: Hugging Face
+        - generic [ref=f1e122]: LangChain
+        - generic [ref=f1e126]: Kotlin
+        - generic [ref=f1e130]: Android
+        - generic [ref=f1e134]: C++
+        - generic [ref=f1e138]: Arduino
+        - generic [ref=f1e142]: PyPI
+    - generic [ref=f1e146]:
+      - generic [ref=f1e147]:
+        - heading [level=2] [ref=f1e149]:
+          - text: My
+          - strong [ref=f1e150]: Experience
+        - generic [ref=f1e151]:
+          - article [ref=f1e152]:
+            - generic [ref=f1e153]:
+              - generic [ref=f1e154]: "2025"
+              - generic [ref=f1e155]: Dec 2024 - June 2025
+            - heading "Research Engineer Intern" [level=3] [ref=f1e157]
+            - paragraph [ref=f1e158]: Augmented Human Lab · Singapore
+            - generic [ref=f1e159]:
+              - generic [ref=f1e160]: TinyML
+              - generic [ref=f1e161]: MediaPipe
+              - generic [ref=f1e162]: llama.cpp
+              - generic [ref=f1e163]: LangGraph
+              - generic [ref=f1e164]: Edge AI
+              - generic [ref=f1e165]: Python
+            - generic [ref=f1e166]:
+              - heading "Project" [level=4] [ref=f1e167]
+              - generic [ref=f1e170] [cursor=pointer]:
+                - img "AiSee" [ref=f1e171]
+                - heading "AiSee" [level=4] [ref=f1e174]
+          - article [ref=f1e179]:
+            - generic [ref=f1e180]:
+              - generic [ref=f1e181]: "2024"
+              - generic [ref=f1e182]: Aug 2024 - Dec 2024
+            - heading "Research Attachment" [level=3] [ref=f1e184]
+            - paragraph [ref=f1e185]: Augmented Human Lab · Remote
+            - generic [ref=f1e186]:
+              - generic [ref=f1e187]: VLMs
+              - generic [ref=f1e188]: Multi-modal AI
+              - generic [ref=f1e189]: Python
+              - generic [ref=f1e190]: Agentic AI
+              - generic [ref=f1e191]: Magentic One
+              - generic [ref=f1e192]: Deep Learning
+            - generic [ref=f1e193]:
+              - paragraph [ref=f1e194]: Worked on fine-tuning Vision-Language Models (VLMs) for textbook-based contextual understanding, enhancing educational accessibility for visually impaired individuals in the Singaporean education system.
+              - paragraph [ref=f1e195]: Focused on optimizing multi-modal learning pipelines and developing an agentic framework for autonomous interaction.
+              - paragraph [ref=f1e196]: Contributed to model optimization and deployment at Magentic One, ensuring scalable real-world applications.
+      - generic "Photos from the lab" [ref=f1e197]
+    - generic [ref=f1e200]:
+      - heading [level=2] [ref=f1e202]:
+        - text: My
+        - strong [ref=f1e203]: Projects
+      - generic [ref=f1e204]:
+        - generic [ref=f1e206] [cursor=pointer]:
+          - img "Neural Speech Tracking" [ref=f1e208]
+          - generic [ref=f1e212]:
+            - generic [ref=f1e213]:
+              - generic [ref=f1e214]: Research / BCI
+              - generic [ref=f1e215]: Ongoing
+            - heading "Neural Speech Tracking" [level=3] [ref=f1e216]
+            - paragraph [ref=f1e217]: Fusion of Speech and EEG signals for neural speech tracking. Research-driven project exploring the intersection of neuroscience and signal processing for next-generation human-computer interfaces.
+            - generic [ref=f1e218]: "2024"
+        - generic [ref=f1e225] [cursor=pointer]:
+          - img "BioSense-AI" [ref=f1e227]
+          - generic [ref=f1e231]:
+            - generic [ref=f1e232]: Health Tech / IoT
+            - heading "BioSense-AI" [level=3] [ref=f1e234]
+            - paragraph [ref=f1e235]: Portable health monitoring device with advanced ECG technology for precise diagnostics. Connected to a mobile app for real-time health insights using ML to classify conditions like asthma and heart failure.
+            - generic [ref=f1e236]: "2023"
+        - generic [ref=f1e243] [cursor=pointer]:
+          - img "GGUF Model Converter" [ref=f1e245]
+          - generic [ref=f1e249]:
+            - generic [ref=f1e250]:
+              - generic [ref=f1e251]: AI Tools / Open Source
+              - generic [ref=f1e252]: Active
+            - heading "GGUF Model Converter" [level=3] [ref=f1e253]
+            - paragraph [ref=f1e254]: "Python toolkit automating the full pipeline for LLaMA models: clone llama.cpp, convert HF models to GGUF format, quantize with precision options, and upload to Hugging Face Hub."
+            - generic [ref=f1e255]: "2024"
+        - generic [ref=f1e262] [cursor=pointer]:
+          - img "AiSee LLaMa SDK" [ref=f1e264]
+          - generic [ref=f1e268]:
+            - generic [ref=f1e269]:
+              - generic [ref=f1e270]: Mobile AI / SDK
+              - generic [ref=f1e271]: Active
+            - heading "AiSee LLaMa SDK" [level=3] [ref=f1e272]
+            - paragraph [ref=f1e273]: Android SDK for searching and retrieving .gguf LLaMA models from Hugging Face, with on-device inference and streamed responses. Private, efficient, mobile-friendly AI.
+            - generic [ref=f1e274]: "2024"
+        - generic [ref=f1e281] [cursor=pointer]:
+          - img "Industrial End Effector" [ref=f1e283]
+          - generic [ref=f1e287]:
+            - generic [ref=f1e288]: Robotics / Automation
+            - heading "Industrial End Effector" [level=3] [ref=f1e290]
+            - paragraph [ref=f1e291]: Industrial end effector with vacuum gripper for automated pick-and-place robots. Integrates four ToF sensors for precise box yaw and pitch angle measurement.
+            - generic [ref=f1e292]: "2024"
+        - generic [ref=f1e299] [cursor=pointer]:
+          - img "Hodi — Sinhala OCR" [ref=f1e301]
+          - generic [ref=f1e305]:
+            - generic [ref=f1e306]:
+              - generic [ref=f1e307]: OCR / Deep Learning
+              - generic [ref=f1e308]: Ongoing
+            - heading "Hodi — Sinhala OCR" [level=3] [ref=f1e309]
+            - paragraph [ref=f1e310]: Mobile app using OCR technology to identify both handwritten and printed Sinhala letters. Leveraging deep learning for accurate text extraction and recognition.
+            - generic [ref=f1e311]: "2024"
+      - link "Explore All Projects" [ref=f1e318] [cursor=pointer]:
+        - /url: /projects
+    - generic [ref=f1e324]:
+      - heading [level=2] [ref=f1e326]:
+        - text: My
+        - strong [ref=f1e327]: Education
+      - generic [ref=f1e328]:
+        - article [ref=f1e329]:
+          - generic [ref=f1e330]:
+            - generic [ref=f1e332]:
+              - generic [ref=f1e334]:
+                - heading "University of Moratuwa" [level=3] [ref=f1e335]
+                - paragraph [ref=f1e336]: B.Sc. Engineering (Hons.) · Electronic and Telecommunication Engineering
+              - generic [ref=f1e337]: 2022 – 2026
+            - paragraph [ref=f1e338]: Moratuwa, Sri Lanka
+            - generic [ref=f1e339]:
+              - generic [ref=f1e340]: "CGPA: 3.55/4.00"
+              - generic [ref=f1e341]: "Dean's List: Sem 1 & 6"
+        - article [ref=f1e342]:
+          - generic [ref=f1e343]:
+            - generic [ref=f1e345]:
+              - generic [ref=f1e347]:
+                - heading "Bandaranayake College" [level=3] [ref=f1e348]
+                - paragraph [ref=f1e349]: GCE Advanced Level · Physical Science Stream
+              - generic [ref=f1e350]: 2017 – 2019
+            - paragraph [ref=f1e351]: Gampaha, Sri Lanka
+            - generic [ref=f1e352]:
+              - generic [ref=f1e353]: "Z-Score: 2.3605"
+              - generic [ref=f1e354]: 3 A's
+              - generic [ref=f1e355]: Rank 287 Island
+        - article [ref=f1e356]:
+          - generic [ref=f1e357]:
+            - generic [ref=f1e359]:
+              - generic [ref=f1e361]:
+                - heading "Bandaranayake College" [level=3] [ref=f1e362]
+                - paragraph [ref=f1e363]: GCE Ordinary Level
+              - generic [ref=f1e364]: 2011 – 2016
+            - paragraph [ref=f1e365]: Gampaha, Sri Lanka
+            - generic [ref=f1e366]: 9 A's
+    - generic [ref=f1e369]:
+      - heading [level=2] [ref=f1e371]:
+        - text: Awards &
+        - strong [ref=f1e372]: Honors
+      - generic [ref=f1e373]:
+        - article [ref=f1e374]:
+          - generic [ref=f1e376]:
+            - generic [ref=f1e377]:
+              - generic [ref=f1e382]:
+                - heading "Semi-Finalists - Meta Llama Incubator Programme" [level=3] [ref=f1e383]
+                - paragraph [ref=f1e384]: Meta AI
+              - generic [ref=f1e385]: "2025"
+            - paragraph [ref=f1e386]: AiSee - Visual Intelligence Platform for the Blind and Visually Impaired using Llama 3.2 3B with on-device AI
+        - article [ref=f1e387]:
+          - generic [ref=f1e389]:
+            - generic [ref=f1e390]:
+              - generic [ref=f1e399]:
+                - heading "Finalists - Brainstorm 2024" [level=3] [ref=f1e400]
+                - paragraph [ref=f1e401]: IEEE EMBS Students Chapter, University of Moratuwa
+              - generic [ref=f1e402]: "2024"
+            - paragraph [ref=f1e403]: Biomedical Engineering Competition
+        - article [ref=f1e404]:
+          - generic [ref=f1e406]:
+            - generic [ref=f1e407]:
+              - generic [ref=f1e412]:
+                - heading "Finalists & Best Pitch" [level=3] [ref=f1e413]
+                - paragraph [ref=f1e414]: ICE 2024
+              - generic [ref=f1e415]: "2024"
+            - paragraph [ref=f1e416]: Entrepreneurship Hackathon
+        - article [ref=f1e417]:
+          - generic [ref=f1e419]:
+            - generic [ref=f1e420]:
+              - generic [ref=f1e429]:
+                - heading "3rd Place - MECHA 2023" [level=3] [ref=f1e430]
+                - paragraph [ref=f1e431]: Faculty of Medicine, University of Colombo
+              - generic [ref=f1e432]: "2023"
+            - paragraph [ref=f1e433]: Medical Device Hackathon, hosted by the Department of Medical Technology
+        - article [ref=f1e434]:
+          - generic [ref=f1e436]:
+            - generic [ref=f1e437]:
+              - generic [ref=f1e443]:
+                - heading "School Colours Award" [level=3] [ref=f1e444]
+                - paragraph [ref=f1e445]: Bandaranayake College
+              - generic [ref=f1e446]: "2019"
+            - paragraph [ref=f1e447]: For exceptional academic achievements, President Scout Award, and service as a troop leader
+        - article [ref=f1e448]:
+          - generic [ref=f1e450]:
+            - generic [ref=f1e451]:
+              - generic [ref=f1e456]:
+                - heading "President Scout Award" [level=3] [ref=f1e457]
+                - paragraph [ref=f1e458]: Sri Lanka Scout Association
+              - generic [ref=f1e459]: "2019"
+            - paragraph [ref=f1e460]: The highest rank achievable in the Sri Lanka Scout Association
+    - generic [ref=f1e462]:
+      - heading [level=2] [ref=f1e464]:
+        - text: Volunteering &
+        - strong [ref=f1e465]: Leadership
+      - generic [ref=f1e466]:
+        - article [ref=f1e467]:
+          - generic [ref=f1e468]:
+            - generic [ref=f1e469]:
+              - generic [ref=f1e471]:
+                - heading "Vice President (Main Branch)" [level=3] [ref=f1e472]
+                - paragraph [ref=f1e473]: Electronic Club, University of Moratuwa
+              - generic [ref=f1e474]: 2023 – Present
+            - paragraph [ref=f1e475]: Led the organization of key events such as Abhina, Shuttle Fest, Tronic Awurudu, Industry Envoyage, and Career Fair. Also contributed to community initiatives like SLRC and E-Care.
+            - list [ref=f1e476]:
+              - listitem [ref=f1e477]:
+                - generic [ref=f1e478]: Vice President - Main Branch
+                - generic [ref=f1e479]: 2025 – Present
+              - listitem [ref=f1e480]:
+                - generic [ref=f1e481]: Head of Operations
+                - generic [ref=f1e482]: 2024 – 2025
+              - listitem [ref=f1e483]:
+                - generic [ref=f1e484]: Committee Member
+                - generic [ref=f1e485]: 2023 – 2024
+        - article [ref=f1e490]:
+          - generic [ref=f1e491]:
+            - generic [ref=f1e492]:
+              - generic [ref=f1e494]:
+                - heading "Workshop Mentor" [level=3] [ref=f1e495]
+                - paragraph [ref=f1e496]: ICE 2025 - AI Innovation Workshop
+              - generic [ref=f1e497]: "2025"
+            - paragraph [ref=f1e498]: Mentored 30 participants in Sri Lanka's premier AI innovation workshop, guiding teams to build breakthrough prototypes within three days.
+            - link "Visit site" [ref=f1e503] [cursor=pointer]:
+              - /url: https://ice2025.com/
+        - article [ref=f1e507]:
+          - generic [ref=f1e508]:
+            - generic [ref=f1e509]:
+              - generic [ref=f1e511]:
+                - heading "President Scout Awardee" [level=3] [ref=f1e512]
+                - paragraph [ref=f1e513]: Scout Troop, Bandaranayake College
+              - generic [ref=f1e514]: 2008 – 2019
+            - paragraph [ref=f1e515]: Led a troop of over 600 scouts, organizing national-level events including an all-island hiking competition with multiple championship wins. Played a key role in centenary celebration projects.
+            - list [ref=f1e516]:
+              - listitem [ref=f1e517]:
+                - generic [ref=f1e518]: President Scout Award
+                - generic [ref=f1e519]: "2019"
+              - listitem [ref=f1e520]:
+                - generic [ref=f1e521]: Troop Leader
+                - generic [ref=f1e522]: 2018 – 2019
+        - article [ref=f1e528]:
+          - generic [ref=f1e529]:
+            - generic [ref=f1e530]:
+              - generic [ref=f1e532]:
+                - heading "Program Host" [level=3] [ref=f1e533]
+                - paragraph [ref=f1e534]: Leadership & Personality Development Program, Kotugoda Sri Rahula College
+              - generic [ref=f1e535]: Nov 2023
+            - paragraph [ref=f1e536]: Collaborated with Scout Master Rasanga Rupasinghe to lead a transformative 'Beyond Boundaries' program for 50+ students, facilitating discussions on balancing academics with extracurriculars and personal development strategies.
+        - article [ref=f1e540]:
+          - generic [ref=f1e541]:
+            - generic [ref=f1e542]:
+              - generic [ref=f1e544]:
+                - heading "Department Facilitator" [level=3] [ref=f1e545]
+                - paragraph [ref=f1e546]: EXMO 2023, University of Moratuwa
+              - generic [ref=f1e547]: Jul 2023
+            - paragraph [ref=f1e548]: Contributed to the successful execution of the University of Moratuwa's flagship engineering exhibition, showcasing innovative student projects and promoting technological awareness.
+        - article [ref=f1e549]:
+          - generic [ref=f1e550]:
+            - generic [ref=f1e551]:
+              - generic [ref=f1e553]:
+                - heading "Committee Member" [level=3] [ref=f1e554]
+                - paragraph [ref=f1e555]: Rotaract Club, University of Moratuwa
+              - generic [ref=f1e556]: Dec 2022
+            - paragraph [ref=f1e557]: Involved in organizing several events with the Rotaract Club. Additionally, worked as a video editor for events such as Data Storm, El Talento, and Rota Spark.
+    - generic [ref=f1e559]:
+      - generic [ref=f1e560]:
+        - heading [level=2] [ref=f1e561]:
+          - text: My
+          - strong [ref=f1e562]: Testimonials
+        - paragraph [ref=f1e563]: Recognition from mentors and collaborators
+      - figure "A/Prof Suranga Nanayakkara Principal Investigator, Augmented Human Lab" [ref=f1e565]:
+        - generic [ref=f1e566]: SN
+        - blockquote [ref=f1e573]: Jaliya consistently demonstrated exceptional performance and commitment as a Research Engineer Intern. He exhibited strong work ethics and made significant contributions to our research projects. His professionalism, skills, and positive attitude made him an invaluable asset to our organization.
+        - generic [ref=f1e575]:
+          - generic [ref=f1e576]: A/Prof Suranga Nanayakkara
+          - generic [ref=f1e577]: Principal Investigator, Augmented Human Lab
+    - generic [ref=f1e580]:
+      - generic [ref=f1e581]:
+        - generic [ref=f1e582]:
+          - generic [ref=f1e583]: Your name
+          - textbox "Your name" [ref=f1e584]
+        - generic [ref=f1e585]:
+          - generic [ref=f1e586]: Email
+          - textbox "Email" [ref=f1e587]
+        - generic [ref=f1e588]:
+          - generic [ref=f1e589]: Your website
+          - textbox "Your website" [ref=f1e590]:
+            - /placeholder: Your website (If exists)
+        - generic [ref=f1e591]:
+          - generic [ref=f1e592]: How can I help?
+          - textbox "How can I help?" [ref=f1e593]:
+            - /placeholder: How can I help?*
+        - generic [ref=f1e594]:
+          - button "Get In Touch" [ref=f1e595] [cursor=pointer]
+          - link "LinkedIn" [ref=f1e596] [cursor=pointer]:
+            - /url: https://linkedin.com/in/jaliya-nimantha-8924b7219/
+          - link "GitHub" [ref=f1e601] [cursor=pointer]:
+            - /url: https://github.com/jaliyanimanthako
+          - link "Email" [ref=f1e605] [cursor=pointer]:
+            - /url: mailto:jaliyanimantha070@gmail.com
+      - generic [ref=f1e609]:
+        - heading [level=2] [ref=f1e610]:
+          - text: Let’s talk for
+          - strong [ref=f1e611]: Something special
+        - paragraph [ref=f1e612]: Ready to collaborate on innovative projects in embedded systems, robotics, or AI? I’m always open to research collaborations and interesting engineering problems.
+        - generic [ref=f1e613]:
+          - link "jaliyanimantha070@gmail.com" [ref=f1e614] [cursor=pointer]:
+            - /url: mailto:jaliyanimantha070@gmail.com
+          - link "linkedin.com/in/jaliya-nimantha" [ref=f1e615] [cursor=pointer]:
+            - /url: https://linkedin.com/in/jaliya-nimantha-8924b7219/
+  - contentinfo [ref=f1e616]:
+    - generic [ref=f1e617]:
+      - generic [ref=f1e618]:
+        - link "Jaliya Nimantha" [ref=f1e619] [cursor=pointer]:
+          - /url: "#"
+        - navigation [ref=f1e620]:
+          - link "About Me" [ref=f1e621] [cursor=pointer]:
+            - /url: "#about"
+          - link "Skills" [ref=f1e622] [cursor=pointer]:
+            - /url: "#expertise"
+          - link "Experience" [ref=f1e623] [cursor=pointer]:
+            - /url: "#experience"
+          - link "Projects" [ref=f1e624] [cursor=pointer]:
+            - /url: "#projects"
+          - link "Contact Me" [ref=f1e625] [cursor=pointer]:
+            - /url: "#contact"
+        - generic [ref=f1e626]:
+          - link "LinkedIn" [ref=f1e627] [cursor=pointer]:
+            - /url: https://linkedin.com/in/jaliya-nimantha-8924b7219/
+          - link "GitHub" [ref=f1e632] [cursor=pointer]:
+            - /url: https://github.com/jaliyanimanthako
+          - link "Email" [ref=f1e636] [cursor=pointer]:
+            - /url: mailto:jaliyanimantha070@gmail.com
+      - generic [ref=f1e640]:
+        - paragraph [ref=f1e641]: Research Engineer · Augmented Human Lab, NUS
+        - paragraph [ref=f1e642]: © 2026 Jaliya Nimantha. All rights reserved.

@@ -1,0 +1,59 @@
+.education-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 32px);
+  padding: clamp(22px, 3vw, 38px);
+  margin-bottom: 28px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+}
+
+.education-history { list-style: none; padding: 0; margin: 0; }
+.education-milestone {
+  --education-marker-y: 60px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 20px;
+  padding: 0 0 32px 28px;
+}
+.education-milestone:last-child { padding-bottom: 0; }
+.education-milestone:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 5.5px;
+  top: var(--education-marker-y);
+  bottom: calc(-1 * var(--education-marker-y));
+  width: 1px;
+  background: var(--lavender);
+}
+.education-dot {
+  position: absolute;
+  top: calc(var(--education-marker-y) - 6px);
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 0 0 5px var(--paper);
+}
+.education-crest { padding-top: 28px; }
+.education-crest img { width: 64px; height: 64px; object-fit: contain; }
+.education-period { display: block; margin-bottom: 10px; font-size: 11px; letter-spacing: .06em; color: var(--purple); }
+.education-details h3 { font-size: clamp(19px, 1.8vw, 24px); line-height: 1.3; letter-spacing: -.025em; }
+.education-qualification { margin-top: 9px; font-size: 13px; line-height: 1.65; }
+.education-achievement { margin-top: 10px; font-size: 12px; line-height: 1.7; color: var(--muted); }
+.education-illustration { width: 100%; justify-self: center; overflow: hidden; border-radius: 12px; }
+
+@media (max-width: 900px) {
+  .education-panel { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 20px; }
+  .education-milestone { --education-marker-y: 56px; grid-template-columns: 50px minmax(0, 1fr); gap: 14px; }
+  .education-crest img { width: 50px; height: 56px; }
+}
+@media (max-width: 700px) {
+  .education-panel { grid-template-columns: minmax(0, 1fr); padding: 24px 18px; gap: 24px; }
+  .education-milestone { padding-left: 23px; gap: 12px; }
+}

@@ -1,0 +1,247 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="A stretchy human and a friendly robot reach out until their fingertips touch">
+  <style>
+    :root { --ink: #1d1b20; --paper: #f6f4ef; --white: #fffdf9; --accent: #b481f8; --soft: #e6dcf8; }
+    .o { fill: var(--white); stroke: var(--ink); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+    .k { fill: var(--ink); }
+    .ln { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    .thin { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+    .seam { fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-dasharray: 9 9; stroke-linecap: round; }
+    .limb-out { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+    .limb-in { fill: none; stroke: var(--white); stroke-linecap: round; stroke-linejoin: round; }
+    .bands { fill: none; stroke: var(--ink); stroke-width: 30; stroke-dasharray: 4 14; }
+    .acc { fill: var(--accent); }
+
+    /* 6s loop: anticipation → stretch → touch → hold → release */
+    .man { animation: man-float 6s cubic-bezier(.37, 0, .63, 1) infinite; }
+    .robot { animation: robot-float 6s cubic-bezier(.37, 0, .63, 1) infinite; }
+    .man-arm { transform-origin: 600px 444px; animation: man-arm 6s infinite; }
+    .man-hand { animation: man-hand 6s infinite; }
+    .bot-arm { transform-origin: 1004px 500px; animation: bot-arm 6s infinite .1s; }
+    .bot-hand { animation: bot-hand 6s infinite .1s; }
+    .glow { transform-origin: 875px 420px; animation: glow 6s infinite; }
+    .halo { transform-origin: 875px 420px; animation: halo 6s infinite; }
+    .rays { stroke-dasharray: 30; animation: rays 6s infinite; }
+    .blob { transform-origin: 650px 450px; animation: breathe 6s cubic-bezier(.37, 0, .63, 1) infinite alternate; }
+    .tw { transform-box: fill-box; transform-origin: center; animation: twinkle 3s cubic-bezier(.37, 0, .63, 1) infinite; }
+    .eye { transform-box: fill-box; transform-origin: center; animation: blink 6s infinite; }
+    .bob { animation: bob 4s cubic-bezier(.37, 0, .63, 1) infinite alternate; }
+
+    @keyframes man-arm {
+      0% { transform: scaleX(.58); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
+      14% { transform: scaleX(.5); animation-timing-function: cubic-bezier(.34, 1.4, .2, 1); }
+      36% { transform: scaleX(1); }
+      72% { transform: scaleX(1); animation-timing-function: cubic-bezier(.77, 0, .175, 1); }
+      88%, 100% { transform: scaleX(.58); }
+    }
+    @keyframes man-hand {
+      0% { transform: translateX(-91px); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
+      14% { transform: translateX(-109px); animation-timing-function: cubic-bezier(.34, 1.4, .2, 1); }
+      36% { transform: translateX(0); }
+      72% { transform: translateX(0); animation-timing-function: cubic-bezier(.77, 0, .175, 1); }
+      88%, 100% { transform: translateX(-91px); }
+    }
+    @keyframes bot-arm {
+      0% { transform: scale(.58); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
+      14% { transform: scale(.5); animation-timing-function: cubic-bezier(.34, 1.4, .2, 1); }
+      36% { transform: scale(1); }
+      72% { transform: scale(1); animation-timing-function: cubic-bezier(.77, 0, .175, 1); }
+      88%, 100% { transform: scale(.58); }
+    }
+    @keyframes bot-hand {
+      0% { transform: translate(30px, 33px); animation-timing-function: cubic-bezier(.45, 0, .55, 1); }
+      14% { transform: translate(36px, 39px); animation-timing-function: cubic-bezier(.34, 1.4, .2, 1); }
+      36% { transform: translate(0, 0); }
+      72% { transform: translate(0, 0); animation-timing-function: cubic-bezier(.77, 0, .175, 1); }
+      88%, 100% { transform: translate(30px, 33px); }
+    }
+    @keyframes glow {
+      0%, 33% { transform: scale(.9); opacity: 0; animation-timing-function: cubic-bezier(.34, 1.6, .2, 1); }
+      40% { transform: scale(1.15); opacity: 1; animation-timing-function: cubic-bezier(.37, 0, .63, 1); }
+      48% { transform: scale(1); opacity: 1; }
+      58% { transform: scale(1.1); opacity: 1; }
+      68% { transform: scale(1); opacity: 1; animation-timing-function: cubic-bezier(.4, 0, 1, 1); }
+      76%, 100% { transform: scale(.9); opacity: 0; }
+    }
+    @keyframes halo {
+      0%, 35% { transform: scale(.9); opacity: 0; animation-timing-function: cubic-bezier(.23, 1, .32, 1); }
+      38% { opacity: .7; }
+      58%, 100% { transform: scale(2.6); opacity: 0; }
+    }
+    @keyframes rays {
+      0%, 35% { stroke-dashoffset: 30; opacity: 1; animation-timing-function: cubic-bezier(.23, 1, .32, 1); }
+      46%, 66% { stroke-dashoffset: 0; opacity: 1; }
+      74%, 100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+    @keyframes man-float {
+      0%, 100% { transform: translate(0, 0) rotate(0); }
+      36% { transform: translate(0, -8px); }
+      72% { transform: translate(0, -4px); }
+    }
+    @keyframes robot-float {
+      0%, 100% { transform: translate(0, 0); }
+      36% { transform: translate(0, -8px); }
+      72% { transform: translate(0, -4px); }
+    }
+    @keyframes breathe { from { transform: scale(.985); } to { transform: scale(1.015); } }
+    @keyframes twinkle { 0%, 100% { transform: scale(.8) rotate(0); opacity: .55; } 50% { transform: scale(1.1) rotate(15deg); opacity: 1; } }
+    @keyframes blink { 0%, 60%, 64%, 100% { transform: scaleY(1); } 62% { transform: scaleY(.1); } }
+    @keyframes bob { from { transform: translateY(5px); } to { transform: translateY(-6px); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; }
+      .glow { opacity: 1; }
+    }
+  </style>
+
+  <rect width="1200" height="900" fill="var(--paper)" />
+  <path class="blob" fill="var(--soft)" d="M330 430 C326 312 462 254 590 300 C700 340 760 330 862 298 C984 262 1048 366 992 452 C948 522 860 520 760 560 C640 610 540 640 440 602 C352 566 334 506 330 430 Z" />
+
+  <!-- doodles -->
+  <g class="bob" style="animation-delay:-1s">
+    <path class="ln" style="stroke-width:3" d="M282 268 C298 236 312 300 330 268 C348 236 360 300 378 268 C396 236 410 296 428 262" />
+    <circle class="acc" cx="452" cy="250" r="9" stroke="var(--ink)" stroke-width="3" />
+  </g>
+  <g fill="var(--ink)" opacity=".75">
+    <circle cx="240" cy="318" r="2.6" /><circle cx="258" cy="318" r="2.6" /><circle cx="276" cy="318" r="2.6" /><circle cx="294" cy="318" r="2.6" />
+    <circle cx="249" cy="334" r="2.6" /><circle cx="267" cy="334" r="2.6" /><circle cx="285" cy="334" r="2.6" /><circle cx="303" cy="334" r="2.6" />
+    <circle cx="258" cy="350" r="2.6" /><circle cx="276" cy="350" r="2.6" /><circle cx="294" cy="350" r="2.6" /><circle cx="312" cy="350" r="2.6" />
+    <circle cx="1028" cy="728" r="2.6" /><circle cx="1046" cy="728" r="2.6" /><circle cx="1064" cy="728" r="2.6" /><circle cx="1082" cy="728" r="2.6" />
+    <circle cx="1037" cy="744" r="2.6" /><circle cx="1055" cy="744" r="2.6" /><circle cx="1073" cy="744" r="2.6" /><circle cx="1091" cy="744" r="2.6" />
+    <circle cx="1046" cy="760" r="2.6" /><circle cx="1064" cy="760" r="2.6" /><circle cx="1082" cy="760" r="2.6" /><circle cx="1100" cy="760" r="2.6" />
+  </g>
+  <g class="bob" style="animation-delay:-2.5s">
+    <g transform="translate(760 650)">
+      <path class="thin" d="M-12 -22 V-28 M0 -22 V-28 M12 -22 V-28 M-12 22 V28 M0 22 V28 M12 22 V28 M-22 -12 H-28 M-22 0 H-28 M-22 12 H-28 M22 -12 H28 M22 0 H28 M22 12 H28" />
+      <rect class="o" style="stroke-width:3" x="-22" y="-22" width="44" height="44" rx="6" />
+      <rect class="o" style="stroke-width:3" x="-10" y="-10" width="20" height="20" rx="2" />
+    </g>
+  </g>
+  <path class="o tw" style="stroke-width:3" d="M640 640 C642 656 646 660 662 662 C646 664 642 668 640 684 C638 668 634 664 618 662 C634 660 638 656 640 640 Z" />
+  <path class="o tw" style="stroke-width:2.5;animation-delay:-1.2s" d="M206 610 C207 618 209 620 217 621 C209 622 207 624 206 632 C205 624 203 622 195 621 C203 620 205 618 206 610 Z" />
+  <g class="bob" style="animation-delay:-.6s">
+    <path class="ln" style="stroke-width:3" d="M708 744 L756 718" />
+    <circle class="acc" cx="704" cy="746" r="10" stroke="var(--ink)" stroke-width="3" />
+    <circle class="o" style="stroke-width:3" cx="760" cy="716" r="7" />
+  </g>
+  <circle class="o tw" style="stroke-width:3;animation-delay:-2s" cx="1076" cy="308" r="8" />
+  <circle class="o tw" style="stroke-width:3;animation-delay:-.4s" cx="992" cy="796" r="10" />
+  <path class="ln" style="stroke-width:3" d="M70 470 Q58 488 62 506 M390 768 Q420 752 452 756" />
+  <path class="ln" style="stroke-width:3" d="M1150 490 Q1168 510 1164 532 M1124 330 L1134 314 M1146 344 L1162 336" />
+
+  <!-- contact: halo, glow, rays -->
+  <circle class="halo" cx="875" cy="420" r="34" fill="none" stroke="var(--accent)" stroke-width="3" />
+  <circle class="glow acc" cx="875" cy="420" r="34" />
+  <path class="ln rays" style="stroke-width:3.5" d="M852 378 L842 360 M875 372 L875 352 M898 378 L908 360" />
+
+  <!-- the human -->
+  <g class="man">
+    <!-- legs -->
+    <path class="limb-out" stroke-width="46" d="M486 500 C430 520 370 548 312 548 L190 512" />
+    <path class="limb-in" stroke-width="38" d="M486 500 C430 520 370 548 312 548 L190 512" />
+    <path class="seam" d="M470 494 C424 512 372 534 316 534 L200 500" />
+    <path class="limb-out" stroke-width="46" d="M500 516 C452 560 400 600 352 634 L282 694" />
+    <path class="limb-in" stroke-width="38" d="M500 516 C452 560 400 600 352 634 L282 694" />
+    <path class="seam" d="M480 518 C436 556 390 592 344 622 L282 674" />
+    <!-- cuffs + shoes -->
+    <g transform="translate(176 508) rotate(16)">
+      <rect class="o" x="-6" y="-24" width="22" height="48" rx="5" />
+      <path class="o" d="M-6 -22 C-40 -26 -74 -14 -84 6 L-84 14 L-6 14 Z" />
+      <path class="k" d="M-88 12 H-2 Q4 12 4 20 V22 Q4 30 -4 30 H-82 Q-90 30 -90 22 V20 Q-90 12 -88 12 Z" />
+      <path class="thin" d="M-36 -18 L-30 -4 M-46 -16 L-40 -2 M-56 -12 L-50 0" />
+    </g>
+    <g transform="translate(272 704) rotate(40)">
+      <rect class="o" x="-6" y="-24" width="22" height="48" rx="5" />
+      <path class="o" d="M-6 -22 C-40 -26 -74 -14 -84 6 L-84 14 L-6 14 Z" />
+      <path class="k" d="M-88 12 H-2 Q4 12 4 20 V22 Q4 30 -4 30 H-82 Q-90 30 -90 22 V20 Q-90 12 -88 12 Z" />
+      <path class="thin" d="M-36 -18 L-30 -4 M-46 -16 L-40 -2 M-56 -12 L-50 0" />
+    </g>
+
+    <!-- back arm reaching behind -->
+    <path class="limb-out" stroke-width="30" d="M506 446 C426 420 340 410 262 416" />
+    <path class="limb-in" stroke-width="22" d="M506 446 C426 420 340 410 262 416" />
+    <g transform="translate(258 416)">
+      <path class="o" d="M8 -16 C-8 -22 -26 -18 -34 -8 C-46 -14 -60 -8 -54 2 C-50 8 -44 8 -38 6 C-48 14 -42 26 -30 20 C-30 30 -16 32 -12 22 C-4 28 10 20 8 8 Z" />
+      <path class="thin" d="M-36 6 C-30 4 -26 4 -22 6 M-28 20 C-24 16 -20 14 -16 14" />
+    </g>
+
+    <!-- torso -->
+    <path class="k" d="M492 432 C520 410 562 400 592 410 L624 442 L602 460 L592 450 L552 530 C522 532 486 516 468 498 Z" />
+    <path class="o" d="M552 402 L566 384 L586 396 L578 412 Z" />
+
+    <!-- head -->
+    <g transform="translate(566 362)">
+      <path class="o" d="M-20 -8 C-20 -30 16 -32 22 -12 C26 0 24 14 16 22 C6 30 -14 26 -20 12 Z" />
+      <path class="o" d="M-15 -2 C-24 -4 -24 9 -15 9" />
+      <path class="k" d="M-24 4 C-34 -4 -32 -22 -20 -26 C-20 -38 -4 -42 4 -33 C12 -42 30 -36 26 -22 C34 -16 26 -6 20 -10 C14 -18 6 -14 2 -10 C-4 -14 -12 -8 -12 0 C-14 6 -20 8 -24 4 Z" />
+      <path class="k" d="M-12 14 C-4 28 10 30 18 18 C14 22 6 23 0 19 C-4 20 -8 18 -12 14 Z" />
+      <ellipse class="k eye" cx="11" cy="-4" rx="2.6" ry="3.2" />
+      <path class="thin" d="M6 8 Q12 12 18 6" />
+    </g>
+
+    <!-- front arm: stretches toward the robot -->
+    <g class="man-arm">
+      <path class="limb-out" stroke-width="30" d="M600 444 C676 434 744 416 818 420" />
+      <path class="limb-in" stroke-width="22" d="M600 444 C676 434 744 416 818 420" />
+    </g>
+    <g class="man-hand">
+      <g transform="translate(812 420)">
+        <path class="o" d="M-4 -14 C10 -20 26 -16 32 -10 L58 -10 C66 -10 66 2 58 2 L34 2 C36 10 30 18 18 20 C4 22 -8 14 -6 2 Z" />
+        <path class="thin" d="M12 6 C18 8 24 8 30 6 M10 14 C16 16 22 15 26 12" />
+        <path class="o" d="M6 -16 C6 -26 20 -28 24 -14" />
+      </g>
+    </g>
+  </g>
+
+  <!-- the robot -->
+  <g class="robot">
+    <!-- legs -->
+    <path class="limb-out" stroke-width="38" d="M1024 568 C1004 600 990 626 1000 652" />
+    <path class="limb-in" stroke-width="30" d="M1024 568 C1004 600 990 626 1000 652" />
+    <path class="bands" d="M1024 568 C1004 600 990 626 1000 652" />
+    <path class="limb-out" stroke-width="38" d="M1068 568 C1082 604 1092 630 1092 660" />
+    <path class="limb-in" stroke-width="30" d="M1068 568 C1082 604 1092 630 1092 660" />
+    <path class="bands" d="M1068 568 C1082 604 1092 630 1092 660" />
+    <ellipse class="k" cx="1000" cy="676" rx="30" ry="34" />
+    <ellipse class="o" cx="1008" cy="674" rx="20" ry="28" />
+    <ellipse class="k" cx="1092" cy="684" rx="30" ry="34" />
+    <ellipse class="o" cx="1100" cy="682" rx="20" ry="28" />
+
+    <!-- far arm hanging out -->
+    <path class="limb-out" stroke-width="30" d="M1088 500 C1120 516 1134 556 1154 580" />
+    <path class="limb-in" stroke-width="22" d="M1088 500 C1120 516 1134 556 1154 580" />
+    <path class="bands" style="stroke-width:24" d="M1088 500 C1120 516 1134 556 1154 580" />
+    <g transform="translate(1160 590) rotate(30)">
+      <path class="o" d="M-10 -12 C6 -22 26 -18 34 -8 C46 -12 54 -4 46 4 C40 8 34 6 30 6 C38 14 32 24 22 18 C22 28 8 30 4 20 C-4 26 -14 16 -10 4 Z" />
+    </g>
+
+    <!-- body + head -->
+    <rect class="o" x="1030" y="452" width="20" height="22" rx="4" />
+    <rect class="o" x="1000" y="470" width="92" height="104" rx="16" />
+    <circle class="o" cx="1032" cy="508" r="13" />
+    <circle class="k" cx="1032" cy="508" r="6" />
+    <rect class="o" x="1056" y="496" width="24" height="54" rx="6" />
+    <path class="thin" d="M1060 528 H1076" />
+    <path class="ln" d="M1062 380 L1070 352" />
+    <circle class="o" cx="1072" cy="346" r="9" />
+    <circle class="o" cx="990" cy="418" r="11" />
+    <circle class="o" cx="1092" cy="418" r="11" />
+    <rect class="o" x="990" y="380" width="102" height="78" rx="20" />
+    <rect class="k" x="1004" y="394" width="66" height="44" rx="13" />
+    <rect class="eye" x="1020" y="406" width="11" height="16" rx="4" fill="var(--white)" />
+    <rect class="eye" x="1044" y="406" width="11" height="16" rx="4" fill="var(--white)" />
+
+    <!-- near arm: stretches toward the human -->
+    <g class="bot-arm">
+      <path class="limb-out" stroke-width="30" d="M1004 500 C970 496 944 470 934 424" />
+      <path class="limb-in" stroke-width="22" d="M1004 500 C970 496 944 470 934 424" />
+      <path class="bands" style="stroke-width:24" d="M1004 500 C970 496 944 470 934 424" />
+    </g>
+    <g class="bot-hand">
+      <g transform="translate(938 420) scale(-1 1)">
+        <path class="o" d="M-4 -14 C10 -20 26 -16 32 -10 L58 -10 C66 -10 66 2 58 2 L34 2 C36 10 30 18 18 20 C4 22 -8 14 -6 2 Z" />
+        <path class="thin" d="M12 6 C18 8 24 8 30 6 M10 14 C16 16 22 15 26 12" />
+        <path class="o" d="M6 -16 C6 -26 20 -28 24 -14" />
+      </g>
+    </g>
+  </g>
+</svg>
