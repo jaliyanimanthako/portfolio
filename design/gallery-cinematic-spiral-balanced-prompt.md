@@ -1,0 +1,6 @@
+# Smaller gallery character
+
+Built-in imagegen edit of `public/notion/gallery-cinematic-spiral-tall.png`.
+Final asset: `public/notion/gallery-cinematic-spiral-balanced.png`.
+
+Precise image edit. Input is a transparent illustration of a man climbing a long film strip. Make ONLY the human character approximately 20% smaller in both width and height relative to the film strip, centered around his current torso position. Keep him climbing naturally with hands gripping the strip and shoes resting on nearby frames, adjusting contact points locally. Preserve the SAME character identity, face, hairstyle, glasses, beard, clothes, pose, black linework and ivory fills. Preserve the film strip's EXACT overall length, width, flowing curved path, top and bottom extensions, lavender frames and original canvas proportions (749 by 2098 tall portrait). Reconstruct any strip areas previously hidden behind the larger human. Do not shorten, stretch, or resize the strip, do not crop or zoom the composition. Preserve true alpha transparency everywhere in the background. No background color, glow, shadows or extra elements. The only visible difference should be a modestly smaller climber on the SAME long film strip.

@@ -1,37 +1,27 @@
-// Preview gallery for the illustration scenes (served at /illustrations.html).
-import { FloatingResearcher, Mentor, MindReader, PocketLLM, Prototyper, SayHello } from './scenes';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Download, Pause, Play } from 'lucide-react';
+import { ResearchDesk, SignalResearcher, DeviceResearcher, HelloResearcher } from './ResearchScenes';
 
 const scenes = [
-  { title: 'Floating researcher', use: 'Hero', note: 'Human & machine: a phone chat, a chip, a brain, EEG and code float around him.', Component: FloatingResearcher },
-  { title: 'Neural speech tracking', use: 'Research · Final-year project', note: 'EEG cap electrodes fire in sequence while speech bars play: EEG and speech fusion.', Component: MindReader },
-  { title: 'LLM in your pocket', use: 'Edge AI · AiSee · llama.cpp', note: 'Chat bubbles from a model running on the chip itself; the cloud is crossed out.', Component: PocketLLM },
-  { title: 'Prototyping hardware', use: 'Embedded · BioSense · TransX', note: 'Soldering a board, current flowing in the traces, an ECG heartbeat drawing.', Component: Prototyper },
-  { title: 'Teaching & leading', use: 'Electronic Club · ICE mentor · Scouting', note: 'A neural network draws itself on the whiteboard while the room nods along.', Component: Mentor },
-  { title: 'Say hello', use: 'Contact', note: 'A waving hand and a paper plane looping into the inbox.', Component: SayHello },
+  { title: 'A curious mind', file: 'research-desk', note: 'Reading, writing, connecting ideas. A moving signal trace, a little pencil movement, and a warm cup of coffee.', Component: ResearchDesk },
+  { title: 'Listening to the brain', file: 'signal-researcher', note: 'Neural speech tracking: a researcher, an EEG cap, and a live signal.', Component: SignalResearcher },
+  { title: 'Intelligence, on device', file: 'device-researcher', note: 'An engineer testing a language model on a phone, seated on a tiny processor.', Component: DeviceResearcher },
+  { title: 'An open conversation', file: 'hello-researcher', note: 'A notebook under one arm, a gentle wave with the other. Good things start with a hello.', Component: HelloResearcher },
 ];
-
-const css = `
-  body { margin: 0; background: #f6f4ef; color: #191919; font-family: Inter, Helvetica, Arial, sans-serif; }
-  main { max-width: 1180px; margin: 0 auto; padding: 56px 20px 80px; }
-  h1 { font-size: clamp(34px, 5vw, 56px); letter-spacing: -.05em; font-weight: 600; margin: 0 0 10px; }
-  .lede { color: #6b6670; font-size: 15px; margin: 0 0 40px; max-width: 560px; line-height: 1.6; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
-  figure { margin: 0; background: #fff; border: 1px solid #19191915; border-radius: 18px; padding: 18px 18px 20px; }
-  figure.wide { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.2fr) 1fr; gap: 24px; align-items: center; }
-  figcaption span { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #7a4fc0; font-weight: 600; }
-  figcaption h2 { font-size: 22px; letter-spacing: -.03em; margin: 8px 0 6px; font-weight: 600; }
-  figcaption p { margin: 0; font-size: 14px; line-height: 1.6; color: #6b6670; }
-  @media (max-width: 700px) { figure.wide { grid-template-columns: 1fr; } }
-`;
-
 export default function IllustrationLab() {
-  return <main>
-    <style>{css}</style>
-    <h1>Illustration lab</h1>
-    <p className="lede">Notion-style animated scenes drawn from the CV. Each one is a standalone React component in <code>src/components/illustrations</code>, ready for the redesign.</p>
-    <div className="grid">{scenes.map((scene, i) => <figure key={scene.title} className={i === 0 ? 'wide' : ''}>
-      <scene.Component />
-      <figcaption><span>{scene.use}</span><h2>{scene.title}</h2><p>{scene.note}</p></figcaption>
-    </figure>)}</div>
+  const [paused, setPaused] = useState(false);
+  useEffect(() => { document.title = 'Illustration notebook — Jaliya Nimantha'; }, []);
+  return <main className="illustration-lab" data-motion={paused ? 'paused' : 'playing'}>
+    <style>{`
+      .illustration-lab{max-width:1080px;margin:auto;padding:45px 25px 75px;font-family:'DM Sans',Arial,sans-serif;color:#202020;background:#fefdf9}
+      .lab-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:45px}.lab-nav a,.lab-nav button,.lab-download{display:inline-flex;gap:10px;align-items:center;font-size:12px;color:inherit;text-decoration:none}.lab-nav button{background:none;border:1px solid #20202033;padding:10px;cursor:pointer;border-radius:4px}
+      .illustration-lab h1{font:400 clamp(36px,5vw,60px)/1.1 Georgia,serif;letter-spacing:-.04em;margin:0 0 20px}.lab-intro{font-size:14px;line-height:1.8;max-width:620px}.lab-palette{display:flex;gap:18px;margin:24px 0 40px;font-size:10px;flex-wrap:wrap}.lab-palette span{display:flex;gap:7px;align-items:center}.lab-palette i{width:13px;height:13px;border:1px solid #20202033;border-radius:50%}.lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px 30px}.lab-grid figure{margin:0;border-top:1px solid #20202033;padding-top:20px}.lab-grid .research-scene{height:330px}.lab-grid h2{font:400 27px Georgia,serif;margin:20px 0 12px}.lab-grid p{font-size:13px;line-height:1.7;margin:0 0 17px}.lab-download{font-size:11px;border-bottom:1px solid #7952b3;padding-bottom:5px}.lab-foot{font-size:11px;line-height:1.7;margin-top:40px}
+      @media(max-width:600px){.lab-grid{grid-template-columns:1fr}.lab-grid .research-scene{height:auto;max-height:350px}}
+    `}</style>
+    <nav className="lab-nav"><a href="/"><ArrowLeft size={15} /> Back to portfolio</a><button aria-pressed={paused} onClick={() => setPaused(!paused)}>{paused ? <Play size={13} /> : <Pause size={13} />}{paused ? 'Play animations' : 'Pause animations'}</button></nav>
+    <h1>The illustration notebook.</h1><p className="lab-intro">Four original human figures for a research engineer’s world. Simple ink lines, a little purple, and just enough motion to bring an idea to life.</p>
+    <div className="lab-palette">{[['Paper','#fefdf9'],['Ink','#202020'],['Lavender','#e9dcff'],['Purple','#7952b3']].map(([name,color]) => <span key={name}><i style={{background:color}} />{name} · {color}</span>)}</div>
+    <div className="lab-grid">{scenes.map(({title,file,note,Component}) => <figure key={file}><Component /><figcaption><h2>{title}</h2><p>{note}</p><a className="lab-download" href={`/illustrations/${file}.svg`} download>Download animated SVG <Download size={13} /></a></figcaption></figure>)}</div>
+    <p className="lab-foot">All scenes respect reduced-motion preferences. SVG downloads are self-contained and use the same four-color palette.</p>
   </main>;
 }

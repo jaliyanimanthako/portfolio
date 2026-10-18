@@ -1,0 +1,8 @@
+.notion-artwork { position: relative; width: 100%; isolation: isolate; }
+.notion-artwork > img { display: block; width: 100%; height: auto; }
+.artwork-motion { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.idea-ring { fill: none; stroke: var(--purple, #7952b3); stroke-width: 1.6; transform-box: fill-box; transform-origin: center; opacity: 0; animation: idea-ripple 7s ease-out infinite; }
+.idea-ring-delayed { animation-delay: 1.3s; }
+.notion-artwork:not(.artwork-visible) .idea-ring, [data-motion="paused"] .idea-ring { animation-play-state: paused; }
+@keyframes idea-ripple { 0%, 12% { opacity: 0; transform: scale(.82); } 23% { opacity: .35; } 65%, 100% { opacity: 0; transform: scale(1.55); } }
+@media (prefers-reduced-motion: reduce) { .idea-ring { animation: none; } }
