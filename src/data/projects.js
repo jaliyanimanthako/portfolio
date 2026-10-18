@@ -2,7 +2,7 @@ export const allProjects = [
     // Featured Projects
     {
         title: "Neural Speech Tracking",
-        image: "/eeg_cap.webp",
+        image: "/notion/voices.webp",
         category: "Final Year Project",
         status: "Ongoing",
         description: "Fusion of Speech and EEG signals for neural speech tracking. Research-driven project exploring the intersection of neuroscience and signal processing.",
@@ -13,7 +13,7 @@ export const allProjects = [
     },
     {
         title: "BioSense-AI",
-        image: "/biosense.webp",
+        image: "/notion/biosense.webp",
         category: "Health Tech / IoT",
         status: "Completed",
         description: "Portable health monitoring device with advanced ECG technology for precise diagnostics. Connected to a mobile app for real-time health insights using ML to classify conditions.",
@@ -83,7 +83,7 @@ export const allProjects = [
     },
     {
         title: "Campus Yamu",
-        image: "/campus-yamu.jpeg",
+        image: "/notion/campus.webp",
         category: "AI / Web Application",
         status: "Completed",
         description: "AI-powered web app helping Sri Lankan students discover university programs based on Z-scores using RAG, LangChain, and OpenAI.",
@@ -94,7 +94,7 @@ export const allProjects = [
     },
     {
         title: "Facial Expression Recognition",
-        image: "/facial-expression.png",
+        image: "/facial-expression.webp",
         category: "Computer Vision",
         status: "Completed",
         description: "Semi-supervised contrastive learning model classifying 8 expression classes with multi-modal features for real-world robustness.",
@@ -105,7 +105,7 @@ export const allProjects = [
     },
     {
         title: "TumorVision",
-        image: "/tumorvision.png",
+        image: "/tumorvision.webp",
         category: "Medical AI",
         status: "Completed",
         description: "Web application for brain tumor detection using deep learning. Identifies glioma, meningioma, pituitary tumors.",
@@ -116,7 +116,7 @@ export const allProjects = [
     },
     {
         title: "GOYAMA",
-        image: "/goyama.jpeg",
+        image: "/goyama.webp",
         category: "Agriculture AI",
         status: "Completed",
         description: "PyTorch model identifying rice leaf diseases with ~98% accuracy on test sets.",
@@ -127,7 +127,7 @@ export const allProjects = [
     },
     {
         title: "Vehicle Detection (YOLOv8)",
-        image: "/vehicle-detection.png",
+        image: "/vehicle-detection.webp",
         category: "Computer Vision",
         status: "Completed",
         description: "Vehicle detection using YOLOv8 and KITTI dataset for road safety with real-time monitoring.",
@@ -149,7 +149,7 @@ export const allProjects = [
     },
     {
         title: "NextWordPredictor",
-        image: "/next-word-predictor.jpeg",
+        image: "/next-word-predictor.webp",
         category: "NLP",
         status: "Ongoing",
         description: "Next-word prediction model using TensorFlow/Keras with LSTM neural networks.",
@@ -161,7 +161,7 @@ export const allProjects = [
     // Robotics / Embedded
     {
         title: "Line-Following Robot (PID)",
-        image: "/line-following-robot.jpeg",
+        image: "/line-following-robot.webp",
         category: "Robotics",
         status: "Completed",
         description: "Robotic system for line following and obstacle avoidance using PID control with Arduino.",
@@ -172,7 +172,7 @@ export const allProjects = [
     },
     {
         title: "NutriTech Pot",
-        image: "/nutritech-pot.jpeg",
+        image: "/nutritech-pot.webp",
         category: "IoT / Smart Agriculture",
         status: "Completed",
         description: "Smart plant care system that automatically waters plants based on soil moisture with remote monitoring.",

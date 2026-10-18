@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Technology logos for the Skills grid.
  *
@@ -52,6 +53,19 @@ export const LangChainLogo = logo(
     "M13.796 0a6.93 6.93 0 0 0-4.91 2.019L5.451 5.455l3.273 3.27 3.432-3.432a2.284 2.284 0 0 1 3.277 0 2.28 2.28 0 0 1 0 3.275L12 12.001l3.273 3.273 3.433-3.435c2.692-2.692 2.692-7.127 0-9.82A6.92 6.92 0 0 0 13.796 0m-5.07 8.728-3.433 3.434c-2.692 2.693-2.692 7.126 0 9.819A6.92 6.92 0 0 0 10.203 24a6.93 6.93 0 0 0 4.911-2.02l3.432-3.432-3.271-3.272-3.433 3.433a2.284 2.284 0 0 1-3.277 0 2.28 2.28 0 0 1 0-3.276L12 12z"
 );
 
+export const LangGraphLogo = (props) => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <path d="M6.2 6.4 12 3.5l5.8 2.9v6.2L12 15.5l-5.8-2.9V6.4ZM12 15.5v5M6.2 12.6 3 17.8m14.8-5.2 3.2 5.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="12" cy="3.5" r="2" fill="currentColor" />
+        <circle cx="6.2" cy="6.4" r="2" fill="currentColor" />
+        <circle cx="17.8" cy="6.4" r="2" fill="currentColor" />
+        <circle cx="12" cy="15.5" r="2" fill="currentColor" />
+        <circle cx="3" cy="17.8" r="2" fill="currentColor" />
+        <circle cx="21" cy="17.8" r="2" fill="currentColor" />
+        <circle cx="12" cy="20.5" r="2" fill="currentColor" />
+    </svg>
+);
+
 export const KotlinLogo = logo(
     "M24 24H0V0h24L12 12Z"
 );
@@ -81,6 +95,7 @@ export const TECH_LOGOS = [
     { label: "MediaPipe", Logo: MediaPipeLogo },
     { label: "Hugging Face", Logo: HuggingFaceLogo },
     { label: "LangChain", Logo: LangChainLogo },
+    { label: "LangGraph", Logo: LangGraphLogo },
     { label: "Kotlin", Logo: KotlinLogo },
     { label: "Android", Logo: AndroidLogo },
     { label: "C++", Logo: CPlusPlusLogo },
