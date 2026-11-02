@@ -4,7 +4,7 @@ import { ArrowDown, ArrowUpRight, ArrowUp, ArrowRight, X, Menu, Search } from 'l
 import { allProjects } from '../data/projects';
 import { awards, communityMoments } from '../data/profile';
 import ProjectDialog from './ProjectDialog';
-import ProjectLive from './ProjectLive';
+import ProjectLive, { ProjectFigure } from './ProjectLive';
 import JourneyMap from './JourneyMap';
 import { CardSignal, LocalTime, RoleTicker } from './Signals';
 import NotionArtwork from './illustrations/NotionArtwork';
@@ -117,7 +117,7 @@ function Projects({ archive = false }) {
     {archive && <div className="archive-controls"><Link to="/" className="text-link">← Back to home</Link><label className="search-field"><Search size={17} /><span className="sr-only">Search projects</span><input type="search" placeholder="Find a project, tool, or idea…" value={query} onChange={(e) => setQuery(e.target.value)} /></label></div>}
     {archive && <div className="filter-bar"><div role="group" aria-label="Filter projects">{filters.map((name) => <button key={name} onClick={() => setFilter(name)} aria-pressed={filter === name} className={filter === name ? 'active' : ''}>{name}</button>)}</div><span aria-live="polite">{projects.length} projects</span></div>}
     <div className="projects-grid">{projects.map((project) => <button className={`project-card${!archive ? ' featured-project-card' : ''}${!archive && !featuredArtwork[project.title] ? ' compact-project' : ''}`} key={project.title} onClick={() => setSelected(project)} aria-label={`View ${project.title}`}>
-      {!archive ? <FeaturedProjectVisual project={project} /> : <div className="project-image"><img src={project.image} alt="" loading="lazy" width="800" height="600" /><span className="project-open"><ArrowUpRight size={19} /></span></div>}
+      {!archive ? <FeaturedProjectVisual project={project} /> : <div className="project-image project-image-live"><ProjectFigure kind={project.figure} /><span className="project-open"><ArrowUpRight size={19} /></span></div>}
       <div className="project-content"><div className="project-meta"><span>{project.category}</span><span>{String(allProjects.indexOf(project) + 1).padStart(2, '0')}</span></div>
       <h3>{project.title}{!archive && !featuredArtwork[project.title] && <ArrowUpRight size={21} />}</h3><p className="project-summary">{project.description}</p><div className="project-tools">{project.tech.slice(0, 3).join(' / ')}</div></div>
     </button>)}</div>

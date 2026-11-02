@@ -2,7 +2,7 @@ export const allProjects = [
     // Featured Projects
     {
         title: "Neural Speech Tracking",
-        image: "/notion/voices.webp",
+        figure: "voices",
         category: "Final Year Project",
         status: "Ongoing",
         description: "Fusion of Speech and EEG signals for neural speech tracking. Research-driven project exploring the intersection of neuroscience and signal processing.",
@@ -13,7 +13,7 @@ export const allProjects = [
     },
     {
         title: "BioSense-AI",
-        image: "/notion/biosense.webp",
+        figure: "biosense",
         category: "Health Tech / IoT",
         status: "Completed",
         description: "Portable health monitoring device with advanced ECG technology for precise diagnostics. Connected to a mobile app for real-time health insights using ML to classify conditions.",
@@ -24,7 +24,7 @@ export const allProjects = [
     },
     {
         title: "GGUF Model Converter",
-        image: "/gguf.webp",
+        figure: "gguf",
         category: "AI Tools / Open Source",
         status: "Active",
         description: "Python toolkit automating the full pipeline for LLaMA models: clone llama.cpp, convert HF models to GGUF format, quantize with precision options, and upload to Hugging Face Hub.",
@@ -36,7 +36,7 @@ export const allProjects = [
     },
     {
         title: "AiSee LLaMa Android SDK",
-        image: "/llama.webp",
+        figure: "microchip",
         category: "Mobile AI / SDK",
         status: "Active",
         description: "Android SDK for searching .gguf LLaMA models from Hugging Face with on-device inference. Designed for private, efficient, mobile-friendly AI deployments.",
@@ -48,7 +48,7 @@ export const allProjects = [
     },
     {
         title: "Industrial End Effector",
-        image: "/endeff.webp",
+        figure: "endeff",
         category: "Robotics / Automation",
         status: "Completed",
         description: "Industrial end effector with vacuum gripper for automated pick-and-place robots. Uses ToF sensors for precise angle measurement with Modbus protocol.",
@@ -59,7 +59,7 @@ export const allProjects = [
     },
     {
         title: "Hodi (Sinhala OCR)",
-        image: "/hodi.webp",
+        figure: "hodi",
         category: "OCR / Deep Learning",
         status: "Ongoing",
         description: "Mobile app using OCR technology to identify both handwritten and printed Sinhala letters for text extraction.",
@@ -72,7 +72,7 @@ export const allProjects = [
     // Deep Learning / AI Projects
     {
         title: "Sign Language Recognition",
-        image: "/sign-language.webp",
+        figure: "sign",
         category: "Wearable AI",
         status: "Ongoing",
         description: "Wearable device for real-time hand sign recognition using sEMG and IMU sensors. Converts gestures into audible speech through deep learning.",
@@ -83,7 +83,7 @@ export const allProjects = [
     },
     {
         title: "Campus Yamu",
-        image: "/notion/campus.webp",
+        figure: "campus",
         category: "AI / Web Application",
         status: "Completed",
         description: "AI-powered web app helping Sri Lankan students discover university programs based on Z-scores using RAG, LangChain, and OpenAI.",
@@ -94,7 +94,7 @@ export const allProjects = [
     },
     {
         title: "Facial Expression Recognition",
-        image: "/facial-expression.webp",
+        figure: "face",
         category: "Computer Vision",
         status: "Completed",
         description: "Semi-supervised contrastive learning model classifying 8 expression classes with multi-modal features for real-world robustness.",
@@ -105,7 +105,7 @@ export const allProjects = [
     },
     {
         title: "TumorVision",
-        image: "/tumorvision.webp",
+        figure: "tumor",
         category: "Medical AI",
         status: "Completed",
         description: "Web application for brain tumor detection using deep learning. Identifies glioma, meningioma, pituitary tumors.",
@@ -116,7 +116,7 @@ export const allProjects = [
     },
     {
         title: "GOYAMA",
-        image: "/goyama.webp",
+        figure: "goyama",
         category: "Agriculture AI",
         status: "Completed",
         description: "PyTorch model identifying rice leaf diseases with ~98% accuracy on test sets.",
@@ -127,7 +127,7 @@ export const allProjects = [
     },
     {
         title: "Vehicle Detection (YOLOv8)",
-        image: "/vehicle-detection.webp",
+        figure: "yolo",
         category: "Computer Vision",
         status: "Completed",
         description: "Vehicle detection using YOLOv8 and KITTI dataset for road safety with real-time monitoring.",
@@ -138,7 +138,7 @@ export const allProjects = [
     },
     {
         title: "U-Net Image Segmentation",
-        image: "/unet-segmentation.webp",
+        figure: "unet",
         category: "Deep Learning",
         status: "Completed",
         description: "U-Net architecture in TensorFlow/Keras for semantic segmentation on CARLA self-driving dataset.",
@@ -149,7 +149,7 @@ export const allProjects = [
     },
     {
         title: "NextWordPredictor",
-        image: "/next-word-predictor.webp",
+        figure: "nextword",
         category: "NLP",
         status: "Ongoing",
         description: "Next-word prediction model using TensorFlow/Keras with LSTM neural networks.",
@@ -161,7 +161,7 @@ export const allProjects = [
     // Robotics / Embedded
     {
         title: "Line-Following Robot (PID)",
-        image: "/line-following-robot.webp",
+        figure: "linebot",
         category: "Robotics",
         status: "Completed",
         description: "Robotic system for line following and obstacle avoidance using PID control with Arduino.",
@@ -172,7 +172,7 @@ export const allProjects = [
     },
     {
         title: "NutriTech Pot",
-        image: "/nutritech-pot.webp",
+        figure: "pot",
         category: "IoT / Smart Agriculture",
         status: "Completed",
         description: "Smart plant care system that automatically waters plants based on soil moisture with remote monitoring.",

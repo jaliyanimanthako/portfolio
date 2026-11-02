@@ -43,3 +43,10 @@
 .project-visual[data-live='true'] .project-live-chip::before { background: var(--purple); animation: chip-blink 1.2s ease-in-out infinite; }
 @keyframes chip-blink { 50% { opacity: .25; } }
 @media (prefers-reduced-motion: reduce) { .project-visual[data-live='true'] .project-live-chip::before { animation: none; } }
+
+/* Always-on figures in archive cards and the project dialog (ProjectFigure) */
+.project-figure { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.project-image-live, .dialog-figure { background: var(--paper) radial-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px) 0 0 / 18px 18px; transition: background-color .3s; }
+.project-card:hover .project-image-live { background-color: var(--tint, #f4effc); }
+.dialog-figure { position: relative; height: 280px; margin: 23px 0; border: 1px solid var(--line); border-radius: 3px; }
+@media (max-width: 600px) { .dialog-figure { height: 210px; } }
