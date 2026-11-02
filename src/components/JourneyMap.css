@@ -1,0 +1,53 @@
+.journey-map {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  align-self: center;
+  isolation: isolate;
+  margin: 0;
+}
+
+.journey-map-visual { width: 100%; }
+.journey-map-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.journey-map-land { opacity: .85; }
+.journey-map-cursor-glow { opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .journey-map[data-hovered='true'] .journey-map-cursor-glow { opacity: 1; }
+}
+.journey-map-route { fill: none; stroke: var(--purple); stroke-width: 2.2; stroke-dasharray: 3 5; }
+.journey-map-traveller { fill: var(--purple); offset-path: path('M320 350 C390 220 540 235 628 420'); animation: journey-map-travel 6s linear infinite; }
+.journey-map-trail { opacity: .12; }
+.journey-map-pin { fill: var(--purple); stroke: var(--paper); stroke-width: 2; }
+.journey-map-pin-origin { fill: var(--paper); stroke: var(--purple); }
+.journey-map-halo { fill: var(--purple); opacity: .09; }
+.journey-map-pulse { fill: none; stroke: var(--purple); stroke-width: 1; transform-box: fill-box; transform-origin: center; animation: journey-map-pulse 3s ease-out infinite; }
+.journey-map-label { font: 550 17px 'DM Sans', sans-serif; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 5px; stroke-linejoin: round; }
+.journey-map-sublabel { font: 9px monospace; letter-spacing: .08em; fill: var(--purple); paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.journey-map[data-active='false'] * { animation-play-state: paused; }
+
+@keyframes journey-map-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  8%, 85% { opacity: 1; }
+  95%, 100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes journey-map-pulse {
+  from { transform: scale(.5); opacity: .5; }
+  to { transform: scale(1.8); opacity: 0; }
+}
+
+@media (max-width: 1050px) {
+  .journey-map-label { font-size: 23px; }
+  .journey-map-sublabel { display: none; }
+}
+
+@media (max-width: 600px) {
+  .journey-map { margin-top: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-map-traveller, .journey-map-pulse { display: none; }
+}
+
+@media print {
+  .journey-map-traveller, .journey-map-pulse { display: none; }
+}

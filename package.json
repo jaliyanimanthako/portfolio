@@ -8,7 +8,8 @@
     "build": "vite build",
     "illustrations:export": "node scripts/export-illustrations.mjs",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gallery:optimize": "node scripts/optimize-gallery.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.23.26",
