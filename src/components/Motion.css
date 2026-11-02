@@ -1,0 +1,64 @@
+/* Hero entrance: each block rises in turn on first load. */
+.hero h1,
+.role-ticker,
+.hero-description > p,
+.hero-actions,
+.journey-map {
+  animation: motion-rise .9s cubic-bezier(.2, .7, .2, 1) backwards;
+}
+.role-ticker { animation-delay: .07s; }
+.hero-description > p:nth-child(1) { animation-delay: .12s; }
+.hero-description > p:nth-child(2) { animation-delay: .2s; }
+.hero-description > p:nth-child(3) { animation-delay: .28s; }
+.hero-actions { animation-delay: .38s; }
+.journey-map { animation-name: motion-fade; animation-duration: 1.4s; animation-delay: .25s; }
+
+@keyframes motion-rise { from { opacity: 0; transform: translateY(18px); } }
+@keyframes motion-fade { from { opacity: 0; } }
+
+/* Scroll reveal: Portfolio sets data-reveal and removes it once the element has settled.
+   The doubled attribute keeps it ahead of the card hover transitions below. */
+[data-reveal][data-reveal] {
+  transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+[data-reveal='hidden'][data-reveal] { opacity: 0; transform: translateY(22px); }
+
+/* The current role's marker sends out a slow ripple. */
+.is-current .experience-marker::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--purple);
+  border-radius: 50%;
+  animation: motion-ripple 2.8s ease-out infinite;
+}
+@keyframes motion-ripple { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(2.8); } }
+
+/* Hover details */
+.nav-links > a { background: linear-gradient(var(--purple), var(--purple)) left calc(100% - 6px) / 0 1px no-repeat; transition: color .2s, background-size .3s cubic-bezier(.2, .7, .2, 1); }
+.nav-links > a:hover { background-size: 100% 1px; }
+
+.button-primary svg, .contact-email svg, .project-open svg { transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+.button-primary:hover svg { transform: translateX(3px); }
+.hero-actions .button-primary:hover svg { transform: translateY(3px); }
+.contact-email:hover svg { transform: translate(3px, -3px); }
+
+.featured-project-card { transition: border-color .25s, transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s; }
+.featured-project-card:hover { box-shadow: 0 18px 34px -24px color-mix(in srgb, var(--purple) 55%, transparent); }
+.project-card:hover .project-open svg { transform: rotate(45deg); }
+
+.awards-list .award-card,
+.beyond-section .community-grid article {
+  transition: border-color .25s, transform .25s cubic-bezier(.2, .7, .2, 1), box-shadow .25s;
+}
+.awards-list .award-card:hover,
+.beyond-section .community-grid article:hover {
+  border-color: color-mix(in srgb, var(--purple) 40%, var(--line));
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px -18px color-mix(in srgb, var(--purple) 50%, transparent);
+}
+
+@media print {
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+}

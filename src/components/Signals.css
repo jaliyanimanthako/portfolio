@@ -1,0 +1,103 @@
+/* Role ticker under the hero name */
+.role-ticker { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 10px; margin-top: 16px; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; }
+.role-ticker-slash { color: var(--line); font-weight: 400; }
+.role-ticker-window { display: inline-block; overflow: hidden; vertical-align: bottom; height: 1.35em; color: var(--purple); }
+.role-ticker-word { display: inline-block; animation: ticker-in .6s cubic-bezier(.2, .7, .2, 1); }
+@keyframes ticker-in { from { transform: translateY(105%); opacity: 0; } }
+
+/* Signal band: live waveform + numbers */
+.signal-band { margin-top: 70px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.signal-wave { position: relative; height: 120px; touch-action: pan-y; cursor: crosshair; }
+.signal-wave canvas { display: block; width: 100%; height: 100%; }
+.signal-wave-labels { position: absolute; inset: auto 0 12px; display: flex; justify-content: space-between; pointer-events: none; font: 9px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.signal-wave-labels span:last-child { color: var(--purple); }
+.signal-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--line); }
+.signal-stats > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 8px; padding: 26px 22px 30px; border-left: 1px solid var(--line); }
+.signal-stats > div:first-child { border-left: 0; padding-left: 0; }
+.signal-stats dd { margin: 0; font-size: clamp(34px, 3.6vw, 52px); font-weight: 550; letter-spacing: -.055em; line-height: 1; font-variant-numeric: tabular-nums; }
+.signal-stats > div:nth-child(2n) dd { color: var(--purple); }
+.signal-stats dt { font-size: 11px; line-height: 1.5; color: var(--muted); }
+
+/* Manifesto: the one dark moment on the page */
+.manifesto { --p: 0; background: var(--ink); color: var(--paper); margin-block: 30px 0; overflow: hidden; }
+.manifesto-inner { display: grid; grid-template-columns: 1.15fr 1fr; gap: 60px; align-items: center; padding-block: 110px; }
+.manifesto-kicker { font: 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .18em; text-transform: uppercase; color: var(--lavender); opacity: .8; }
+.manifesto h2 { margin-top: 22px; font-size: clamp(44px, 5.4vw, 78px); letter-spacing: -.055em; line-height: 1.04; }
+.manifesto-word { opacity: clamp(.16, calc(var(--p) * (var(--n) + 1) - var(--i)), 1); transition: opacity .2s linear; }
+.manifesto-word.is-key { position: relative; isolation: isolate; color: var(--paper); }
+.manifesto-word.is-key::before { content: ''; position: absolute; z-index: -1; inset: .12em .18em .02em -.08em; background: var(--purple); border-radius: 3px; transform-origin: left; transform: scaleX(clamp(0, calc(var(--p) * (var(--n) + 1) - var(--i) - .2), 1)); }
+.manifesto-note { max-width: 440px; margin-top: 30px; font-size: 14px; line-height: 1.85; color: color-mix(in srgb, var(--paper) 62%, var(--ink)); opacity: clamp(0, calc(var(--p) * 1.6 - .6), 1); }
+
+.manifesto-venn { margin: 0; justify-self: center; width: min(100%, 440px); }
+.manifesto-venn svg { display: block; width: 100%; height: auto; overflow: visible; }
+.venn-ring { fill: color-mix(in srgb, var(--lavender) 5%, transparent); stroke: var(--lavender); stroke-width: 1.6; stroke-dasharray: 100; stroke-dashoffset: 100; transform-box: fill-box; transform-origin: center; transition: stroke-dashoffset 1.4s cubic-bezier(.65, 0, .35, 1), transform 1.2s cubic-bezier(.2, .7, .2, 1); }
+.venn-ring-1 { transform: translateY(-34px); }
+.venn-ring-2 { transform: translate(30px, 20px); transition-delay: .1s; }
+.venn-ring-3 { transform: translate(-30px, 20px); transition-delay: .2s; }
+.venn-core { fill: var(--purple); opacity: 0; transition: opacity .6s .95s; }
+.venn-core-label { font: 600 17px 'DM Sans', sans-serif; fill: var(--paper); opacity: 0; transition: opacity .6s 1.1s; }
+.venn-label { font: 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .16em; fill: var(--lavender); opacity: 0; transition: opacity .8s .7s; }
+.manifesto-venn[data-drawn='true'] .venn-ring { stroke-dashoffset: 0; transform: none; }
+.manifesto-venn[data-drawn='true'] :is(.venn-core, .venn-core-label, .venn-label) { opacity: 1; }
+.manifesto-venn figcaption { margin-top: 26px; text-align: center; font-size: 15px; color: color-mix(in srgb, var(--paper) 75%, var(--ink)); }
+.manifesto-venn figcaption span { color: var(--lavender); }
+
+/* Live glyphs on featured project cards */
+.card-signal { width: 42px; height: 12px; margin-left: 10px; vertical-align: -2px; overflow: hidden; }
+.card-signal path, .card-signal circle:not(.card-signal-packet) { fill: none; stroke: var(--purple); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.card-signal-eeg g { animation: card-eeg 2.4s linear infinite; }
+@keyframes card-eeg { to { transform: translateX(-60px); } }
+.card-signal-tokens rect { fill: var(--purple); opacity: .15; animation: card-token 1.6s steps(1) infinite; animation-delay: calc(var(--i) * .2s); }
+@keyframes card-token { 0%, 55% { opacity: 1; } 56%, 100% { opacity: .15; } }
+.card-signal-ecg path { stroke-dasharray: 22 100; animation: card-ecg 1.8s linear infinite; }
+@keyframes card-ecg { from { stroke-dashoffset: 22; } to { stroke-dashoffset: -100; } }
+.card-signal-rag circle:not(.card-signal-packet) { fill: var(--paper); }
+.card-signal-packet { fill: var(--purple); animation: card-packet 2s cubic-bezier(.65, 0, .35, 1) infinite; }
+@keyframes card-packet { to { transform: translateX(50px); } }
+.project-card:hover .card-signal * { animation-duration: .9s; }
+.project-card:hover .card-signal-eeg g, .project-card:hover .card-signal-rag .card-signal-packet { animation-duration: 1.1s; }
+
+/* Heartbeat divider before contact */
+.pulse-divider { height: 80px; margin-block: 40px 60px; }
+.pulse-divider svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.pulse-base, .pulse-trace { fill: none; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.pulse-base { stroke: var(--line); stroke-width: 1.2; }
+.pulse-trace { stroke: var(--purple); stroke-width: 2; stroke-dasharray: 9 91; stroke-dashoffset: 9; animation: pulse-travel 3.6s cubic-bezier(.45, .05, .55, .95) infinite; }
+.pulse-divider[data-active='false'] .pulse-trace { animation-play-state: paused; }
+@keyframes pulse-travel { to { stroke-dashoffset: -91; } }
+
+/* Contact: local time */
+.local-time { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font: 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.local-time time { color: var(--ink); }
+.local-time-dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--purple); }
+.local-time-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--purple); animation: motion-ripple 2.8s ease-out infinite; }
+
+@media (max-width: 1050px) {
+  .manifesto-inner { gap: 40px; padding-block: 90px; }
+  .signal-stats > div { padding-inline: 16px; }
+}
+@media (max-width: 760px) {
+  .signal-band { margin-top: 45px; }
+  .signal-wave { height: 96px; }
+  .signal-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .signal-stats > div { padding: 22px 0 24px 18px; border-top: 1px solid var(--line); }
+  .signal-stats > div:nth-child(-n + 2) { border-top: 0; }
+  .signal-stats > div:nth-child(2n + 1) { border-left: 0; padding-left: 0; }
+  .signal-stats > div:last-child { grid-column: 1 / -1; border-left: 0; padding-left: 0; }
+  .manifesto-inner { grid-template-columns: 1fr; padding-block: 72px; }
+  .manifesto-venn { width: min(100%, 360px); }
+  .pulse-divider { height: 56px; margin-block: 20px 40px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-ticker-word, .card-signal *, .pulse-trace, .local-time-dot::after { animation: none !important; }
+  .manifesto-word { transition: none; }
+  .venn-ring, .venn-core, .venn-core-label, .venn-label { transition: none; }
+}
+@media print {
+  .signal-wave, .pulse-divider { display: none; }
+  .manifesto { background: none; color: var(--ink); }
+  .manifesto-word, .manifesto-note { opacity: 1; }
+}
+.manifesto + .tech-stack-section { margin-top: 80px; }
+@media (max-width: 760px) { .manifesto + .tech-stack-section { margin-top: 50px; } }

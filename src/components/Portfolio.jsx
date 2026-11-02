@@ -4,10 +4,13 @@ import { ArrowDown, ArrowUpRight, ArrowUp, ArrowRight, X, Menu, Search } from 'l
 import { allProjects } from '../data/projects';
 import { awards, communityMoments } from '../data/profile';
 import ProjectDialog from './ProjectDialog';
+import JourneyMap from './JourneyMap';
+import { CardSignal, LocalTime, Manifesto, PulseDivider, RoleTicker, SignalBand } from './Signals';
 import NotionArtwork from './illustrations/NotionArtwork';
 import { TECH_LOGOS } from './ui/TechLogos';
 import './WorkExperience.css';
 import './Education.css';
+import './Motion.css';
 
 const email = 'jaliyanimantha070@gmail.com';
 const social = [['GitHub', 'https://github.com/jaliyanimanthako'], ['LinkedIn', 'https://linkedin.com/in/jaliya-nimantha-8924b7219/']];
@@ -51,6 +54,7 @@ function Navigation() {
 function Hero() {
   return <section className="hero wrap" aria-labelledby="hero-title">
     <div className="hero-copy"><h1 id="hero-title">Hi, I’m<br /><span className="hero-person-name">Jaliya Nimantha.</span></h1>
+      <RoleTicker />
       <div className="hero-description">
         <p>I’m an Electronic and Telecommunication Engineering graduate from the <strong>University of Moratuwa, Sri Lanka</strong>, and currently a Research Engineer at the <strong>Augmented Human Lab, National University of Singapore</strong>. My work lies at the intersection of <strong>deep learning, computer vision, and artificial intelligence</strong>, where algorithms meet real-world impact.</p>
         <p>From signal processing and embedded systems to circuit design and <strong>Brain–Computer Interfaces</strong>, I enjoy exploring the full spectrum of technology. I’m particularly fascinated by <strong>Human–Computer Interaction</strong> and <strong>Explainable AI</strong>, because I believe technology should be understood, not just used.</p>
@@ -58,8 +62,37 @@ function Hero() {
       </div>
       <div className="hero-actions"><a href="#work" className="button-primary">Explore my work <ArrowDown size={16} /></a></div>
     </div>
-    <figure className="hero-art"><NotionArtwork name="portal" priority /></figure>
+    <JourneyMap />
   </section>;
+}
+
+const revealTargets = '.section-heading, .experience-entry, .project-card, .archive-link, .tech-stack-grid li, .tech-stack-caption, .education-panel, .awards-art, .award-card, .community-grid article, .beyond-art, .gallery-cta, .contact-layout > *, .signal-stats > div, .manifesto-copy, .manifesto-venn';
+// Fades content up as it scrolls into view. Only elements present on load are hidden,
+// so anything rendered later (e.g. filtered projects) simply appears.
+function useScrollReveal(key) {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const elements = [...document.querySelectorAll(`main :is(${revealTargets})`)].filter((el) => el.getBoundingClientRect().top > window.innerHeight * 0.9);
+    const observer = new IntersectionObserver((entries) => entries.forEach(({ isIntersecting, target }) => {
+      if (!isIntersecting) return;
+      observer.unobserve(target);
+      target.dataset.reveal = 'shown';
+      const settle = (event) => {
+        if (event.target !== target) return;
+        target.removeEventListener('transitionend', settle);
+        delete target.dataset.reveal;
+        target.style.removeProperty('--reveal-delay');
+      };
+      target.addEventListener('transitionend', settle);
+    }), { rootMargin: '0px 0px -8% 0px' });
+    elements.forEach((el) => {
+      const siblings = [...el.parentElement.children].filter((child) => elements.includes(child));
+      el.style.setProperty('--reveal-delay', `${Math.min(siblings.indexOf(el), 6) * 70}ms`);
+      el.dataset.reveal = 'hidden';
+      observer.observe(el);
+    });
+    return () => { observer.disconnect(); elements.forEach((el) => { delete el.dataset.reveal; el.style.removeProperty('--reveal-delay'); }); };
+  }, [key]);
 }
 
 function SectionLabel({ number, children, aside }) {
@@ -69,7 +102,7 @@ function SectionLabel({ number, children, aside }) {
 function FeaturedProjectVisual({ project }) {
   const visual = featuredArtwork[project.title];
   if (!visual) return null;
-  return <div className="project-visual"><NotionArtwork name={visual.name} decorative /><span className="visual-foot">{visual.note}</span><span className="project-open"><ArrowUpRight size={19} /></span></div>;
+  return <div className="project-visual"><NotionArtwork name={visual.name} decorative /><span className="visual-foot">{visual.note}<CardSignal kind={visual.name} /></span><span className="project-open"><ArrowUpRight size={19} /></span></div>;
 }
 
 function Projects({ archive = false }) {
@@ -143,7 +176,7 @@ function Journey() {
 }
 
 function Contact() {
-  return <section id="contact" className="contact-section wrap"><div className="contact-layout"><div><h2>Get In <span className="accent-text">Touch</span></h2><p>A research question, a collaboration, or a different<br className="desktop-break" /> way of looking at things. I’d love to hear it.</p><a className="contact-email" href={`mailto:${email}`}>{email}<ArrowUpRight size={21} /></a><div className="social-links">{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noopener noreferrer">{name}<ArrowUpRight size={14} /></a>)}</div></div><figure><NotionArtwork name="makers" /><figcaption>Good questions. Shared ideas. Better things.</figcaption></figure></div></section>;
+  return <section id="contact" className="contact-section wrap"><div className="contact-layout"><div><LocalTime /><h2>Get In <span className="accent-text">Touch</span></h2><p>A research question, a collaboration, or a different<br className="desktop-break" /> way of looking at things. I’d love to hear it.</p><a className="contact-email" href={`mailto:${email}`}>{email}<ArrowUpRight size={21} /></a><div className="social-links">{social.map(([name, href]) => <a href={href} key={name} target="_blank" rel="noopener noreferrer">{name}<ArrowUpRight size={14} /></a>)}</div></div><figure><NotionArtwork name="makers" /><figcaption>Good questions. Shared ideas. Better things.</figcaption></figure></div></section>;
 }
 
 export default function Portfolio({ archive = false }) {
@@ -153,5 +186,6 @@ export default function Portfolio({ archive = false }) {
     const frame = requestAnimationFrame(() => { if (hash) document.getElementById(hash.slice(1))?.scrollIntoView(); else window.scrollTo(0, 0); });
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash, archive]);
-  return <div><a className="skip-link" href="#main">Skip to content</a><Navigation /><main id="main">{archive ? <Projects archive /> : <><Hero /><WorkExperience /><Projects /><TechStack /><Journey /><Contact /></>}</main><footer className="footer wrap"><Link to="/" className="footer-name">jn.</Link><span>© {new Date().getFullYear()} Jaliya Nimantha</span><span className="footer-thought">Made with curiosity. Always evolving.</span><a href="#main">Back to top <ArrowUp size={14} /></a></footer></div>;
+  useScrollReveal(pathname);
+  return <div><a className="skip-link" href="#main">Skip to content</a><Navigation /><main id="main">{archive ? <Projects archive /> : <><Hero /><SignalBand /><WorkExperience /><Projects /><Manifesto /><TechStack /><Journey /><PulseDivider /><Contact /></>}</main><footer className="footer wrap"><Link to="/" className="footer-name">jn.</Link><span>© {new Date().getFullYear()} Jaliya Nimantha</span><span className="footer-thought">Made with curiosity. Always evolving.</span><a href="#main">Back to top <ArrowUp size={14} /></a></footer></div>;
 }
