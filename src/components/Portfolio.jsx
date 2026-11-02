@@ -4,8 +4,9 @@ import { ArrowDown, ArrowUpRight, ArrowUp, ArrowRight, X, Menu, Search } from 'l
 import { allProjects } from '../data/projects';
 import { awards, communityMoments } from '../data/profile';
 import ProjectDialog from './ProjectDialog';
+import ProjectLive from './ProjectLive';
 import JourneyMap from './JourneyMap';
-import { CardSignal, LocalTime, Manifesto, PulseDivider, RoleTicker, SignalBand } from './Signals';
+import { CardSignal, LocalTime, RoleTicker } from './Signals';
 import NotionArtwork from './illustrations/NotionArtwork';
 import { TECH_LOGOS } from './ui/TechLogos';
 import './WorkExperience.css';
@@ -66,7 +67,7 @@ function Hero() {
   </section>;
 }
 
-const revealTargets = '.section-heading, .experience-entry, .project-card, .archive-link, .tech-stack-grid li, .tech-stack-caption, .education-panel, .awards-art, .award-card, .community-grid article, .beyond-art, .gallery-cta, .contact-layout > *, .signal-stats > div, .manifesto-copy, .manifesto-venn';
+const revealTargets = '.section-heading, .experience-entry, .project-card, .archive-link, .tech-stack-grid li, .tech-stack-caption, .education-panel, .awards-art, .award-card, .community-grid article, .beyond-art, .gallery-cta, .contact-layout > *';
 // Fades content up as it scrolls into view. Only elements present on load are hidden,
 // so anything rendered later (e.g. filtered projects) simply appears.
 function useScrollReveal(key) {
@@ -102,7 +103,7 @@ function SectionLabel({ number, children, aside }) {
 function FeaturedProjectVisual({ project }) {
   const visual = featuredArtwork[project.title];
   if (!visual) return null;
-  return <div className="project-visual"><NotionArtwork name={visual.name} decorative /><span className="visual-foot">{visual.note}<CardSignal kind={visual.name} /></span><span className="project-open"><ArrowUpRight size={19} /></span></div>;
+  return <div className="project-visual"><NotionArtwork name={visual.name} decorative /><ProjectLive kind={visual.name} /><span className="visual-foot">{visual.note}<CardSignal kind={visual.name} /></span><span className="project-open"><ArrowUpRight size={19} /></span></div>;
 }
 
 function Projects({ archive = false }) {
@@ -187,5 +188,5 @@ export default function Portfolio({ archive = false }) {
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash, archive]);
   useScrollReveal(pathname);
-  return <div><a className="skip-link" href="#main">Skip to content</a><Navigation /><main id="main">{archive ? <Projects archive /> : <><Hero /><SignalBand /><WorkExperience /><Projects /><Manifesto /><TechStack /><Journey /><PulseDivider /><Contact /></>}</main><footer className="footer wrap"><Link to="/" className="footer-name">jn.</Link><span>© {new Date().getFullYear()} Jaliya Nimantha</span><span className="footer-thought">Made with curiosity. Always evolving.</span><a href="#main">Back to top <ArrowUp size={14} /></a></footer></div>;
+  return <div><a className="skip-link" href="#main">Skip to content</a><Navigation /><main id="main">{archive ? <Projects archive /> : <><Hero /><WorkExperience /><Projects /><TechStack /><Journey /><Contact /></>}</main><footer className="footer wrap"><Link to="/" className="footer-name">jn.</Link><span>© {new Date().getFullYear()} Jaliya Nimantha</span><span className="footer-thought">Made with curiosity. Always evolving.</span><a href="#main">Back to top <ArrowUp size={14} /></a></footer></div>;
 }
