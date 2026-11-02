@@ -50,3 +50,8 @@
 .project-card:hover .project-image-live { background-color: var(--tint, #f4effc); }
 .dialog-figure { position: relative; height: 280px; margin: 23px 0; border: 1px solid var(--line); border-radius: 3px; }
 @media (max-width: 600px) { .dialog-figure { height: 210px; } }
+
+/* Project dialog: publication details */
+.dialog-content > p.dialog-venue { margin-top: 18px; font: 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; line-height: 1.7; color: var(--purple); }
+.dialog-content > p.dialog-authors { margin-top: 6px; font-size: 12px; line-height: 1.7; }
+.dialog-links { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 25px; }

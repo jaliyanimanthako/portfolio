@@ -74,38 +74,80 @@ function probBars(rows, x, y, u, t0, { labelW = 200, w = 300, gap = 42, size = 2
   });
 }
 
-function vizEEG(u) {
-  const rev = inOutCubic(P(u, .2, 1.1)), cols = 96, cw = VW / cols;
-  const env = (xw) => clamp((fbm(xw * .035) + .55) / 1.3) ** 1.6;
-  const scroll = u * 30;
-  text('SPEECH ENVELOPE', 0, 20, { size: 18, fam: MONO, color: K.muted, ls: 2 });
-  const cy0 = 108, envPts = [];
-  for (let c = 0; c < cols * rev; c++) {
-    const xw = c + scroll, e = env(xw), hgt = e * 62 * (.45 + .55 * h1(Math.floor(xw) * 7));
-    ctx.fillStyle = rgba(K.mid, .75); ctx.fillRect(c * cw + 1, cy0 - hgt, cw - 3, hgt * 2);
-    envPts.push([c * cw + cw / 2, cy0 - e * 66 - 6]);
+// NeuroCodec: EEG steers which talker survives as mixture codec tokens become target tokens (Q1–Q9).
+const HEAD = Array.from({ length: 13 }, (_, i) => { const a = i * 2.39996, r = 40 * Math.sqrt((i + .5) / 13); return [65 + r * Math.cos(a), 414 + r * Math.sin(a) * .95]; });
+function vizNeuroCodec(u) {
+  const talkA = (t) => Math.abs(fbm(t * 1.7)) * (.4 + .6 * clamp(fbm(t * .35 + 4) + .6));
+  const talkB = (t) => Math.abs(fbm(t * 2.3 + 40)) * (.4 + .6 * clamp(fbm(t * .3 + 19) + .6));
+  const ax = 432, show = (a, b) => P(u, a, b);
+  // mixture
+  label('MIXTURE', 0, 24);
+  for (let k = 0; k < 55; k++) {
+    const t = u * 2.4 + k * .09, hb = 70 * talkB(t), ha = 70 * talkA(t), x = k * 4;
+    ctx.fillStyle = rgba(K.ink, .28); ctx.fillRect(x, 172 - hb, 3, hb * 2);
+    ctx.fillStyle = rgba(K.purple, .55); ctx.fillRect(x, 172 - ha, 3, ha * 2);
   }
-  polyline(envPts, K.purple, 2.5);
-  const couple = inOutCubic(P(u, 1.1, 2.9));
-  const chs = ['Fz', 'Cz', 'Pz', 'Oz', 'T7', 'T8'], top = 220, sp = 54;
-  text('EEG · 6 CH', 0, top - 12, { size: 18, fam: MONO, color: K.muted, ls: 2 });
-  chs.forEach((ch, i) => {
-    const y = top + 26 + i * sp;
-    text(ch, 0, y + 6, { size: 18, fam: MONO, color: K.muted });
-    const pts = [];
-    for (let x = 0; x < (VW - 60) * rev; x += 3) {
-      const xw = x / cw + scroll;
-      pts.push([60 + x, y - (11 * fbm(xw * .55 + i * 50 + u * 2) + couple * 17 * (env(xw - 4) - .3) * (i % 3 === 2 ? .6 : 1))]);
+  label('2 TALKERS', 0, 318, { size: 15 });
+  // codec tokens
+  label('CODEC LATENTS · Q1–Q9', ax, 24, { align: 'center', color: K.purple });
+  const step = 22, shift = (u * 36) % step, base = Math.floor(u * 36 / step);
+  ctx.save(); ctx.beginPath(); ctx.rect(248, 40, 364, 268); ctx.clip();
+  for (let c = 0; c < 19; c++) {
+    const x = 248 - shift + c * step, id = base + c, target = x + 8 > ax;
+    for (let r = 0; r < 9; r++) {
+      const v = h1(id * 11 + r * 97);
+      rrect(x, 46 + r * 28, 16, 22, 4);
+      ctx.fillStyle = target ? rgba(K.purple, .25 + .65 * v * (1 - r * .06)) : rgba(K.ink, .07 + .3 * h1(id * 5 + r * 31));
+      ctx.fill();
     }
-    polyline(pts, rgba(K.ink, .62), 1.6);
+  }
+  ctx.restore();
+  withAlpha(show(.4, .8), () => {
+    ctx.fillStyle = rgba(K.purple, .1); ctx.fillRect(ax - 14, 38, 28, 272);
+    ctx.fillStyle = K.purple; ctx.fillRect(ax - 1, 38, 2, 272);
   });
-  const wx = 60 + ((u * 150) % (VW - 190));
-  withAlpha(P(u, 1.1, 1.5), () => { ctx.fillStyle = rgba(K.purple, .07); ctx.fillRect(wx, 40, 130, 520); ctx.fillStyle = rgba(K.purple, .45); ctx.fillRect(wx, 40, 2, 520); });
-  const my = 608;
-  text('NEURAL TRACKING', 0, my, { size: 18, fam: MONO, color: K.purple, ls: 2, alpha: P(u, .9, 1.2) });
-  ctx.fillStyle = rgba(K.ink, .1); ctx.fillRect(240, my - 9, 360, 6);
-  ctx.fillStyle = K.purple; ctx.fillRect(240, my - 9, 360 * couple, 6);
-  text('speech → cortex', VW, my, { size: 18, fam: MONO, color: K.muted, align: 'right', alpha: P(u, .9, 1.2) });
+  for (let r = 0; r < 9; r += 2) text(`Q${r + 1}`, 618, 63 + r * 28, { size: 12, fam: MONO, color: K.muted });
+  label('CROSS-ATTN · MAMBA', ax, 334, { align: 'center', size: 14, color: K.purple, alpha: show(.6, 1) });
+  // target speech
+  label('TARGET', VW, 24, { align: 'right', color: K.purple });
+  withAlpha(show(.8, 1.3), () => {
+    for (let k = 0; k < 44; k++) { const h = 70 * talkA(u * 2.4 + k * .09 - 1.2); ctx.fillStyle = K.purple; ctx.fillRect(660 + k * 4, 172 - h, 3, h * 2); }
+    label('44.1 kHz', VW, 318, { align: 'right', size: 15, color: K.purple });
+  });
+  // EEG graph + traces, attention links up into the token column
+  label('EEG · GRAPH CONV', 140, 356);
+  ctx.beginPath(); ctx.arc(65, 414, 48, 0, Math.PI * 2); ctx.strokeStyle = rgba(K.ink, .6); ctx.lineWidth = 2; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(57, 367); ctx.lineTo(65, 356); ctx.lineTo(73, 367); ctx.stroke();
+  HEAD.forEach(([x, y], i) => [i + 1, i + 3, i + 5].forEach((j) => { if (j < HEAD.length) polyline([[x, y], HEAD[j]], rgba(K.purple, .12 + .25 * clamp(Math.sin(u * 3 + i + j))), 1.2); }));
+  HEAD.forEach(([x, y], i) => circle(x, y, 3.5 + 1.5 * Math.sin(u * 4 + i), K.purple));
+  for (let ch = 0; ch < 4; ch++) {
+    const pts = [];
+    for (let x = 140; x <= VW; x += 3) { const t = u * 2.4 - (VW - x) / 90; pts.push([x, 382 + ch * 24 - 8 * fbm(t * 3 + ch * 17) - 6 * (talkA(t) - .3) * (ch % 2 ? .5 : 1)]); }
+    polyline(pts, rgba(K.ink, .5), 1.3);
+  }
+  withAlpha(show(.5, .9), () => {
+    ctx.fillStyle = rgba(K.purple, .08); ctx.fillRect(ax - 14, 366, 28, 102);
+    [-7, 0, 7].forEach((dx, i) => {
+      dashed([[ax + dx, 364], [ax + dx, 346]], rgba(K.purple, .5), 1.5, [3, 4]);
+      const p = (u * 1.1 + i / 3) % 1; circle(ax + dx, lerp(470, 312, p), 3.5, rgba(K.purple, p < .85 ? .9 : 0));
+    });
+  });
+  // results
+  label('LISTENING TEST · MUSHRA', 0, 516, { color: K.purple });
+  [['NeuroCodec', 82.24], ['M3ANet', 49.63], ['Mixture', 22.41]].forEach(([n, v], i) => {
+    const y = 552 + i * 30, f = outExpo(P(u, 1.2 + i * .1, 2 + i * .1));
+    text(n, 0, y, { size: 19, color: i ? K.muted : K.ink, weight: i ? 400 : 600 });
+    bar(132, y - 10, 210, 8, v / 100 * f, i ? K.mid : K.purple);
+    text((v * f).toFixed(2), 396, y, { size: 16, fam: MONO, color: i ? K.muted : K.purple, align: 'right' });
+  });
+  label('OUTPUT BANDWIDTH', 460, 516, { color: K.purple });
+  [['NeuroCodec', 20], ['M3ANet', 7]].forEach(([n, v], i) => {
+    const y = 552 + i * 30, f = outExpo(P(u, 1.5 + i * .1, 2.3 + i * .1));
+    text(n, 460, y, { size: 19, color: i ? K.muted : K.ink, weight: i ? 400 : 600 });
+    bar(592, y - 10, 170, 8, v / 20 * f, i ? K.mid : K.purple);
+    text(`${Math.round(v * f)} kHz`, VW, y, { size: 16, fam: MONO, color: i ? K.muted : K.purple, align: 'right' });
+  });
+  label('KUL · STOI 0.868 · PESQ 2.56', 460, 612, { size: 14 });
 }
 
 function vizSDK(u) {
@@ -705,7 +747,7 @@ function vizPot(u) {
 }
 
 const FIGURES = {
-  voices: { draw: vizEEG }, biosense: { draw: vizECG },
+  voices: { draw: vizNeuroCodec, still: 3 }, biosense: { draw: vizECG },
   microchip: { draw: vizSDK, loop: 7.5 }, campus: { draw: vizRAG, loop: 7.5 },
   gguf: { draw: vizGGUF, loop: 6.5, still: 5 }, endeff: { draw: vizEndEff, loop: 5.2, still: 2.6 },
   hodi: { draw: vizHodi, loop: 6.5, still: 5 }, sign: { draw: vizSign, still: 1.6 },
