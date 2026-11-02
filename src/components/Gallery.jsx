@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { galleryImages } from '../data/galleryImages';
 import './Gallery.css';
 
 const photos = [
@@ -25,6 +26,24 @@ const photos = [
 
 const photoRows = [photos.slice(0, 3), photos.slice(3, 7), photos.slice(7, 10), photos.slice(10, 14), photos.slice(14)];
 
+// Serves a right-sized copy (see scripts/optimize-gallery.mjs) over a tiny blurred placeholder, then fades it in.
+const markLoaded = (img) => { if (img?.complete) img.dataset.loaded = 'true'; };
+function GalleryPhoto({ photo, share, eager }) {
+  const sized = galleryImages[photo.file];
+  const name = photo.file.replace(/\.webp$/, '');
+  return <figure className="gallery-photo" style={{ flex: `${photo.width / photo.height} 1 0%`, aspectRatio: `${photo.width} / ${photo.height}`, backgroundImage: sized && `url(${sized.placeholder})` }}>
+    <img
+      ref={markLoaded}
+      src={sized ? `/gallery/sized/${name}-${sized.widths[1] ?? sized.widths[0]}.webp` : `/gallery/${photo.file}`}
+      srcSet={sized?.widths.map((w) => `/gallery/sized/${name}-${w}.webp ${w}w`).join(', ')}
+      sizes={`(max-width: 600px) 50vw, ${Math.ceil(share * 100)}vw`}
+      alt={photo.alt} width={photo.width} height={photo.height}
+      loading={eager ? 'eager' : 'lazy'} fetchPriority={eager ? 'high' : 'auto'} decoding="async"
+      onLoad={(e) => { e.currentTarget.dataset.loaded = 'true'; }}
+    />
+  </figure>;
+}
+
 export default function Gallery() {
   useEffect(() => {
     document.title = 'Gallery — Jaliya Nimantha';
@@ -36,9 +55,10 @@ export default function Gallery() {
       <div className="gallery-page-heading"><div><p className="eyebrow">MOMENTS ALONG THE WAY</p><h1 id="gallery-title">Gallery</h1></div><p>Research, projects, communities,<br />and a little life in between.</p></div>
       <div className="gallery-collage">
         {photoRows.map((row) => <div className="gallery-photo-row" key={row[0].file}>
-          {row.map((photo) => <figure className="gallery-photo" key={photo.file} style={{ flex: `${photo.width / photo.height} 1 0%`, aspectRatio: `${photo.width} / ${photo.height}` }}>
-            <img src={`/gallery/${photo.file}`} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" decoding="async" />
-          </figure>)}
+          {row.map((photo) => {
+            const total = row.reduce((sum, p) => sum + p.width / p.height, 0);
+            return <GalleryPhoto key={photo.file} photo={photo} share={(photo.width / photo.height) / total} eager={row === photoRows[0]} />;
+          })}
         </div>)}
       </div>
       <div className="gallery-page-footer"><Link to="/" className="gallery-back"><ArrowLeft size={16} /> Back to portfolio</Link></div>
