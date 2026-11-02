@@ -15,10 +15,10 @@ import './Motion.css';
 
 const email = 'jaliyanimantha070@gmail.com';
 const social = [['GitHub', 'https://github.com/jaliyanimanthako'], ['LinkedIn', 'https://linkedin.com/in/jaliya-nimantha-8924b7219/']];
-const featured = ['Neural Speech Tracking', 'AiSee LLaMa Android SDK', 'BioSense-AI', 'Campus Yamu']
+const featured = ['NeuroCodec: EEG-Guided Speech Extraction', 'AiSee LLaMa Android SDK', 'BioSense-AI', 'Campus Yamu']
   .map((title) => allProjects.find((project) => project.title === title));
 const featuredArtwork = {
-  'Neural Speech Tracking': { name: 'voices', note: '01 / understanding neural signals' },
+  'NeuroCodec: EEG-Guided Speech Extraction': { name: 'voices', note: '01 / listening with the brain' },
   'AiSee LLaMa Android SDK': { name: 'microchip', note: '02 / intelligence, on device' },
   'BioSense-AI': { name: 'biosense', note: '03 / turning noise into insight' },
   'Campus Yamu': { name: 'campus', note: '04 / finding a path forward' },
@@ -27,9 +27,9 @@ const filters = ['All work', 'AI & learning', 'Human & signal', 'Physical system
 function matchesFilter(project, filter) {
   const title = project.title;
   if (filter === 'All work') return true;
-  if (filter === 'Human & signal') return /Neural Speech|BioSense|Sign Language|TumorVision|Facial/.test(title);
+  if (filter === 'Human & signal') return /NeuroCodec|BioSense|Sign Language|TumorVision|Facial/.test(title);
   if (filter === 'Physical systems') return /End Effector|Robot|NutriTech|BioSense|Sign Language/.test(title);
-  return /GGUF|LLaMa|Hodi|Campus|Facial|Tumor|GOYAMA|Vehicle|U-Net|NextWord/.test(title);
+  return /NeuroCodec|GGUF|LLaMa|Hodi|Campus|Facial|Tumor|GOYAMA|Vehicle|U-Net|NextWord/.test(title);
 }
 
 function Navigation() {

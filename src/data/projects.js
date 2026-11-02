@@ -1,14 +1,18 @@
 export const allProjects = [
     // Featured Projects
     {
-        title: "Neural Speech Tracking",
+        title: "NeuroCodec: EEG-Guided Speech Extraction",
         figure: "voices",
-        category: "Final Year Project",
-        status: "Ongoing",
-        description: "Fusion of Speech and EEG signals for neural speech tracking. Research-driven project exploring the intersection of neuroscience and signal processing.",
-        longDescription: "This Final Year Project explores the cutting-edge fusion of speech and EEG (electroencephalogram) signals for neural speech tracking. By combining neuroscience with advanced signal processing techniques, we aim to decode neural patterns associated with speech production and perception. This research has applications in brain-computer interfaces, assistive technologies, and understanding the neural basis of human communication.",
-        year: "2024",
-        tech: ["EEG", "Signal Processing", "Deep Learning", "Python", "MATLAB", "Brain-Computer Interface"],
+        category: "Research Paper · Under Review",
+        status: "Under review",
+        description: "Generative target speaker extraction steered by the listener's EEG. Predicts the attended talker in a neural audio codec's latent space for 44.1 kHz, high-fidelity speech.",
+        longDescription: "NeuroCodec grew out of my final-year research on neural speech tracking. In a cocktail-party scene, the listener's EEG reveals which talker they are attending to; NeuroCodec uses that signal to pull the attended speaker out of the mixture. Instead of estimating time-frequency masks, it predicts the target speaker's latents inside a frozen Descript Audio Codec: graph convolutions model the spatial structure of the EEG, and cross-attention with Mamba fuses EEG and audio at the codec frame rate. A six-phase curriculum combines latent, multi-scale spectral and adversarial losses. On the Cocktail Party and KUL datasets it improves STOI and PESQ over prior EEG-guided systems, reconstructs content up to 20 kHz, and scored 82.24 against 49.63 for M3ANet in a 20-person MUSHRA listening test. A causal variant, OnlineNeuroCodec, runs in streaming mode for hearing-assistive devices. Submitted to IEEE/ACM Transactions on Audio, Speech, and Language Processing and currently under review.",
+        authors: "Julian Silva, Jaliya Kodithuwakku, Navindu Sirimanna, Shaveen Herath, Wageesha N. Manamperi, Joshua P. Kulasingham",
+        venue: "Under review · IEEE/ACM Transactions on Audio, Speech, and Language Processing",
+        year: "2026",
+        tech: ["EEG", "Neural Audio Codec", "Graph Convolutions", "Mamba", "GANs", "PyTorch"],
+        paper: "https://arxiv.org/abs/2610.29815",
+        github: "https://github.com/JulianSilva2001/NeuroCodec-TSE",
         color: "from-surface-alt to-surface"
     },
     {
