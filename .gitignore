@@ -25,3 +25,7 @@ dist-ssr
 
 # Figma API token (never commit)
 .figma-token
+
+# Showreel renders (regenerate with node showreel/music.mjs && node showreel/render.mjs)
+showreel/*.mp4
+showreel/*.wav

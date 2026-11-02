@@ -1,0 +1,52 @@
+/* Role ticker under the hero name */
+.role-ticker { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 10px; margin-top: 16px; font-size: clamp(15px, 1.35vw, 19px); font-weight: 500; letter-spacing: -.02em; }
+.role-ticker-slash { color: var(--line); font-weight: 400; }
+.role-ticker-window { display: inline-block; overflow: hidden; vertical-align: bottom; height: 1.35em; color: var(--purple); }
+.role-ticker-word { display: inline-block; animation: ticker-in .6s cubic-bezier(.2, .7, .2, 1); }
+@keyframes ticker-in { from { transform: translateY(105%); opacity: 0; } }
+
+/* Live glyphs on featured project cards */
+.card-signal { width: 42px; height: 12px; margin-left: 10px; vertical-align: -2px; overflow: hidden; }
+.card-signal path, .card-signal circle:not(.card-signal-packet) { fill: none; stroke: var(--purple); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.card-signal-eeg g { animation: card-eeg 2.4s linear infinite; }
+@keyframes card-eeg { to { transform: translateX(-60px); } }
+.card-signal-tokens rect { fill: var(--purple); opacity: .15; animation: card-token 1.6s steps(1) infinite; animation-delay: calc(var(--i) * .2s); }
+@keyframes card-token { 0%, 55% { opacity: 1; } 56%, 100% { opacity: .15; } }
+.card-signal-ecg path { stroke-dasharray: 22 100; animation: card-ecg 1.8s linear infinite; }
+@keyframes card-ecg { from { stroke-dashoffset: 22; } to { stroke-dashoffset: -100; } }
+.card-signal-rag circle:not(.card-signal-packet) { fill: var(--paper); }
+.card-signal-packet { fill: var(--purple); animation: card-packet 2s cubic-bezier(.65, 0, .35, 1) infinite; }
+@keyframes card-packet { to { transform: translateX(50px); } }
+.project-card:hover .card-signal * { animation-duration: .9s; }
+.project-card:hover .card-signal-eeg g, .project-card:hover .card-signal-rag .card-signal-packet { animation-duration: 1.1s; }
+
+/* Contact: local time */
+.local-time { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font: 10px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.local-time time { color: var(--ink); }
+.local-time-dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--purple); }
+.local-time-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--purple); animation: motion-ripple 2.8s ease-out infinite; }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .role-ticker-word, .card-signal *, .local-time-dot::after { animation: none !important; }
+}
+
+/* Live figures inside featured project cards (ProjectLive) */
+.project-live { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; transition: opacity .45s cubic-bezier(.2, .7, .2, 1); }
+.project-visual > .notion-artwork { transition: transform .4s, opacity .45s cubic-bezier(.2, .7, .2, 1); }
+.project-visual[data-live='true'] > .notion-artwork { opacity: 0; transform: scale(.97); }
+.project-visual[data-live='true'] > .project-live { opacity: 1; }
+.project-visual[data-live='true'] { background-image: radial-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px); background-size: 18px 18px; }
+.project-live-chip { position: absolute; top: 14px; right: 14px; display: flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 99px; background: var(--paper); font: 9px ui-monospace, 'SF Mono', Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); transition: color .3s, border-color .3s; }
+.project-live-chip::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background .3s; }
+.project-visual[data-live='true'] .project-live-chip { color: var(--purple); border-color: color-mix(in srgb, var(--purple) 35%, var(--line)); }
+.project-visual[data-live='true'] .project-live-chip::before { background: var(--purple); animation: chip-blink 1.2s ease-in-out infinite; }
+@keyframes chip-blink { 50% { opacity: .25; } }
+@media (prefers-reduced-motion: reduce) { .project-visual[data-live='true'] .project-live-chip::before { animation: none; } }
+
+/* Always-on figures in archive cards and the project dialog (ProjectFigure) */
+.project-figure { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.project-image-live, .dialog-figure { background: var(--paper) radial-gradient(color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 1px) 0 0 / 18px 18px; transition: background-color .3s; }
+.project-card:hover .project-image-live { background-color: var(--tint, #f4effc); }
+.dialog-figure { position: relative; height: 280px; margin: 23px 0; border: 1px solid var(--line); border-radius: 3px; }
+@media (max-width: 600px) { .dialog-figure { height: 210px; } }

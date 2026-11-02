@@ -1,0 +1,48 @@
+.hero-art {
+  position: relative;
+  isolation: isolate;
+}
+
+/* A repeating square mask keeps the gradient inside the individual pixels. */
+.hero-dot-matrix {
+  position: absolute;
+  inset: -14% 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 76% 30%, var(--purple), transparent 52%),
+    radial-gradient(ellipse at 25% 72%, color-mix(in srgb, var(--purple) 65%, transparent), transparent 48%);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='white' d='M5 5h3v3H5z'/%3E%3C/svg%3E");
+  mask-size: 14px 14px;
+  mask-repeat: repeat;
+  opacity: .65;
+  animation: dot-matrix-breathe 8s ease-in-out infinite alternate;
+}
+
+/* Keep the illustration opaque so the dots only appear around it. */
+.hero-art > .notion-artwork {
+  background: var(--paper);
+}
+
+.hero-art:not(:has(.artwork-visible)) .hero-dot-matrix {
+  animation-play-state: paused;
+}
+
+@keyframes dot-matrix-breathe {
+  from { opacity: .45; }
+  to { opacity: .8; }
+}
+
+@media (max-width: 600px) {
+  .hero-dot-matrix {
+    inset: -8% 0;
+    mask-size: 12px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-dot-matrix {
+    animation: none;
+    opacity: .65;
+  }
+}

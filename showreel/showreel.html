@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jaliya Nimantha Showreel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..800&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#0d0d0d;overflow:hidden}
+  canvas{position:absolute;inset:0;margin:auto;max-width:100vw;max-height:100vh;aspect-ratio:16/9;width:100vw;height:auto}
+  #play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 18px "DM Mono",monospace;color:#fefdf9;letter-spacing:.2em;cursor:pointer;background:rgba(0,0,0,.35)}
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div id="play">▶ PLAY SHOWREEL</div>
+<script>
+// ───────────────────────────── core ─────────────────────────────
+const W = 1920, H = 1080, FPS = 60, DUR = 60;
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+
+const C = {
+  paper: '#fefdf9', ink: '#202020', dark: '#151515', panel: '#1b1b1b',
+  purple: '#7952b3', lav: '#e9dcff', lavD: '#b9a0e6', muted: '#6e6c68', mutedD: '#8d8a85',
+};
+const rgba = (hex, a) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+};
+
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const E = {
+  outExpo: x => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x),
+  inExpo: x => x <= 0 ? 0 : Math.pow(2, 10 * x - 10),
+  inOutExpo: x => x <= 0 ? 0 : x >= 1 ? 1 : x < .5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2,
+  outCubic: x => 1 - Math.pow(1 - x, 3),
+  inCubic: x => x * x * x,
+  inOutCubic: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  outQuint: x => 1 - Math.pow(1 - x, 5),
+  outBack: x => { const c1 = 1.70158, c3 = c1 + 1; return x <= 0 ? 0 : 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+};
+
+function h1(i) {
+  let x = Math.imul(i | 0, 0x27d4eb2d) ^ 0x165667b1;
+  x ^= x >>> 15; x = Math.imul(x, 0x85ebca6b);
+  x ^= x >>> 13; x = Math.imul(x, 0xc2b2ae35);
+  x ^= x >>> 16;
+  return (x >>> 0) / 4294967295;
+}
+function noise1(x) { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return lerp(h1(i), h1(i + 1), u) * 2 - 1; }
+const fbm = x => noise1(x) * .6 + noise1(x * 2.13 + 13.7) * .3 + noise1(x * 4.37 + 71.1) * .1;
+
+// ───────────────────────────── drawing helpers ─────────────────────────────
+const SANS = '"DM Sans", Arial, sans-serif', MONO = '"DM Mono", monospace';
+function font(size, weight = 400, fam = SANS) { ctx.font = `${weight} ${size}px ${fam}`; }
+function bg(col) { ctx.fillStyle = col; ctx.fillRect(-80, -80, W + 160, H + 160); }
+function circle(x, y, r, col) { if (r <= 0) return; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill(); }
+function ring(x, y, r, col, lw = 2) { if (r <= 0) return; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke(); }
+function rrect(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+function text(s, x, y, { size = 24, weight = 400, fam = SANS, color = C.ink, align = 'left', ls = 0, base = 'alphabetic', alpha = 1 } = {}) {
+  if (alpha <= 0) return 0;
+  font(size, weight, fam); ctx.letterSpacing = ls + 'px';
+  ctx.textAlign = align; ctx.textBaseline = base; ctx.fillStyle = color;
+  const ga = ctx.globalAlpha; ctx.globalAlpha = ga * alpha;
+  ctx.fillText(s, x, y);
+  ctx.globalAlpha = ga;
+  const w = ctx.measureText(s).width; ctx.letterSpacing = '0px'; ctx.textBaseline = 'alphabetic';
+  return w;
+}
+function measure(s, size, weight = 400, fam = SANS, ls = 0) { font(size, weight, fam); ctx.letterSpacing = ls + 'px'; const w = ctx.measureText(s).width; ctx.letterSpacing = '0px'; return w; }
+const typed = (s, t, t0, cps = 30) => s.slice(0, clamp(Math.floor((t - t0) * cps), 0, s.length));
+function wrap(s, maxW, size, weight = 400, fam = SANS) {
+  font(size, weight, fam); const out = []; let line = '';
+  for (const w of s.split(' ')) { const tryL = line ? line + ' ' + w : w; if (ctx.measureText(tryL).width > maxW && line) { out.push(line); line = w; } else line = tryL; }
+  if (line) out.push(line); return out;
+}
+
+// Per-character masked rise; returns the string width.
+function riseText(s, x, y, o) {
+  const { t, t0, size, weight = 600, color, fam = SANS, stagger = .03, dur = .7, out = 1e9, outStagger = .018, outDur = .42, align = 'left', ls = 0, i0 = 0 } = o;
+  font(size, weight, fam); ctx.letterSpacing = ls + 'px';
+  const total = ctx.measureText(s).width;
+  const x0 = align === 'center' ? x - total / 2 : align === 'right' ? x - total : x;
+  ctx.save(); ctx.beginPath(); ctx.rect(x0 - size, y - size * 1.02, total + size * 2, size * 1.34); ctx.clip();
+  ctx.fillStyle = color; ctx.textAlign = 'left';
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === ' ') continue;
+    const k = i + i0;
+    const pin = E.outExpo(P(t, t0 + k * stagger, t0 + k * stagger + dur));
+    const pout = E.inExpo(P(t, out + k * outStagger, out + k * outStagger + outDur));
+    if (pin <= 0 || pout >= 1) continue;
+    ctx.fillText(s[i], x0 + ctx.measureText(s.slice(0, i)).width, y + (1 - pin) * size * 1.15 - pout * size * 1.25);
+  }
+  ctx.restore(); ctx.letterSpacing = '0px';
+  return total;
+}
+// Whole-line masked rise (for sentences).
+function riseLine(s, x, y, o) {
+  const { t, t0, dur = .7, out = 1e9, outDur = .4, size, align = 'left' } = o;
+  const pin = E.outExpo(P(t, t0, t0 + dur)), pout = E.inExpo(P(t, out, out + outDur));
+  if (pin <= 0 || pout >= 1) return 0;
+  const w = measure(s, size, o.weight, o.fam, o.ls);
+  const x0 = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  ctx.save(); ctx.beginPath(); ctx.rect(x0 - 20, y - size * 1.05, w + 40, size * 1.4); ctx.clip();
+  text(s, x, y + (1 - pin) * size * 1.2 - pout * size * 1.3, o);
+  ctx.restore();
+  return w;
+}
+function pill(x, y, s, { size = 20, fam = MONO, weight = 500, h = 40, padX = 18, fill = null, stroke = null, color = C.paper, ls = 1, lw = 1.5 } = {}) {
+  const w = measure(s, size, weight, fam, ls) + padX * 2;
+  rrect(x, y, w, h, h / 2);
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw; ctx.stroke(); }
+  text(s, x + padX, y + h / 2 + 1, { size, fam, weight, color, ls, base: 'middle' });
+  return w;
+}
+function dotGrid(sp, col, ox = 0, oy = 0) {
+  ctx.fillStyle = col;
+  for (let y = (oy % sp) + sp / 2; y < H; y += sp) for (let x = (ox % sp) + sp / 2; x < W; x += sp) ctx.fillRect(x - 1, y - 1, 2, 2);
+}
+function polyline(pts, col, lw) {
+  if (pts.length < 2) return;
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.stroke();
+}
+const bez = (p0, c, p1, s) => [(1 - s) * (1 - s) * p0[0] + 2 * (1 - s) * s * c[0] + s * s * p1[0], (1 - s) * (1 - s) * p0[1] + 2 * (1 - s) * s * c[1] + s * s * p1[1]];
+const cbez = (a, b, c, d, s) => { const m = 1 - s; return [m*m*m*a[0] + 3*m*m*s*b[0] + 3*m*s*s*c[0] + s*s*s*d[0], m*m*m*a[1] + 3*m*m*s*b[1] + 3*m*s*s*c[1] + s*s*s*d[1]]; };
+function withAlpha(a, fn) { if (a <= 0) return; const g = ctx.globalAlpha; ctx.globalAlpha = g * a; fn(); ctx.globalAlpha = g; }
+
+// ───────────────────────────── 00 BOOT (0–6) ─────────────────────────────
+function sBoot(t) {
+  bg(C.dark);
+  dotGrid(48, rgba(C.paper, .07 * E.outCubic(P(t, 1.6, 3.0))));
+  const cx = W / 2, cy = H / 2;
+  const appear = E.outBack(P(t, .3, .8));
+  const s = E.inOutExpo(P(t, 1.0, 2.1));
+  const col = E.inExpo(P(t, 5.1, 5.55));
+
+  if (s <= 0) {
+    circle(cx, cy, 12 * appear, C.lavD);
+    const pr = P(t, .35, 1.1);
+    ring(cx, cy, 12 + E.outCubic(pr) * 90, rgba(C.lav, .5 * (1 - pr)), 1.5);
+  } else {
+    const half = lerp(6, 780, s) * (1 - col);
+    const noiseAmt = 1 - E.inOutCubic(P(t, 2.3, 3.9));
+    const amp = lerp(0, 105, E.outCubic(P(t, 2.0, 3.2))) * (1 + .55 * E.inOutCubic(P(t, 4.2, 5.0)));
+    const freq = lerp(.012, .021, E.inOutCubic(P(t, 4.2, 5.1)));
+    const fr = Math.floor(t * FPS);
+    for (let k = 2; k >= 0; k--) {
+      const pts = [];
+      for (let x = cx - half; x <= cx + half; x += 3) {
+        const u = (x - (cx - half)) / (2 * half);
+        const win = Math.pow(Math.sin(Math.PI * u), .7);
+        const clean = amp * Math.sin((x - cx) * freq - t * 6 - k * .55);
+        const nz = noiseAmt * (fbm(x * .045 + t * 14 + k * 3) * 70 + (h1(Math.floor(x / 3) + fr * 977 + k * 31) - .5) * 46);
+        pts.push([x, cy + win * (clean + nz)]);
+      }
+      polyline(pts, k === 0 ? C.lav : rgba(C.lavD, k === 1 ? .4 : .18), k === 0 ? 3 : 2);
+    }
+    circle(cx - half, cy, 5, C.lav); circle(cx + half, cy, 5, C.lav);
+
+    const ra = P(t, 2.0, 2.4) * (1 - P(t, 5.0, 5.3));
+    const filtered = noiseAmt < .35;
+    text(filtered ? 'CH-01  ·  FILTERED' : 'CH-01  ·  RAW SIGNAL', cx - 780, cy - 210, { size: 18, fam: MONO, color: C.paper, ls: 3, alpha: .6 * ra });
+    text(`SNR  ${lerp(2.1, 38.4, 1 - noiseAmt).toFixed(1)} dB`, cx + 780, cy - 210, { size: 18, fam: MONO, color: filtered ? C.lav : C.paper, ls: 3, align: 'right', alpha: .75 * ra });
+    ctx.fillStyle = rgba(C.paper, .12 * ra);
+    for (let i = 0; i <= 26; i++) ctx.fillRect(cx - 780 + i * 60, cy + 190, 1, i % 5 ? 8 : 16);
+  }
+  const msg = '> from noise, to signal, to insight';
+  const ta = 1 - P(t, 5.1, 5.4);
+  const shown = typed(msg, t, 3.0, 26);
+  if (t > 2.8 && ta > 0) {
+    const w = measure(msg, 30, 400, MONO);
+    const x0 = cx - w / 2;
+    const sw = text(shown, x0, cy + 300, { size: 30, fam: MONO, color: C.paper, alpha: ta });
+    if (Math.floor(t * 3) % 2 === 0 || shown.length < msg.length) withAlpha(ta, () => { ctx.fillStyle = C.lavD; ctx.fillRect(x0 + sw + 6, cy + 276, 15, 30); });
+  }
+}
+
+// ───────────────────────────── 01 HELLO (6–12) ─────────────────────────────
+const NET = (() => {
+  const layers = [3, 5, 5, 3, 1], cx = 1490, cy = 520, nodes = [], edges = [];
+  layers.forEach((n, li) => { for (let j = 0; j < n; j++) nodes.push({ li, x: cx + (li - 2) * 115, y: cy + (j - (n - 1) / 2) * 70 }); });
+  let base = 0;
+  for (let li = 0; li < layers.length - 1; li++) {
+    const nb = base + layers[li];
+    for (let a = 0; a < layers[li]; a++) for (let b = 0; b < layers[li + 1]; b++) edges.push({ li, a: nodes[base + a], b: nodes[nb + b] });
+    base = nb;
+  }
+  return { nodes, edges, cx, cy };
+})();
+const ROLES = ['Deep Learning', 'Computer Vision', 'Explainable AI', 'HCI', 'Brain–Computer Interfaces', 'On-device LLMs', 'AI Agents', 'Human-centered AI'];
+
+function sHello(t) {
+  bg(C.paper);
+  dotGrid(48, rgba(C.ink, .06));
+  const ex = E.inExpo(P(t, 11.4, 11.8));
+  const { cx, cy } = NET;
+  const dr = E.outExpo(P(t, 6.15, 7.3)) * (300 + 6 * Math.sin(t * 2)) * (1 - ex);
+  circle(cx, cy, dr, C.lav);
+
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(1 - ex, 1 - ex); ctx.translate(-cx, -cy);
+  // orbit ring
+  const op = E.inOutCubic(P(t, 6.5, 7.5));
+  if (op > 0) {
+    ctx.beginPath(); ctx.ellipse(cx, cy, 380, 118, -.35, -Math.PI / 2, -Math.PI / 2 + op * Math.PI * 2);
+    ctx.strokeStyle = rgba(C.ink, .45); ctx.lineWidth = 2; ctx.stroke();
+    const a = t * 1.3, ox = 380 * Math.cos(a), oy = 118 * Math.sin(a);
+    circle(cx + ox * Math.cos(-.35) - oy * Math.sin(-.35), cy + ox * Math.sin(-.35) + oy * Math.cos(-.35), 9 * op, C.purple);
+  }
+  // network
+  NET.edges.forEach((e, i) => {
+    const p = E.outCubic(P(t, 6.7 + e.li * .16, 7.1 + e.li * .16));
+    if (p <= 0) return;
+    ctx.beginPath(); ctx.moveTo(e.a.x, e.a.y); ctx.lineTo(lerp(e.a.x, e.b.x, p), lerp(e.a.y, e.b.y, p));
+    ctx.strokeStyle = rgba(C.ink, .2); ctx.lineWidth = 1.5; ctx.stroke();
+    if (t > 7.6 && h1(i * 31 + 7) > .58) {
+      const ph = (t * 1.15 + h1(i * 17)) % 1;
+      circle(lerp(e.a.x, e.b.x, ph), lerp(e.a.y, e.b.y, ph), 4, C.purple);
+    }
+  });
+  NET.nodes.forEach((n, i) => {
+    const p = E.outBack(P(t, 6.6 + n.li * .12, 6.95 + n.li * .12));
+    if (p <= 0) return;
+    const act = t > 7.6 && (n.li === 4 || noise1(t * 2.6 + i * 7.3) > .3);
+    circle(n.x, n.y, 13 * p, act ? C.purple : C.paper);
+    ring(n.x, n.y, 13 * p, C.ink, 2.5);
+  });
+  ctx.restore();
+
+  // copy
+  const out = 11.35;
+  if (t < out + .2) text(typed("Hi, I'm", t, 6.3, 18), 150, 300, { size: 32, fam: MONO, color: C.muted, ls: 2, alpha: 1 - P(t, out, out + .2) });
+  riseText('Jaliya', 150, 500, { t, t0: 6.35, size: 190, weight: 600, color: C.ink, stagger: .035, out, ls: -4 });
+  riseText('Nimantha.', 150, 690, { t, t0: 6.55, size: 190, weight: 600, color: C.purple, stagger: .035, out: out + .05, ls: -4 });
+  const lp = E.inOutExpo(P(t, 6.95, 7.6)) * (1 - E.inExpo(P(t, out, out + .35)));
+  ctx.fillStyle = C.ink; ctx.fillRect(150, 760, 720 * lp, 2);
+
+  const fixed = 'Research Engineer  /  ';
+  const fw = riseLine(fixed, 150, 845, { t, t0: 7.3, size: 40, weight: 500, color: C.ink, out: out + .05 });
+  if (t > 7.6 && t < out + .5) {
+    const rx = 150 + fw, slot = (t - 7.7) / .5;
+    const pa = 1 - P(t, out + .05, out + .4);
+    ctx.save(); ctx.beginPath(); ctx.rect(rx - 4, 795, 900, 66); ctx.clip();
+    for (let i = 0; i < ROLES.length; i++) {
+      const st = 7.7 + i * .5, p = E.outExpo(P(t, st, st + .28));
+      const next = i < ROLES.length - 1 ? E.outExpo(P(t, st + .5, st + .78)) : 0;
+      if (p <= 0 || next >= 1) continue;
+      text(ROLES[i], rx, 845 + (1 - p) * 60 - next * 60, { size: 40, weight: 500, color: C.purple, alpha: pa });
+    }
+    ctx.restore();
+    if (slot < 0) text('…', rx, 845, { size: 40, color: C.purple });
+  }
+  text('B.SC. ENG (HONS) E&TC · UNIVERSITY OF MORATUWA   →   AUGMENTED HUMAN LAB · NUS', 150, 935,
+    { size: 18, fam: MONO, color: C.muted, ls: 2, alpha: P(t, 7.9, 8.4) * (1 - P(t, out, out + .2)) });
+}
+
+// ───────────────────────────── 02 PHILOSOPHY (12–18) ─────────────────────────────
+function sPhilo(t) {
+  bg(C.dark);
+  if (t < 15.2) {
+    const z = 1 + .05 * P(t, 12, 15);
+    ctx.save(); ctx.translate(W / 2, H / 2); ctx.scale(z, z); ctx.translate(-W / 2, -H / 2);
+    const L = [
+      { s: 'Technology', t0: 12.05, c: C.paper },
+      { s: 'should be', t0: 12.5, c: C.paper },
+      { s: 'understood,', t0: 13.0, c: C.paper, hl: true },
+      { s: 'not just used.', t0: 13.75, c: '#5f5d5a' },
+    ];
+    const ys = [330, 480, 630, 780], size = 128;
+    L.forEach((l, i) => {
+      const out = 14.6 + i * .06;
+      if (l.hl) {
+        const w = measure(l.s, size, 600, SANS, -3);
+        const p = E.inOutExpo(P(t, 13.2, 13.65)), q = E.inExpo(P(t, out, out + .3));
+        const bwF = w + 110, bw = bwF * p, x0 = W / 2 - bwF / 2;
+        ctx.fillStyle = C.purple; ctx.fillRect(x0 + bwF * q, ys[i] - size * .82, Math.max(0, bw - bwF * q), size * 1.08);
+      }
+      riseText(l.s, W / 2, ys[i], { t, t0: l.t0, size, weight: 600, color: l.c, align: 'center', stagger: .022, dur: .55, out, ls: -3 });
+    });
+    ctx.restore();
+  }
+  if (t >= 14.9) venn(t);
+}
+function venn(t) {
+  const cx = 960, cy = 500, r = 220;
+  const vp = E.outExpo(P(t, 15.0, 16.0));
+  const d = lerp(560, 135, vp);
+  const angs = [-Math.PI / 2, Math.PI / 6, Math.PI * 5 / 6];
+  const cs = angs.map(a => [cx + Math.cos(a) * d, cy + Math.sin(a) * d]);
+  const zoom = E.inExpo(P(t, 17.4, 18.0));
+  const sc = 1 + zoom * 14;
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(sc, sc); ctx.translate(-cx, -cy);
+  cs.forEach((c, i) => {
+    circle(c[0], c[1], r, rgba(C.lav, .05 * vp));
+    const p = E.inOutCubic(P(t, 15.05 + i * .1, 15.9 + i * .1));
+    if (p > 0) { ctx.beginPath(); ctx.arc(c[0], c[1], r, angs[i], angs[i] + p * Math.PI * 2); ctx.strokeStyle = C.lav; ctx.lineWidth = 3 / sc * Math.min(sc, 3); ctx.stroke(); }
+  });
+  const ip = E.outBack(P(t, 16.05, 16.45));
+  if (ip > 0) {
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cs[0][0], cs[0][1], r, 0, Math.PI * 2); ctx.clip();
+    ctx.beginPath(); ctx.arc(cs[1][0], cs[1][1], r, 0, Math.PI * 2); ctx.clip();
+    circle(cs[2][0], cs[2][1], r, rgba(C.purple, clamp(ip)));
+    ctx.restore();
+    text('impact', cx, cy + 12, { size: 30, weight: 700, color: C.paper, align: 'center', alpha: clamp(ip) * (1 - zoom * 3) });
+  }
+  ctx.restore();
+  const la = P(t, 15.6, 16.0) * (1 - P(t, 17.3, 17.5));
+  text('DEEP LEARNING', cx, cy - d - r - 34, { size: 22, fam: MONO, color: C.lav, ls: 5, align: 'center', alpha: la });
+  text('COMPUTER VISION', cs[1][0] + 150, cs[1][1] + 200, { size: 22, fam: MONO, color: C.lav, ls: 5, align: 'left', alpha: la });
+  text('ARTIFICIAL INTELLIGENCE', cs[2][0] - 150, cs[2][1] + 200, { size: 22, fam: MONO, color: C.lav, ls: 5, align: 'right', alpha: la });
+  const out = 17.3;
+  const w1 = measure('Where algorithms meet ', 46, 500), w2 = measure('real-world impact.', 46, 500);
+  const x0 = cx - (w1 + w2) / 2;
+  riseLine('Where algorithms meet ', x0, 975, { t, t0: 16.4, size: 46, weight: 500, color: C.paper, out });
+  riseLine('real-world impact.', x0 + w1, 975, { t, t0: 16.5, size: 46, weight: 500, color: C.lav, out });
+  if (t > 17.85) withAlpha(P(t, 17.85, 18), () => bg(C.purple));
+}
+
+// ───────────────────────────── 03 JOURNEY (18–22) ─────────────────────────────
+const geo = (lat, lon) => [520 + (lon - 79.86) * 36.7, 560 + (6.93 - lat) * 36.7];
+function sJourney(t) {
+  bg(C.paper);
+  dotGrid(40, rgba(C.ink, .07));
+  // latitude lines
+  [[10, '10°N'], [5, '5°N'], [0, '0° EQUATOR']].forEach(([lat, lab], i) => {
+    const y = geo(lat, 80)[1], p = E.inOutExpo(P(t, 18.05 + i * .08, 18.7 + i * .08));
+    ctx.save(); ctx.setLineDash([3, 9]); ctx.beginPath(); ctx.moveTo(150, y); ctx.lineTo(150 + 1620 * p, y);
+    ctx.strokeStyle = rgba(C.ink, .22); ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+    text(lab, 150, y - 10, { size: 15, fam: MONO, color: C.muted, ls: 2, alpha: p });
+  });
+  let x0 = 150;
+  x0 += riseText('From Moratuwa to ', x0, 215, { t, t0: 18.1, size: 76, weight: 600, color: C.ink, stagger: .015, ls: -1.5 });
+  riseText('Singapore.', x0, 215, { t, t0: 18.1, size: 76, weight: 600, color: C.purple, stagger: .015, i0: 17, ls: -1.5 });
+
+  const A = geo(6.93, 79.86), B = geo(1.35, 103.82), Cc = [960, 330];
+  const ap = E.inOutCubic(P(t, 18.45, 19.6));
+  if (ap > 0) {
+    const pts = []; for (let s = 0; s <= ap; s += .01) pts.push(bez(A, Cc, B, s)); pts.push(bez(A, Cc, B, ap));
+    ctx.save(); ctx.setLineDash([10, 10]); polyline(pts, rgba(C.ink, .55), 2); ctx.restore();
+    const tr = []; for (let s = Math.max(0, ap - .14); s <= ap; s += .01) tr.push(bez(A, Cc, B, s)); tr.push(bez(A, Cc, B, ap));
+    polyline(tr, C.purple, 4);
+    const hd = bez(A, Cc, B, ap); if (ap < 1) circle(hd[0], hd[1], 10, C.purple);
+    const m = bez(A, Cc, B, .5);
+    text(`≈ ${Math.round(2700 * ap).toLocaleString('en-US')} km`, m[0], m[1] - 28, { size: 22, fam: MONO, color: C.ink, ls: 2, align: 'center', alpha: P(t, 18.6, 18.9) });
+  }
+  // Colombo
+  const ca = E.outBack(P(t, 18.2, 18.55));
+  circle(A[0], A[1], 11 * ca, C.ink); ring(A[0], A[1], 22 * ca, rgba(C.ink, .3), 1.5);
+  text('COLOMBO, LK  ·  6.93°N 79.86°E', A[0] - 20, A[1] + 60, { size: 16, fam: MONO, color: C.muted, ls: 2, alpha: P(t, 18.35, 18.6) });
+  riseLine('University of Moratuwa', A[0] - 20, A[1] + 108, { t, t0: 18.4, size: 38, weight: 600, color: C.ink });
+  text('B.Sc. Eng (Hons) · E&TC · 2022 — 2026', A[0] - 20, A[1] + 146, { size: 22, color: C.muted, alpha: P(t, 18.55, 18.85) });
+  // Singapore
+  const sa = E.outBack(P(t, 19.5, 19.85));
+  circle(B[0], B[1], 11 * sa, C.purple);
+  for (let k = 0; k < 3; k++) { const rp = P(t, 19.6 + k * .18, 20.5 + k * .18); if (rp > 0 && rp < 1) ring(B[0], B[1], 12 + rp * 70, rgba(C.purple, 1 - rp), 2); }
+  text('SINGAPORE  ·  1.35°N 103.82°E', B[0] + 40, B[1] - 25, { size: 16, fam: MONO, color: C.muted, ls: 2, alpha: P(t, 19.65, 19.9) });
+  riseLine('Augmented Human Lab', B[0] + 40, B[1] + 22, { t, t0: 19.7, size: 38, weight: 600, color: C.ink });
+  text('National University of Singapore', B[0] + 40, B[1] + 60, { size: 22, color: C.muted, alpha: P(t, 19.85, 20.1) });
+  // timeline
+  const tl = E.inOutExpo(P(t, 19.9, 20.8));
+  ctx.fillStyle = rgba(C.ink, .25); ctx.fillRect(150, 930, 1620 * tl, 2);
+  [['AUG 2024', 'Research Attachment', 300], ['DEC 2024', 'Research Engineer Intern', 960], ['NOW', 'Research Engineer', 1620]].forEach(([d, r, x], i) => {
+    const p = E.outBack(P(t, 20.1 + i * .3, 20.45 + i * .3));
+    const last = i === 2;
+    circle(x, 931, 9 * p, last ? C.purple : C.ink);
+    if (last && t > 20.8) { const rp = ((t - 20.8) * 1.6) % 1; ring(x, 931, 10 + rp * 26, rgba(C.purple, 1 - rp), 2); }
+    text(d, x, 905, { size: 17, fam: MONO, color: last ? C.purple : C.muted, ls: 3, align: 'center', alpha: clamp(p) });
+    riseLine(r, x, 980, { t, t0: 20.2 + i * .3, size: 26, weight: 600, color: C.ink, align: 'center' });
+  });
+}
+
+// ───────────────────────────── 04 SELECTED WORK (22–40) ─────────────────────────────
+const PROJ = [
+  { k: '01 / UNDERSTANDING NEURAL SIGNALS', tag: 'FINAL YEAR PROJECT', title: ['Neural Speech', 'Tracking'], fig: 'EEG × SPEECH  ·  LIVE',
+    d: 'Fusing speech and EEG signals to track how the brain follows speech, where neuroscience meets signal processing.', chips: ['EEG', 'Signal Processing', 'Deep Learning'] },
+  { k: '02 / INTELLIGENCE, ON DEVICE', tag: 'MOBILE AI / SDK', title: ['AiSee LLaMA', 'Android SDK'], fig: 'HF HUB → GGUF → ON-DEVICE',
+    d: 'An Android SDK that finds .gguf LLaMA models on Hugging Face and runs them fully on-device. Private, efficient, mobile-first.', chips: ['Android', 'Kotlin', 'GGUF'] },
+  { k: '03 / TURNING NOISE INTO INSIGHT', tag: 'HEALTH TECH / IOT', title: ['BioSense-AI'], fig: 'ECG · PPG · CLASSIFIER',
+    d: 'A portable ECG health monitor paired with a mobile app, where machine learning classifies conditions in real time.', chips: ['ECG', 'PPG', 'Machine Learning'] },
+  { k: '04 / FINDING A PATH FORWARD', tag: 'AI / WEB APPLICATION', title: ['Campus Yamu'], fig: 'RAG PIPELINE',
+    d: 'An AI web app helping Sri Lankan students discover university programs from their Z-scores, powered by RAG.', chips: ['RAG', 'LangChain', 'OpenAI'] },
+];
+const WORK_B = [22, 26.5, 31, 35.5];          // cut points
+const WORK_A = [22.0, 26.2, 30.7, 35.2];      // animation zero (push begins)
+const PX = 880, PY = 170, PW = 890, PH = 740, VX = PX + 28, VY = PY + 92, VW = PW - 56, VH = PH - 120;
+
+function sWork(t) {
+  bg(C.dark);
+  let drawn = false;
+  for (let k = 1; k < 4; k++) {
+    const b = WORK_B[k];
+    if (t >= b - .3 && t < b + .3) {
+      const q = E.inOutExpo((t - (b - .3)) / .6);
+      proj(k - 1, t - WORK_A[k - 1], -q * W);
+      proj(k, t - WORK_A[k], (1 - q) * W);
+      speedLines(t, Math.sin(Math.PI * q), k);
+      const bx = (1 - q) * W - 40;
+      ctx.fillStyle = C.purple; ctx.fillRect(bx, -40, 26, H + 80);
+      drawn = true;
+    }
+  }
+  if (!drawn) { let k = 3; while (t < WORK_B[k]) k--; proj(k, t - WORK_A[k], 0); }
+  // progress
+  const cur = clamp(Math.floor(((t - 22) + .3) / 4.5), 0, 3);
+  text(`PROJECT 0${cur + 1} / 04`, 150, 905, { size: 16, fam: MONO, color: C.mutedD, ls: 3, alpha: P(t, 22.3, 22.7) });
+  for (let i = 0; i < 4; i++) {
+    const f = clamp((t - WORK_B[i]) / 4.5);
+    ctx.fillStyle = rgba(C.paper, .12); ctx.fillRect(390 + i * 80, 899, 64, 3);
+    ctx.fillStyle = C.lavD; ctx.fillRect(390 + i * 80, 899, 64 * f * P(t, 22.3, 22.7), 3);
+  }
+}
+function speedLines(t, a, k) {
+  for (let i = 0; i < 18; i++) {
+    const y = 60 + h1(i * 13 + k * 101) * (H - 120), len = 200 + h1(i * 7 + k) * 600;
+    const x = ((h1(i * 3 + k * 5) * W) - t * 4000 * (1 + h1(i))) % (W + len) + W;
+    ctx.fillStyle = rgba(C.lav, .25 * a * h1(i * 11)); ctx.fillRect(x % (W + len) - len, y, len * a, 2);
+  }
+}
+function proj(k, u, ox) {
+  if (ox <= -W || ox >= W) return;
+  const p = PROJ[k];
+  ctx.save(); ctx.translate(ox, 0);
+  // giant numeral
+  font(560, 700); ctx.lineWidth = 2; ctx.strokeStyle = rgba(C.paper, .075 * P(u, 0, .6)); ctx.textAlign = 'left';
+  ctx.strokeText('0' + (k + 1), 90, 1010);
+  // copy
+  text(typed(p.k, u, .2, 60), 150, 250, { size: 20, fam: MONO, color: C.lav, ls: 3 });
+  withAlpha(E.outCubic(P(u, .3, .6)), () => pill(150, 285, p.tag, { size: 15, h: 34, padX: 14, stroke: rgba(C.paper, .35), color: C.paper, ls: 2 }));
+  p.title.forEach((ln, i) => riseText(ln, 150, 420 + i * 92, { t: u, t0: .3 + i * .1, size: 86, weight: 600, color: C.paper, stagger: .02, ls: -2 }));
+  const dy = 420 + (p.title.length - 1) * 92 + 75;
+  const dl = wrap(p.d, 640, 28);
+  dl.forEach((ln, i) => riseLine(ln, 150, dy + i * 40, { t: u, t0: .6 + i * .06, size: 28, weight: 400, color: C.mutedD }));
+  const chipY = dy + dl.length * 40 + 30;
+  let cx = 150;
+  p.chips.forEach((c, i) => {
+    const a = E.outBack(P(u, .95 + i * .08, 1.3 + i * .08));
+    if (a <= 0) return;
+    ctx.save(); ctx.translate(cx, chipY); ctx.scale(a, a);
+    cx += pill(0, 0, c, { size: 18, h: 44, padX: 20, fill: '#262626', stroke: rgba(C.lav, .35), color: C.lav }) + 12;
+    ctx.restore();
+    if (a < 1) cx += 0;
+  });
+  // panel
+  const rv = E.outExpo(P(u, .15, .8));
+  if (rv > 0) {
+    ctx.save();
+    rrect(PX, PY, PW, PH * rv, 22); ctx.fillStyle = C.panel; ctx.fill(); ctx.strokeStyle = rgba(C.paper, .08); ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.clip();
+    text(p.fig, PX + 28, PY + 42, { size: 15, fam: MONO, color: C.mutedD, ls: 3 });
+    text('FIG. 0' + (k + 1), PX + PW - 28, PY + 42, { size: 15, fam: MONO, color: C.mutedD, ls: 3, align: 'right' });
+    ctx.fillStyle = rgba(C.paper, .07); ctx.fillRect(PX, PY + 64, PW, 1);
+    [vizEEG, vizSDK, vizECG, vizRAG][k](u);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function vizEEG(u) {
+  const rev = E.inOutCubic(P(u, .5, 1.4)), cols = 104, cw = VW / cols;
+  const env = xw => clamp((fbm(xw * .035) + .55) / 1.3) ** 1.6;
+  const scroll = u * 30;
+  text('SPEECH ENVELOPE', VX, VY + 4, { size: 14, fam: MONO, color: C.mutedD, ls: 2 });
+  const cy0 = VY + 95;
+  const envPts = [];
+  for (let c = 0; c < cols * rev; c++) {
+    const xw = c + scroll, e = env(xw), hgt = e * 62 * (.45 + .55 * h1(Math.floor(xw) * 7));
+    ctx.fillStyle = rgba(C.lav, .85); ctx.fillRect(VX + c * cw + 1, cy0 - hgt, cw - 3, hgt * 2);
+    envPts.push([VX + c * cw + cw / 2, cy0 - e * 66 - 6]);
+  }
+  polyline(envPts, C.lavD, 2);
+  const couple = E.inOutCubic(P(u, 1.4, 3.2));
+  const chs = ['Fz', 'Cz', 'Pz', 'Oz', 'T7', 'T8', 'C3', 'C4'], top = VY + 200, sp = 44;
+  text('EEG  ·  8 CH', VX, top - 22, { size: 14, fam: MONO, color: C.mutedD, ls: 2 });
+  chs.forEach((ch, i) => {
+    const y = top + 16 + i * sp;
+    text(ch, VX, y + 5, { size: 14, fam: MONO, color: C.mutedD });
+    const pts = [];
+    for (let x = 0; x < (VW - 50) * rev; x += 3) {
+      const xw = x / cw + scroll;
+      const v = 11 * fbm(xw * .55 + i * 50 + u * 2) + couple * 16 * (env(xw - 4) - .3) * (i % 3 === 2 ? .6 : 1);
+      pts.push([VX + 50 + x, y - v]);
+    }
+    polyline(pts, rgba(C.paper, .65), 1.4);
+  });
+  // analysis window
+  const wx = VX + 50 + ((u * 160) % (VW - 170));
+  withAlpha(P(u, 1.4, 1.8), () => { ctx.fillStyle = rgba(C.lav, .08); ctx.fillRect(wx, VY - 10, 120, VH - 60); ctx.fillStyle = rgba(C.lav, .5); ctx.fillRect(wx, VY - 10, 1.5, VH - 60); });
+  const my = VY + VH - 20;
+  text('NEURAL TRACKING', VX, my, { size: 14, fam: MONO, color: C.lav, ls: 2, alpha: P(u, 1.2, 1.5) });
+  ctx.fillStyle = rgba(C.paper, .1); ctx.fillRect(VX + 190, my - 7, 400, 4);
+  ctx.fillStyle = C.lav; ctx.fillRect(VX + 190, my - 7, 400 * couple, 4);
+  text('speech  →  cortex', VX + VW, my, { size: 14, fam: MONO, color: C.mutedD, ls: 2, align: 'right', alpha: P(u, 1.2, 1.5) });
+}
+
+function vizSDK(u) {
+  const fx = VX + VW - 330, fy = VY + 10, fw = 300, fh = 590;
+  const ap = E.outExpo(P(u, .3, .95));
+  ctx.save(); ctx.translate(0, (1 - ap) * 60); ctx.globalAlpha = ap;
+  rrect(fx, fy, fw, fh, 44); ctx.fillStyle = '#101010'; ctx.fill(); ctx.strokeStyle = rgba(C.paper, .8); ctx.lineWidth = 3; ctx.stroke();
+  rrect(fx + fw / 2 - 40, fy + 14, 80, 18, 9); ctx.fillStyle = '#000'; ctx.fill();
+  const sx = fx + 16, sy = fy + 46, sw = fw - 32, sh = fh - 66;
+  ctx.save(); rrect(sx, sy, sw, sh, 26); ctx.clip();
+  const sw2 = E.inOutExpo(P(u, 2.7, 3.0));
+  ctx.translate(0, -sw2 * sh);
+  // phase A — search
+  text('AiSee', sx + 14, sy + 30, { size: 22, weight: 600, color: C.paper });
+  text('MODEL HUB', sx + sw - 14, sy + 30, { size: 11, fam: MONO, color: C.mutedD, ls: 2, align: 'right' });
+  rrect(sx + 12, sy + 48, sw - 24, 42, 21); ctx.fillStyle = '#222'; ctx.fill();
+  const q = typed('llama gguf', u, .6, 20);
+  const qw = text(q, sx + 30, sy + 75, { size: 16, fam: MONO, color: C.paper });
+  if (Math.floor(u * 3) % 2 === 0) { ctx.fillStyle = C.lavD; ctx.fillRect(sx + 32 + qw, sy + 60, 2, 20); }
+  const rows = [['Llama-3.2-1B-Instruct', 'Q4_K_M · 0.8 GB'], ['Llama-3.2-3B-Instruct', 'Q4_K_M · 2.0 GB'], ['TinyLlama-1.1B-Chat', 'Q5_K_M · 0.8 GB'], ['Llama-3.1-8B-Instruct', 'Q4_0 · 4.7 GB']];
+  rows.forEach(([n, s], i) => {
+    const rp = E.outExpo(P(u, 1.15 + i * .08, 1.55 + i * .08));
+    if (rp <= 0) return;
+    const ry = sy + 108 + i * 74, rx = sx + 12 + (1 - rp) * 120;
+    ctx.globalAlpha = ap * rp;
+    rrect(rx, ry, sw - 24, 64, 14); ctx.fillStyle = i === 0 && u > 1.7 ? rgba(C.purple, .45) : '#1c1c1c'; ctx.fill();
+    text(n, rx + 14, ry + 27, { size: 15, weight: 600, color: C.paper });
+    text(s, rx + 14, ry + 49, { size: 12, fam: MONO, color: C.mutedD, ls: 1 });
+    if (i === 0 && u > 1.8) {
+      const dp = P(u, 1.8, 2.55);
+      ctx.fillStyle = rgba(C.paper, .15); ctx.fillRect(rx + 14, ry + 56, sw - 52, 3);
+      ctx.fillStyle = C.lav; ctx.fillRect(rx + 14, ry + 56, (sw - 52) * dp, 3);
+      text(dp < 1 ? Math.round(dp * 100) + '%' : 'READY', rx + sw - 38, ry + 27, { size: 12, fam: MONO, color: C.lav, align: 'right' });
+    }
+    ctx.globalAlpha = ap;
+  });
+  // phase B — chat (placed one screen below)
+  const by = sy + sh;
+  text('AiSee', sx + 14, by + 30, { size: 22, weight: 600, color: C.paper });
+  pill(sx + sw - 104, by + 12, '● LOCAL', { size: 11, h: 24, padX: 10, fill: rgba(C.purple, .5), color: C.lav, ls: 1.5 });
+  const uq = "What's in front of me?";
+  const uw = measure(uq, 15, 500) + 28;
+  rrect(sx + sw - 12 - uw, by + 64, uw, 40, 18); ctx.fillStyle = C.lav; ctx.fill();
+  text(uq, sx + sw - 12 - uw + 14, by + 90, { size: 15, weight: 500, color: C.ink });
+  const ans = 'A desk with an open laptop. Your blue mug is just to the right, and a notebook sits in front of you.';
+  const shown = typed(ans, u, 3.05, 48);
+  if (u > 3.0) {
+    const lines = wrap(ans, sw - 64, 15);
+    let left = shown.length;
+    const bh = lines.length * 22 + 26;
+    rrect(sx + 12, by + 120, sw - 40, bh, 18); ctx.fillStyle = '#222'; ctx.fill();
+    lines.forEach((ln, i) => { const part = ln.slice(0, Math.max(0, left)); left -= ln.length + 1; text(part, sx + 28, by + 146 + i * 22, { size: 15, color: C.paper }); });
+    text('Llama-3.2-1B · on-device · offline', sx + 14, by + 136 + bh + 10, { size: 11, fam: MONO, color: C.mutedD, ls: 1, alpha: P(u, 3.3, 3.6) });
+  }
+  rrect(sx + 12, by + sh - 58, sw - 24, 44, 22); ctx.strokeStyle = rgba(C.paper, .2); ctx.lineWidth = 1.5; ctx.stroke();
+  text('Ask anything…', sx + 30, by + sh - 30, { size: 14, color: C.mutedD });
+  ctx.restore(); ctx.restore();
+  // callouts
+  const calls = [['HUGGING FACE HUB', 1.0, sy + 70], ['.GGUF QUANTIZED MODELS', 1.45, sy + 150], ['ON-DEVICE INFERENCE', 3.0, sy + 200], ['ZERO BYTES TO THE CLOUD', 3.35, sy + 320]];
+  calls.forEach(([s, t0, ty], i) => {
+    const p = E.outExpo(P(u, t0, t0 + .45));
+    if (p <= 0 || (i < 2 && u > 2.75 + .2)) {
+      if (!(i < 2 && u > 2.75 && u < 2.95)) return;
+    }
+    const fade = i < 2 ? 1 - P(u, 2.7, 2.9) : 1;
+    const ly = VY + 70 + i * 120;
+    withAlpha(fade * p, () => {
+      const w = text(s, VX + 10, ly, { size: 15, fam: MONO, color: C.lav, ls: 2 });
+      const x1 = VX + 10 + w + 16, x2 = lerp(x1, fx + 10, p);
+      ctx.strokeStyle = rgba(C.lav, .55); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x1, ly - 5); ctx.lineTo(x2, ty); ctx.stroke();
+      circle(x2, ty, 4, C.lav);
+    });
+  });
+  // throughput sparkline
+  withAlpha(P(u, 3.1, 3.5), () => {
+    text('TOKENS / SEC', VX + 10, VY + VH - 60, { size: 13, fam: MONO, color: C.mutedD, ls: 2 });
+    const pts = []; for (let i = 0; i < 60; i++) pts.push([VX + 10 + i * 6, VY + VH - 20 - 22 * (.5 + .5 * fbm(i * .3 + u * 6))]);
+    polyline(pts, C.lavD, 2);
+  });
+}
+
+const gss = (x, m, s) => Math.exp(-((x - m) ** 2) / (2 * s * s));
+function ecg(ts) { const p = ((ts % .833) + .833) % .833 / .833; return .12 * gss(p, .18, .025) - .13 * gss(p, .27, .009) + 1 * gss(p, .30, .011) - .28 * gss(p, .335, .011) + .3 * gss(p, .56, .045); }
+function ppg(ts) { const p = (((ts - .2) % .833) + .833) % .833 / .833; return .85 * gss(p, .25, .08) + .35 * gss(p, .52, .07); }
+function vizECG(u) {
+  const gx = VX, gy = VY, gw = VW, gh = 300;
+  ctx.fillStyle = rgba(C.lav, .04); ctx.fillRect(gx, gy, gw, gh);
+  for (let x = 0; x <= gw; x += 20) { ctx.fillStyle = rgba(C.lav, x % 100 ? .05 : .12); ctx.fillRect(gx + x, gy, 1, gh); }
+  for (let y = 0; y <= gh; y += 20) { ctx.fillStyle = rgba(C.lav, y % 100 ? .05 : .12); ctx.fillRect(gx, gy + y, gw, 1); }
+  text('ECG · LEAD II', gx + 12, gy + 24, { size: 14, fam: MONO, color: C.lav, ls: 2 });
+  const sweep = (fn, x0, y0, w, amp, speed, col, lw, delay) => {
+    const hx = ((u - delay) * speed) % w; let seg = [];
+    for (let x = 0; x < w; x += 2) {
+      if (x > hx && x < hx + 36) { polyline(seg, col, lw); seg = []; continue; }
+      const dt = x <= hx ? (hx - x) / speed : (hx + w - x) / speed;
+      const ts = u - dt;
+      if (ts < delay) { polyline(seg, col, lw); seg = []; continue; }
+      seg.push([x0 + x, y0 - fn(ts) * amp]);
+    }
+    polyline(seg, col, lw);
+    const ts = u; if (ts > delay) circle(x0 + hx, y0 - fn(ts) * amp, 5, C.paper);
+  };
+  sweep(ecg, gx, gy + 200, gw, 130, 520, C.lav, 3, .35);
+  const py = gy + 330;
+  text('PPG', gx, py + 18, { size: 14, fam: MONO, color: C.mutedD, ls: 2 });
+  sweep(ppg, gx + 60, py + 110, 460, 70, 420, C.lavD, 2.5, .6);
+  // BPM block
+  const bx = gx + 600, by = py + 100;
+  const beat = ((u % .833) / .833), pulse = 1 + .18 * gss(beat, .31, .04);
+  withAlpha(P(u, .7, 1.0), () => {
+    ctx.save(); ctx.translate(bx + 20, by - 45); ctx.scale(pulse * 1.3, pulse * 1.3);
+    ctx.beginPath(); ctx.moveTo(0, 6); ctx.bezierCurveTo(-14, -6, -8, -16, 0, -8); ctx.bezierCurveTo(8, -16, 14, -6, 0, 6); ctx.fillStyle = C.purple; ctx.fill();
+    ctx.restore();
+    text(String(Math.round(lerp(0, 72, E.outCubic(P(u, .8, 1.6))))), bx + 50, by, { size: 100, weight: 600, color: C.paper, ls: -3 });
+    text('BPM', bx + 50, by + 30, { size: 14, fam: MONO, color: C.mutedD, ls: 3 });
+    text('SpO₂ 98%', bx + 150, by + 30, { size: 14, fam: MONO, color: C.lav, ls: 2 });
+  });
+  // classifier
+  const cy = py + 175;
+  text('ML CLASSIFIER  ·  REAL-TIME', gx, cy, { size: 14, fam: MONO, color: C.lav, ls: 2, alpha: P(u, 1.8, 2.1) });
+  [['Normal sinus rhythm', .94], ['Arrhythmia', .04], ['Noise / artifact', .02]].forEach(([l, v], i) => {
+    const y = cy + 34 + i * 34, f = E.outExpo(P(u, 2.0 + i * .1, 2.8 + i * .1));
+    text(l, gx, y, { size: 18, color: i ? C.mutedD : C.paper, alpha: P(u, 1.9, 2.2) });
+    ctx.fillStyle = rgba(C.paper, .08); ctx.fillRect(gx + 250, y - 10, 480, 8);
+    ctx.fillStyle = i ? C.mutedD : C.lav; ctx.fillRect(gx + 250, y - 10, 480 * v * f, 8);
+    text((v * f).toFixed(2), gx + 760, y, { size: 16, fam: MONO, color: i ? C.mutedD : C.lav, align: 'left', alpha: P(u, 2.0, 2.2) });
+  });
+}
+
+function vizRAG(u) {
+  const node = (x, y, w, h, t0, label, fn) => {
+    const p = E.outBack(P(u, t0, t0 + .4)); if (p <= 0) return;
+    ctx.save(); ctx.translate(x + w / 2, y + h / 2); ctx.scale(p, p); ctx.translate(-(x + w / 2), -(y + h / 2));
+    rrect(x, y, w, h, 16); ctx.fillStyle = '#232323'; ctx.fill(); ctx.strokeStyle = rgba(C.lav, .3); ctx.lineWidth = 1.5; ctx.stroke();
+    text(label, x + 16, y + 26, { size: 12, fam: MONO, color: C.lav, ls: 2 });
+    fn && fn(x, y, w, h); ctx.restore();
+  };
+  const Q = [VX, VY + 10, 330, 140], EM = [VX + 410, VY + 40, 180, 84], DB = [VX + 660, VY, 174, 220], LM = [VX + 560, VY + 330, 274, 120], AN = [VX, VY + 290, 500, 320];
+  const edge = (a, b, c, d, t0, k) => {
+    const p = E.inOutCubic(P(u, t0, t0 + .5)); if (p <= 0) return;
+    const pts = []; for (let s = 0; s <= p + 1e-6; s += .02) pts.push(cbez(a, b, c, d, Math.min(s, p)));
+    polyline(pts, rgba(C.lav, .4), 2);
+    if (p >= 1) for (let j = 0; j < 3; j++) { const s = ((u * .9 + j / 3 + k * .17) % 1); const pt = cbez(a, b, c, d, s); circle(pt[0], pt[1], 4.5, C.lav); }
+  };
+  edge([Q[0] + Q[2], Q[1] + 70], [Q[0] + Q[2] + 40, Q[1] + 70], [EM[0] - 40, EM[1] + 42], [EM[0], EM[1] + 42], .6, 0);
+  edge([EM[0] + EM[2], EM[1] + 42], [EM[0] + EM[2] + 30, EM[1] + 42], [DB[0] - 30, DB[1] + 110], [DB[0], DB[1] + 110], 1.1, 1);
+  edge([DB[0] + DB[2] / 2, DB[1] + DB[3]], [DB[0] + DB[2] / 2, DB[1] + DB[3] + 50], [LM[0] + LM[2] - 87, LM[1] - 50], [LM[0] + LM[2] - 87, LM[1]], 1.8, 2);
+  edge([LM[0], LM[1] + 60], [LM[0] - 30, LM[1] + 60], [AN[0] + AN[2] + 30, AN[1] + 100], [AN[0] + AN[2], AN[1] + 100], 2.45, 3);
+  node(...Q, .3, 'STUDENT PROFILE', (x, y) => {
+    const z = typed('Z-score 1.8421', u, .45, 30);
+    text(z, x + 16, y + 76, { size: 32, weight: 600, color: C.paper, ls: -.5 });
+    text('Physical Science · Colombo', x + 16, y + 112, { size: 17, color: C.mutedD, alpha: P(u, .8, 1.0) });
+  });
+  node(...EM, .9, 'EMBED', (x, y) => { for (let i = 0; i < 14; i++) { const v = .5 + .5 * Math.sin(i * 1.7 + u * 5); ctx.fillStyle = rgba(C.lav, .3 + .6 * v); ctx.fillRect(x + 16 + i * 10.5, y + 68 - v * 26, 6, v * 26 + 2); } });
+  node(...DB, 1.3, 'VECTOR STORE', (x, y) => {
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 6; c++) {
+      const i = r * 6 + c, near = [8, 14, 15, 21].includes(i) && u > 1.75;
+      circle(x + 26 + c * 25, y + 52 + r * 24, near ? 6 : 3.5, near ? C.lav : rgba(C.paper, .25));
+    }
+  });
+  node(...LM, 2.0, 'LANGCHAIN  →  OPENAI', (x, y) => {
+    text('Retrieval-augmented', x + 16, y + 62, { size: 19, weight: 500, color: C.paper });
+    text('generation', x + 16, y + 88, { size: 19, weight: 500, color: C.paper });
+    for (let i = 0; i < 3; i++) circle(x + 220 + i * 14, y + 82, 4 * (.5 + .5 * Math.sin(u * 8 - i)), C.lav);
+  });
+  node(...AN, 2.6, 'RECOMMENDED PROGRAMS', (x, y) => {
+    [['Engineering', 'University of Moratuwa', .96], ['Physical Science', 'University of Colombo', .88], ['Engineering', 'University of Peradeniya', .82]].forEach(([a, b, v], i) => {
+      const t0 = 2.9 + i * .15;
+      const yy = y + 78 + i * 80;
+      riseLine(a, x + 16, yy, { t: u, t0, size: 22, weight: 600, color: C.paper });
+      riseLine(b, x + 16, yy + 26, { t: u, t0: t0 + .05, size: 17, color: C.mutedD });
+      ctx.fillStyle = rgba(C.paper, .08); ctx.fillRect(x + 320, yy - 8, 150, 6);
+      ctx.fillStyle = i ? C.lavD : C.lav; ctx.fillRect(x + 320, yy - 8, 150 * v * E.outExpo(P(u, t0, t0 + .6)), 6);
+    });
+  });
+}
+
+// ───────────────────────────── 05 TOOLKIT (40–46) ─────────────────────────────
+const TOOLS = ['Python', 'PyTorch', 'TensorFlow', 'Keras', 'OpenCV', 'MediaPipe', 'Hugging Face', 'LangChain', 'LangGraph', 'Kotlin', 'Android', 'C++', 'Arduino', 'PyPI'];
+const RINGS = [{ rx: 600, ry: 235, tilt: -.05, n: 4, spd: .5 }, { rx: 790, ry: 305, tilt: .04, n: 5, spd: -.34 }, { rx: 940, ry: 372, tilt: -.02, n: 5, spd: .24 }];
+function sTools(t) {
+  bg(C.paper);
+  dotGrid(48, rgba(C.ink, .05));
+  const cx = 960, cy = 540;
+  const col = E.inExpo(P(t, 44.95, 45.55));
+  const items = []; let k = 0;
+  RINGS.forEach((r, ri) => {
+    const dp = E.inOutCubic(P(t, 40.15 + ri * .1, 41.0 + ri * .1)) * (1 - col);
+    if (dp > 0) {
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(r.tilt);
+      ctx.beginPath(); ctx.ellipse(0, 0, r.rx * (1 - col), r.ry * (1 - col), 0, Math.PI, Math.PI + dp * Math.PI * 2);
+      ctx.strokeStyle = rgba(C.ink, .14); ctx.lineWidth = 1.5; ctx.stroke(); ctx.restore();
+    }
+    for (let j = 0; j < r.n; j++, k++) {
+      const e = E.outExpo(P(t, 40.35 + k * .06, 41.15 + k * .06));
+      const th = j / r.n * Math.PI * 2 + ri * .7 + r.spd * (t - 40) + col * 3 * Math.sign(r.spd);
+      const m = lerp(2.4, 1, e) * (1 - col);
+      let x = r.rx * m * Math.cos(th), y = r.ry * m * Math.sin(th);
+      const xr = x * Math.cos(r.tilt) - y * Math.sin(r.tilt), yr = x * Math.sin(r.tilt) + y * Math.cos(r.tilt);
+      items.push({ s: TOOLS[k], x: cx + xr, y: cy + yr, z: Math.sin(th), a: e });
+    }
+  });
+  items.sort((a, b) => a.z - b.z);
+  const drawPill = it => {
+    const sc = lerp(.72, 1.12, (it.z + 1) / 2) * (1 - col * .6), front = it.z > 0;
+    withAlpha(it.a * lerp(.5, 1, (it.z + 1) / 2), () => {
+      ctx.save(); ctx.translate(it.x, it.y); ctx.scale(sc, sc);
+      const w = measure(it.s, 26, 500, MONO) + 52;
+      pill(-w / 2, -27, it.s, { size: 26, h: 54, padX: 26, fill: front ? C.ink : C.paper, stroke: front ? null : rgba(C.ink, .3), color: front ? C.paper : C.ink, ls: 0 });
+      ctx.restore();
+    });
+  };
+  items.filter(i => i.z <= 0).forEach(drawPill);
+  const out = 44.85;
+  text('THE STACK', cx, 410, { size: 18, fam: MONO, color: C.purple, ls: 8, align: 'center', alpha: P(t, 40.4, 40.7) * (1 - P(t, out, out + .2)) });
+  riseText('The tools behind', cx, 525, { t, t0: 40.5, size: 96, weight: 600, color: C.ink, align: 'center', stagger: .018, out, ls: -2 });
+  riseText('my research.', cx, 625, { t, t0: 40.7, size: 96, weight: 600, color: C.purple, align: 'center', stagger: .018, out: out + .05, ls: -2 });
+  items.filter(i => i.z > 0).forEach(drawPill);
+  circle(cx, cy, 10 * E.outBack(P(t, 44.9, 45.3)), C.purple);
+}
+
+// ───────────────────────────── 06 HIGHLIGHTS (46–52) ─────────────────────────────
+const CARDS = [
+  { big: '16', num: 16, dec: 0, lab: 'PROJECTS', cap: 'across AI, embedded systems, health-tech & web', bg: C.dark },
+  { big: '3.66', num: 3.66, dec: 2, lab: 'CGPA / 4.00', cap: 'B.Sc. Eng (Hons) · University of Moratuwa', bg: C.purple },
+  { big: '×4', lab: "DEAN'S LIST", cap: 'Semesters 1, 6, 7 & 8', bg: C.paper },
+  { big: 'Meta Llama', lab: 'INCUBATOR PROGRAMME', cap: 'Semi-finalist · AiSee', bg: C.dark },
+  { big: 'Finalist', lab: 'BRAINSTORM', cap: 'Biomedical engineering', bg: C.lav },
+  { big: 'Best Pitch', lab: 'ICE ENTREPRENEURSHIP HACKATHON', cap: 'Finalist & Best Pitch', bg: C.dark },
+  { big: '3rd', lab: 'MECHA MEDICAL DEVICE HACKATHON', cap: 'Podium finish', bg: C.purple },
+  { big: '287', num: 287, dec: 0, lab: 'ISLAND RANK', cap: 'GCE A/L · Z-score 2.3605', bg: C.paper },
+  { big: 'President', lab: 'SCOUT AWARD', cap: 'Sri Lanka Scout Association', bg: C.dark },
+  { big: 'Mentor', lab: 'AI INNOVATION · ICE WORKSHOP', cap: '2025', bg: C.purple },
+  { big: 'VP', lab: 'ELECTRONIC CLUB', cap: 'Vice President · Head of Operations', bg: C.lav },
+  { big: '∞', lab: 'CURIOSITY', cap: 'and counting', bg: C.dark },
+];
+const isDarkBg = c => c === C.dark || c === C.purple;
+function sRapid(t) {
+  const k = clamp(Math.floor((t - 46) / .5), 0, 11), u = (t - 46) - k * .5, c = CARDS[k];
+  bg(c.bg);
+  const dark = isDarkBg(c.bg), fg = dark ? C.paper : C.ink, acc = c.bg === C.purple ? C.lav : dark ? C.lavD : C.purple;
+  // motif
+  const m = k % 3, mp = E.outExpo(P(u, 0, .5));
+  ctx.save(); ctx.translate(960, 540); ctx.rotate((k % 2 ? 1 : -1) * (.05 + mp * .06));
+  if (m === 0) for (let i = 1; i < 9; i++) ring(0, 0, i * 120 * lerp(.85, 1, mp), rgba(fg, .06), 2);
+  else if (m === 1) { ctx.fillStyle = rgba(fg, .045); for (let i = -14; i < 14; i++) { ctx.save(); ctx.rotate(-.6); ctx.fillRect(i * 90 + mp * 40, -1400, 30, 2800); ctx.restore(); } }
+  else circle(0, 0, 470 * lerp(.8, 1, mp), rgba(fg, .06));
+  ctx.restore();
+  const p = E.outExpo(P(u, 0, .22));
+  let s = c.big;
+  if (c.num != null) s = (c.num * E.outCubic(P(u, 0, .32))).toFixed(c.dec);
+  const base = 250, fw = measure(c.big, base, 700, SANS, -6), size = Math.min(base, base * 1500 / fw);
+  const dir = k % 2 ? 1 : -1;
+  const sc = lerp(1.35, 1, p);
+  for (let g = 3; g >= 0; g--) {
+    const lag = E.outExpo(P(u, 0, .22 + g * .03));
+    if (g && lag > .96) continue;
+    withAlpha(g ? .14 : 1, () => {
+      ctx.save(); ctx.translate(960 + dir * lerp(180, 0, lag), 600); ctx.scale(lerp(1.35, 1, lag), lerp(1.35, 1, lag));
+      text(s, 0, 0, { size, weight: 700, color: fg, align: 'center', ls: -6 });
+      ctx.restore();
+    });
+  }
+  const lp = E.outExpo(P(u, .04, .3));
+  text(c.lab, 960, 345 + (1 - lp) * 24, { size: 28, fam: MONO, color: acc, ls: 8, align: 'center', alpha: lp });
+  text(c.cap, 960, 730 + (1 - lp) * 24, { size: 38, weight: 500, color: fg, align: 'center', alpha: lp * .85 });
+  text(`${String(k + 1).padStart(2, '0')} / 12`, 960, 820, { size: 16, fam: MONO, color: fg, ls: 4, align: 'center', alpha: .4 * lp });
+  if (u < .05) withAlpha(.35 * (1 - u / .05), () => bg(acc));
+  void sc;
+}
+
+// ───────────────────────────── 07 CONTACT (52–60) ─────────────────────────────
+function sOutro(t) {
+  const fadeBg = E.inOutCubic(P(t, 58.9, 59.4));
+  bg(C.paper);
+  if (fadeBg > 0) withAlpha(fadeBg, () => bg(C.dark));
+  const allA = 1 - P(t, 58.7, 59.1);
+  withAlpha(allA, () => {
+    dotGrid(48, rgba(C.ink, .05));
+    const out = 55.05;
+    riseText('Good questions.', 150, 390, { t, t0: 52.05, size: 150, weight: 600, color: C.ink, stagger: .02, out, ls: -4 });
+    riseText('Shared ideas.', 150, 570, { t, t0: 52.95, size: 150, weight: 600, color: C.ink, stagger: .02, out: out + .06, ls: -4 });
+    riseText('Better things.', 150, 750, { t, t0: 53.85, size: 150, weight: 600, color: C.purple, stagger: .02, out: out + .12, ls: -4 });
+    const bp = [52.05, 52.95, 53.85].reduce((a, s) => a + Math.max(0, 1 - Math.abs(t - s - .1) * 6), 0);
+    circle(1640, 560, (14 + bp * 10) * E.outBack(P(t, 52.1, 52.5)) * (1 - E.inExpo(P(t, 55.0, 55.4))), C.purple);
+    // end card
+    riseText('Jaliya Nimantha', 960, 490, { t, t0: 55.7, size: 140, weight: 600, color: C.ink, align: 'center', stagger: .025, ls: -4 });
+    const lp = E.inOutExpo(P(t, 55.75, 56.45)), L0 = 360, L1 = 1560, yL = 615;
+    if (lp > 0) {
+      const xb = lerp(L0 - 200, L1, P(t, 56.7, 57.9));
+      const pts = [];
+      for (let x = 960 - 600 * lp; x <= 960 + 600 * lp; x += 2) {
+        const d = (x - xb) / 140; let v = 0;
+        if (Math.abs(d) < 1) { const q = (d + 1) / 2; v = .12 * gss(q, .2, .04) - .15 * gss(q, .42, .02) + 1 * gss(q, .5, .022) - .3 * gss(q, .57, .02) + .28 * gss(q, .78, .05); }
+        pts.push([x, yL - v * 72]);
+      }
+      polyline(pts, C.ink, 2.5);
+      const dotX = clamp(xb + 140, L0, L1);
+      if (t > 56.7) circle(dotX, yL, 9, C.purple);
+    }
+    riseLine('Research Engineer  ·  Human-centered AI', 960, 705, { t, t0: 56.2, size: 36, weight: 500, color: C.muted, align: 'center' });
+    const links = 'jaliyanimantha.com    ·    jaliyanimantha070@gmail.com    ·    GitHub    ·    LinkedIn';
+    text(links, 960, 800, { size: 22, fam: MONO, color: C.ink, ls: 1, align: 'center', alpha: E.outCubic(P(t, 56.6, 57.1)) });
+  });
+  // the bookend dot
+  if (t > 58.7) {
+    const g = E.inOutExpo(P(t, 58.8, 59.4)), sh = E.inExpo(P(t, 59.5, 59.85));
+    circle(lerp(1560, 960, g), lerp(615, 540, g), lerp(9, 12, g) * (1 - sh), g > .5 ? C.lavD : C.purple);
+  }
+}
+
+// ───────────────────────────── transitions ─────────────────────────────
+const DIAG = Math.hypot(W, H) / 2 + 40;
+function transitions(t) {
+  // iris: purple close → open onto Hello
+  if (t > 5.6 && t < 6.5) {
+    if (t < 6) circle(W / 2, H / 2, E.inExpo(P(t, 5.6, 6.0)) * DIAG, C.purple);
+    else { const r = E.outExpo(P(t, 6.0, 6.45)) * DIAG; ctx.beginPath(); ctx.rect(-80, -80, W + 160, H + 160); ctx.arc(W / 2, H / 2, r, 0, Math.PI * 2, true); ctx.fillStyle = C.purple; ctx.fill(); }
+  }
+  // shutter into Philosophy
+  if (t > 11.55 && t < 12.05) for (let i = 0; i < 10; i++) { const p = E.inOutExpo(P(t, 11.58 + i * .02, 11.86 + i * .02)); ctx.fillStyle = C.dark; ctx.fillRect(i * W / 10 - 1, -40, W / 10 + 2, (H + 80) * p); }
+  // purple iris open onto Journey
+  if (t >= 18 && t < 18.5) { const r = E.outExpo(P(t, 18.0, 18.45)) * DIAG; ctx.beginPath(); ctx.rect(-80, -80, W + 160, H + 160); ctx.arc(W / 2, H / 2, r, 0, Math.PI * 2, true); ctx.fillStyle = C.purple; ctx.fill(); }
+  // diagonal slash into Work
+  if (t > 21.5 && t < 22.05) {
+    const p = E.inOutExpo(P(t, 21.52, 22.0)), xe = lerp(-500, W + 500, p);
+    ctx.beginPath(); ctx.moveTo(-600, -50); ctx.lineTo(xe + 260, -50); ctx.lineTo(xe - 260, H + 50); ctx.lineTo(-600, H + 50); ctx.fillStyle = C.dark; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(xe + 260, -50); ctx.lineTo(xe + 400, -50); ctx.lineTo(xe - 120, H + 50); ctx.lineTo(xe - 260, H + 50); ctx.fillStyle = C.purple; ctx.fill();
+  }
+  // split doors into Toolkit
+  if (t > 39.55 && t < 40.5) {
+    const c = E.inOutExpo(P(t, 39.58, 40.0)), o = E.inOutExpo(P(t, 40.0, 40.42));
+    const hgt = (H / 2 + 40) * (t < 40 ? c : 1 - o);
+    ctx.fillStyle = C.purple; ctx.fillRect(-80, -40, W + 160, hgt); ctx.fillRect(-80, H + 40 - hgt, W + 160, hgt);
+  }
+  // ink iris into Highlights
+  if (t > 45.5 && t < 46) circle(W / 2, H / 2, E.inExpo(P(t, 45.52, 46.0)) * DIAG, C.dark);
+  // flash on outro cut
+  if (t >= 52 && t < 52.12) withAlpha(1 - P(t, 52, 52.12), () => bg(C.purple));
+}
+
+// ───────────────────────────── HUD & finishing ─────────────────────────────
+const SECTIONS = [[0, '00 — SIGNAL'], [6, '01 — HELLO'], [12, '02 — PHILOSOPHY'], [18, '03 — JOURNEY'], [22, '04 — SELECTED WORK'], [40, '05 — TOOLKIT'], [46, '06 — HIGHLIGHTS'], [52, '07 — CONTACT']];
+function darkAt(t) {
+  if (t < 6) return true; if (t < 12) return false; if (t < 18) return true; if (t < 22) return false;
+  if (t < 40) return true; if (t < 46) return false; if (t < 52) return isDarkBg(CARDS[clamp(Math.floor((t - 46) / .5), 0, 11)].bg);
+  return t > 59.1;
+}
+function hud(t) {
+  const a = P(t, .8, 1.3) * (1 - P(t, 58.4, 58.8));
+  if (a <= 0) return;
+  const col = darkAt(t) ? C.paper : C.ink;
+  withAlpha(a * .7, () => {
+    text('JALIYA NIMANTHA  /  SHOWREEL ’26', 64, 62, { size: 15, fam: MONO, color: col, ls: 3 });
+    const f = Math.floor(t * FPS), ss = Math.floor(f / FPS), ff = f % FPS;
+    text(`00:00:${String(ss).padStart(2, '0')}:${String(ff).padStart(2, '0')}`, W - 64, 62, { size: 15, fam: MONO, color: col, ls: 3, align: 'right' });
+    let sec = SECTIONS[0][1]; for (const [s, l] of SECTIONS) if (t >= s) sec = l;
+    text(sec, 64, H - 52, { size: 15, fam: MONO, color: col, ls: 3 });
+    ctx.fillStyle = rgba(col, .25); ctx.fillRect(W - 64 - 240, H - 58, 240, 2);
+    ctx.fillStyle = col; ctx.fillRect(W - 64 - 240, H - 58, 240 * t / DUR, 2);
+    // registration marks
+    ctx.fillStyle = rgba(col, .5);
+    [[40, 40], [W - 40, 40], [40, H - 40], [W - 40, H - 40]].forEach(([x, y]) => { ctx.fillRect(x - 8, y, 16, 1); ctx.fillRect(x, y - 8, 1, 16); });
+  });
+}
+const GRAIN = Array.from({ length: 6 }, (_, g) => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const x = c.getContext('2d'), d = x.createImageData(256, 256);
+  for (let i = 0; i < d.data.length; i += 4) { const v = h1(i * 7 + g * 99991) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  x.putImageData(d, 0, 0); return c;
+});
+let VIG;
+function finish(t) {
+  const f = Math.floor(t * FPS);
+  ctx.save(); ctx.globalCompositeOperation = 'overlay'; ctx.globalAlpha = .07;
+  ctx.fillStyle = ctx.createPattern(GRAIN[f % 6], 'repeat');
+  ctx.translate((h1(f) * 256) | 0, (h1(f + 1) * 256) | 0); ctx.fillRect(-256, -256, W + 512, H + 512);
+  ctx.restore();
+  if (!VIG) { VIG = ctx.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05); VIG.addColorStop(0, 'rgba(0,0,0,0)'); VIG.addColorStop(1, 'rgba(0,0,0,1)'); }
+  ctx.globalAlpha = darkAt(t) ? .35 : .05; ctx.fillStyle = VIG; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+}
+
+const HITS = [6.0, 12.0, 18.0, 22.0, 40.0, 52.0, ...Array.from({ length: 12 }, (_, i) => 46 + i * .5)];
+function shake(t) {
+  let x = 0, y = 0;
+  for (const h of HITS) { const d = t - h; if (d >= 0 && d < .4) { const a = (h >= 46 && h < 52 ? 7 : 12) * Math.exp(-d * 14); x += noise1(t * 60 + h) * a; y += noise1(t * 60 + h + 50) * a; } }
+  return { x, y };
+}
+
+function render(t) {
+  t = clamp(t, 0, DUR - 1e-6);
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  const sh = shake(t); ctx.translate(sh.x, sh.y);
+  if (t < 6) sBoot(t); else if (t < 12) sHello(t); else if (t < 18) sPhilo(t); else if (t < 22) sJourney(t);
+  else if (t < 40) sWork(t); else if (t < 46) sTools(t); else if (t < 52) sRapid(t); else sOutro(t);
+  transitions(t);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  hud(t); finish(t);
+}
+
+// ───────────────────────────── boot ─────────────────────────────
+const RENDER = new URLSearchParams(location.search).has('render');
+const fontsReady = Promise.all(['300', '400', '500', '600', '700'].map(w => document.fonts.load(`${w} 40px "DM Sans"`))
+  .concat(['400', '500'].map(w => document.fonts.load(`${w} 40px "DM Mono"`)))).then(() => document.fonts.ready);
+
+if (RENDER) {
+  document.getElementById('play').remove();
+  window.ready = fontsReady.then(() => true);
+  window.frameJPEG = (i, q = .94) => { render(i / FPS); return cv.toDataURL('image/jpeg', q); };
+  window.framePNG = t => { render(t); return cv.toDataURL('image/png'); };
+} else {
+  fontsReady.then(() => render(9.2));
+  const audio = new Audio('showreel-music.wav');
+  const btn = document.getElementById('play');
+  btn.onclick = () => {
+    btn.style.display = 'none';
+    let t0 = performance.now();
+    audio.currentTime = 0; audio.play().catch(() => {});
+    const loop = () => {
+      const t = !audio.paused && audio.readyState > 2 ? audio.currentTime : (performance.now() - t0) / 1000;
+      render(t);
+      if (t < DUR) requestAnimationFrame(loop); else btn.style.display = 'flex';
+    };
+    loop();
+  };
+}
+</script>
+</body>
+</html>
