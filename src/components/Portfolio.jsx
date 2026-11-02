@@ -47,7 +47,7 @@ function Navigation() {
     <button ref={toggle} className="menu-toggle" aria-label={open ? 'Close navigation' : 'Open navigation'} aria-expanded={open} aria-controls="main-navigation" onClick={() => setOpen(!open)}>{open ? <X size={20} /> : <Menu size={20} />}</button>
     <nav id="main-navigation" aria-label="Main navigation" className={`nav-links${open ? ' is-open' : ''}`}>
       {[['Experience', 'experience'], ['Work', 'work'], ['Contact', 'contact']].map(([label, id]) => <Link key={id} to={`/#${id}`} onClick={() => setOpen(false)}>{label}</Link>)}
-      <a href="/cv.pdf" target="_blank" rel="noreferrer" className="resume-link">Résumé <ArrowUpRight size={14} /></a>
+      <a href="/cv.pdf" download="Jaliya_Nimantha_Kodithuwakku.pdf" className="resume-link">Résumé <ArrowUpRight size={14} /></a>
     </nav>
   </header>;
 }
